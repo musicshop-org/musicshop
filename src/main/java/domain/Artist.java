@@ -5,10 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 public class Artist {
 
-    private String name;
+    private final String name;
 
     @Builder
     public Artist(String name) {

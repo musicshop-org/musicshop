@@ -4,21 +4,17 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
-public class Album implements Product {
+public class Album extends Product {
 
-    private String albumTitle;
-    private int year;
-    private String label;
-    private List<Song> songs;
+    private final String label;
+    private final List<Song> songs;
 
     @Builder
-    public Album(String albumTitle, int year, String label, List<Song> songs) {
-        this.albumTitle = albumTitle;
-        this.year = year;
+    public Album(String label, List<Song> songs) {
         this.label = label;
         this.songs = songs;
     }

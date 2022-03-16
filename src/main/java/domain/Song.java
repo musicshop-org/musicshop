@@ -8,19 +8,14 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
-public class Song implements Product {
+public class Song extends Product {
 
-    private String title;
-    private String genre;
-    private LocalDate releaseDate;
-    private List<Artist> artists;
+    private final String genre;
+    private final List<Artist> artists;
 
     @Builder
-    public Song(String title, String genre, LocalDate releaseDate, List<Artist> artists) {
-        this.title = title;
+    public Song(String genre, List<Artist> artists) {
         this.genre = genre;
-        this.releaseDate = releaseDate;
         this.artists = artists;
     }
 }
