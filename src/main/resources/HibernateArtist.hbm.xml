@@ -6,11 +6,15 @@
 <hibernate-mapping default-access="field" default-cascade="all">
 
     <class name="domain.Artist" table="tbl_artist" lazy="true">
-        <id name="id" type="long" column="id">
-            <column name="artist_id" />
+        <id name="id" type="long" column="artist_id">
             <generator class="native"/>
         </id>
 
         <property name="name" column="name" type="java.lang.String"/>
+        <list name="songs" table="artist_song" cascade="all">
+            <key column="artist_id"/>
+            <index column="idx"></index>
+            <many-to-many class="domain.Song" column="song_id"/>
+        </list>
     </class>
 </hibernate-mapping>

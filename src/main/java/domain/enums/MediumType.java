@@ -1,5 +1,5 @@
 package domain.enums;
 
 public enum MediumType {
-    CD, ALBUM, VINYL
+    CD, DIGITAL, VINYL
 }
