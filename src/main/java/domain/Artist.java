@@ -9,8 +9,7 @@ import java.util.List;
 @Getter
 public class Artist {
 
-    private Artist(){
-    }
+    private Artist(){}
 
     private long id;
     private String name;

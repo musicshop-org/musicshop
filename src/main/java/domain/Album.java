@@ -13,8 +13,7 @@ import java.util.List;
 @Getter
 public class Album extends Product {
 
-    private Album(){
-    }
+    private Album(){}
 
     private String label;
     private AlbumId albumId;

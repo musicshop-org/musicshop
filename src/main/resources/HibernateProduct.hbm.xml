@@ -35,7 +35,7 @@
             <component name="albumId" class="domain.valueobjects.AlbumId">
                 <property name="albumId" column="albumId" type="java.util.UUID"/>
             </component>
-            <list name="songs" table="album_songs" cascade="all">
+            <list name="songs" table="album_song" cascade="all">
                 <key column="album_id"/>
                 <index column="idx"></index>
                 <many-to-many class="domain.Song" column="song_id"/>
