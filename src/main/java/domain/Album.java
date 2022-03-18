@@ -1,21 +1,21 @@
 package domain;
 
+import domain.valueobjects.AlbumId;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 import java.util.List;
 
 @Getter
 public class Album extends Product {
 
     private final String label;
+    private final AlbumId albumId;
     private final List<Song> songs;
 
     @Builder
-    public Album(String label, List<Song> songs) {
+    public Album(AlbumId albumId, String label, List<Song> songs) {
         this.label = label;
+        this.albumId = albumId;
         this.songs = songs;
     }
 }

@@ -2,11 +2,11 @@ package domain;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 public class Artist {
 
+    private Long id;
     private final String name;
 
     @Builder

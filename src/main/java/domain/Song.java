@@ -10,6 +10,7 @@ import java.util.List;
 @Getter
 public class Song extends Product {
 
+    private Long id;
     private final String genre;
     private final List<Artist> artists;
 

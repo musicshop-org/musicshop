@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping default-access="field" default-cascade="all">
+
+    <class name="domain.Song" table="tbl_song" lazy="true">
+        <id name="id" type="long" column="id">
+            <column name="song_id" />
+            <generator class="native"/>
+        </id>
+
+        <property name="genre" column="genre" type="java.lang.String"/>
+
+        <list name="artists" table="artist_song" cascade="all">
+            <key column="song_id"/>
+            <index column="idx"></index>
+            <many-to-many class="domain.Artist" column="artist_id"/>
+        </list>
+    </class>
+</hibernate-mapping>
