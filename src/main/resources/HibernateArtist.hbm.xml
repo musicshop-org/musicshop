@@ -11,10 +11,5 @@
         </id>
 
         <property name="name" column="name" type="java.lang.String"/>
-        <list name="songs" table="artist_song" cascade="all">
-            <key column="artist_id"/>
-            <index column="idx"></index>
-            <many-to-many class="domain.Song" column="song_id"/>
-        </list>
     </class>
 </hibernate-mapping>

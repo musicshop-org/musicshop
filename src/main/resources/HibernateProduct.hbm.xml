@@ -28,11 +28,6 @@
                 <index column="idx"></index>
                 <many-to-many class="domain.Artist" column="artist_id"/>
             </list>
-            <list name="albums" table="album_songs" cascade="all">
-                <key column="song_id"/>
-                <index column="idx"></index>
-                <many-to-many class="domain.Album" column="album_id"/>
-            </list>
         </subclass>
 
         <subclass name="domain.Album" discriminator-value="album">

@@ -11,14 +11,15 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
 public class Album extends Product {
+
+    private Album(){
+    }
 
     private String label;
     private AlbumId albumId;
     private List<Song> songs;
 
-    @Builder
     public Album(String title, BigDecimal price, int stock, MediumType mediumType, LocalDate releaseDate, AlbumId albumId, String label, List<Song> songs) {
         this.label = label;
         this.albumId = albumId;
