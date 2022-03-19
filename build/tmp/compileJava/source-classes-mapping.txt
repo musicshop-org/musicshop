@@ -1,2 +1,16 @@
+domain/Product.java
+ domain.Product
+domain/Artist.java
+ domain.Artist
+domain/Song.java
+ domain.Song
+domain/Album.java
+ domain.Album
+domain/enums/MediumType.java
+ domain.enums.MediumType
 Main.java
  Main
+infrastructure/AlbumRepository.java
+ infrastructure.AlbumRepository
+infrastructure/AlbumRepositoryImpl.java
+ infrastructure.AlbumRepositoryImpl
