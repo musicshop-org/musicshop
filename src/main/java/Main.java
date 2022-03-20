@@ -1,11 +1,10 @@
-import infrastructure.AlbumRepositoryImpl;
+import infrastructure.ProductRepositoryImpl;
 
-import java.sql.SQLException;
+import java.rmi.RemoteException;
 
 public class Main {
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        AlbumRepositoryImpl albumRepository = new AlbumRepositoryImpl();
-        System.out.println(albumRepository.findAlbum("Beautiful"));
-
+    public static void main(String[] args) throws RemoteException {
+        ProductRepositoryImpl albumRepository = new ProductRepositoryImpl();
+        System.out.println(albumRepository.findAlbumsByTitle("Beautiful"));
     }
 }

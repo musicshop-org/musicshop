@@ -1,19 +1,17 @@
 package infrastructure;
 
-import domain.Album;
 import domain.Artist;
-import domain.Product;
-import domain.Song;
 
+import java.rmi.RemoteException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
 
-public class AlbumRepositoryImpl implements AlbumRepository {
+public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
-    public List<String> findAlbum(String musicName) throws SQLException, ClassNotFoundException {
+    public List<String> findAlbumsByTitle(String title) throws RemoteException {
         //List<Product> result = new ArrayList<>();
         List<String> result = new ArrayList<>();
         List<Integer> product_id = new ArrayList<>();
@@ -32,11 +30,11 @@ public class AlbumRepositoryImpl implements AlbumRepository {
             Connection con = DriverManager.getConnection(url, user, password);
             Statement st = con.createStatement();
 
-            String fetchquery = "select * from tbl_product where \"title\" like '" +musicName+ "'";
+            String fetchquery = "select * from tbl_product where \"title\" like '" + title + "'";
             ResultSet rs = st.executeQuery(fetchquery);
 
             while (rs.next()) {
-                if (rs.getString("title").toLowerCase().equals(musicName.toLowerCase())){
+                if (rs.getString("title").toLowerCase().equals(title.toLowerCase())){
                     //result = new Song.SongBuilder(rs.getString("genre"), new List<Artist>());
                     product_id.add(Integer.valueOf(rs.getString("product_id")));
                     System.out.println("song_id = " + Integer.valueOf(rs.getString("product_id")));
@@ -108,5 +106,16 @@ public class AlbumRepositoryImpl implements AlbumRepository {
             e.printStackTrace();
         }
     return result;
+    }
+
+    // TODO: implement methods
+    @Override
+    public List<String> findSongsByTitle(String title) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public List<String> findArtistsByName(String name) throws RemoteException {
+        return null;
     }
 }
