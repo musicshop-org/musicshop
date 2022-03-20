@@ -1,7 +1,11 @@
-public class Main {
-    public static void main(String[] args){
+import infrastructure.AlbumRepositoryImpl;
 
-        System.out.println("Hello World");
+import java.sql.SQLException;
+
+public class Main {
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+        AlbumRepositoryImpl albumRepository = new AlbumRepositoryImpl();
+        System.out.println(albumRepository.findAlbum("Beautiful"));
 
     }
 }
