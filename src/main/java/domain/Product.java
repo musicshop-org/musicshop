@@ -7,6 +7,7 @@ import java.time.LocalDate;
 
 public abstract class Product {
 
+    protected long id;
     protected String title;
     protected BigDecimal price;
     protected int stock;
