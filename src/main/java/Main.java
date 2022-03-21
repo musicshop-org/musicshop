@@ -40,13 +40,15 @@ public class Main {
         }
         Album album = new Album("Test Album", BigDecimal.valueOf(30.00),10, MediumType.CD, LocalDate.of(1992,03,13),new AlbumId(),"Test label",songs);
         session.persist(album);
+
+        album = new Album("Test Album 2", BigDecimal.valueOf(15.00),10, MediumType.CD, LocalDate.of(1992,03,13),new AlbumId(),"Test label 2",songs);
+        session.persist(album);
         session.getTransaction().commit();
+        */
+        List<Album> albums = session.createQuery("from Album",Album.class).list();
+        System.out.println(albums.get(0).toString());
 
-        List<Song> songs1 = session.createQuery("from Song",Song.class).list();
-        Song song1 = songs1.get(0);
-        System.out.println(song1);
 
-         */
         session.close();
     }
 }
