@@ -1,111 +1,57 @@
 package infrastructure;
 
+import domain.Album;
 import domain.Artist;
+import domain.Song;
+import domain.enums.MediumType;
+import domain.valueobjects.AlbumId;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
+
+import java.math.BigDecimal;
 import java.rmi.RemoteException;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
 import java.sql.*;
 
-public class ProductRepositoryImpl implements ProductRepository {
+public class ProductRepositoryImpl<result> implements ProductRepository {
 
     @Override
-    public List<String> findAlbumsByTitle(String title) throws RemoteException {
-        //List<Product> result = new ArrayList<>();
-        List<String> result = new ArrayList<>();
-        List<Integer> product_id = new ArrayList<>();
-        List<Integer> albums_id = new ArrayList<>();
-        List<Integer> album_songs_id = new ArrayList<>();
-        List<Integer> artist_songs_id = new ArrayList<>();
-        List<Artist> artists = new ArrayList<>();
+    public List<String> findAlbumsByTitle(String albumTitle) throws RemoteException {
+        SessionFactory sessionFactory = null;
+
+        Set<Song> songs = new HashSet<>();
 
         try {
-            Class.forName("org.postgresql.Driver");
-
-            String url = "jdbc:postgresql://10.0.40.162:5432/postgres";
-            String user = "postgres";
-            String password = "dbadmin!2020";
-
-            Connection con = DriverManager.getConnection(url, user, password);
-            Statement st = con.createStatement();
-
-            String fetchquery = "select * from tbl_product where \"title\" like '" + title + "'";
-            ResultSet rs = st.executeQuery(fetchquery);
-
-            while (rs.next()) {
-                if (rs.getString("title").toLowerCase().equals(title.toLowerCase())){
-                    //result = new Song.SongBuilder(rs.getString("genre"), new List<Artist>());
-                    product_id.add(Integer.valueOf(rs.getString("product_id")));
-                    System.out.println("song_id = " + Integer.valueOf(rs.getString("product_id")));
-                }
-            }
-
-            for (int i = 0; i < product_id.size(); i++) {
-                int song_id = product_id.get(i);
-                fetchquery = "select * from album_song  where \"song_id\" = '" +song_id+ "'";
-                rs = st.executeQuery(fetchquery);
-                while (rs.next()){
-                    if (Integer.valueOf(rs.getString("song_id")) == product_id.get(i)){
-                        albums_id.add(Integer.valueOf(rs.getString("album_id")));
-                        System.out.println("album_id = " + Integer.valueOf(rs.getString("album_id")));
-                    }
-                }
-            }
-
-            for (int i = 0; i < albums_id.size(); i++) {
-                int album_id = albums_id.get(i);
-                int count = 0;
-                fetchquery = "select * from album_song  where \"album_id\" = '" +album_id+ "'";
-                rs = st.executeQuery(fetchquery);
-                while (rs.next()){
-                    if (Integer.valueOf(rs.getString("album_id")) == albums_id.get(i)){
-                        album_songs_id.add(Integer.valueOf(rs.getString("song_id")));
-                        System.out.println("album: " + album_id + " song_id: " + album_songs_id.get(count));
-                        count++;
-                    }
-                }
-                count = 0;
-            }
-
-            for (int i = 0; i < album_songs_id.size(); i++) {
-                int album_song = album_songs_id.get(i);
-                int count = 0;
-                fetchquery = "select * from artist_song  where \"song_id\" = '" +album_song+ "'";
-                rs = st.executeQuery(fetchquery);
-                while (rs.next()){
-                    if (Integer.valueOf(rs.getString("song_id")) == album_song){
-                        artist_songs_id.add(Integer.valueOf(rs.getString("artist_id")));
-                        System.out.println("artist: " + artist_songs_id.get(count));
-                        count++;
-                    }
-                }
-                count = 0;
-            }
-
-            for (int i = 0; i < artist_songs_id.size(); i++) {
-                int artist_id = artist_songs_id.get(i);
-                int count = 0;
-                fetchquery = "select * from tbl_artist  where \"artist_id\" = '" +artist_id+ "'";
-                rs = st.executeQuery(fetchquery);
-                while (rs.next()){
-                    if (Integer.valueOf(rs.getString("artist_id")) == artist_id){
-                        artists.add(new Artist(rs.getString("name")));
-                        System.out.println(artists.get(0).toString());
-                    }
-                }
-            }
-
-            st.close();
-            con.close();
-
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-
-        } catch (SQLException e) {
+            sessionFactory = new Configuration().configure().buildSessionFactory();
+        } catch (Exception e) {
             e.printStackTrace();
         }
-    return result;
+
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        List<Artist> artists = new LinkedList<Artist>();
+        artists.add(new Artist("Jake"));
+
+
+        for (int i = 0; i < 5; i++) {
+            String title = "test title " + i;
+            songs.add(new Song(title, BigDecimal.valueOf(3.00), 99999, MediumType.DIGITAL, LocalDate.of(1990, 03, 13), "test genre", artists));
+        }
+        Album album = new Album("Test Album", BigDecimal.valueOf(30.00), 10, MediumType.CD, LocalDate.of(1992, 03, 13), new AlbumId(), "Test label", songs);
+        session.persist(album);
+        session.getTransaction().commit();
+
+        List<Song> songs1 = session.createQuery("from Song", Song.class).list();
+        Song song1 = songs1.get(0);
+        System.out.println(song1);
+
+        return null;
+
     }
 
     // TODO: implement methods
