@@ -10,32 +10,47 @@ import infrastructure.ProductRepositoryImpl;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ProductServiceImpl extends UnicastRemoteObject  implements ProductService {
 
     ProductRepository productRepository = new ProductRepositoryImpl();
 
-
     public ProductServiceImpl() throws RemoteException {
     }
 
     public List<AlbumDTO> findAlbumsByTitle(String title) throws RemoteException {
-        // return productRepository.findAlbumsByTitle(title);
+        List<AlbumDTO> albumDTOs = new LinkedList<>();
+        List<String> albumTitles = productRepository.findAlbumsByTitle(title);
 
-        return null;
+        for (String albumTitle : albumTitles) {
+            albumDTOs.add(new AlbumDTO(albumTitle, null, null, null, null, 0));
+        }
+
+        return albumDTOs;
     }
 
     public List<SongDTO> findSongsByTitle(String title) throws RemoteException {
-        // return productRepository.findSongsByTitle(title);
+        List<SongDTO> songDTOs = new LinkedList<>();
+        List<String> songTitles = productRepository.findSongsByTitle(title);
 
-        return null;
+        for (String songTitle : songTitles) {
+            songDTOs.add(new SongDTO(songTitle, null, null, 0, null, null, 0));
+        }
+
+        return songDTOs;
     }
 
     public List<ArtistDTO> findArtistsByName(String name) throws RemoteException {
-        // return productRepository.findArtistsByName(name);
+        List<ArtistDTO> artistDTOs = new LinkedList<>();
+        List<String> artistNames = productRepository.findArtistsByName(name);
 
-        return null;
+        for (String artistName : artistNames) {
+            artistDTOs.add(new ArtistDTO(artistName));
+        }
+
+        return artistDTOs;
     }
 
 }
