@@ -6,12 +6,19 @@
 <hibernate-mapping default-access="field" default-cascade="all">
 
     <class name="domain.LineItem" table="tbl_lineItem" lazy="true">
-        <id name="id" type="long" column="lineItem_id">
+        <id name="id" type="long" column="id">
             <generator class="native"/>
         </id>
 
+        <property name="mediumType" column="mediumType">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">domain.enums.MediumType</param>
+                <param name="type">12</param>
+            </type>
+        </property>
+
         <property name="name" column="name" type="java.lang.String"/>
-        <property name="quantity" column="stock" type="java.lang.Integer"/>
+        <property name="quantity" column="quantity" type="java.lang.Integer"/>
         <property name="price" column="price" type="java.math.BigDecimal"/>
     </class>
 </hibernate-mapping>

@@ -6,22 +6,22 @@
 <hibernate-mapping default-access="field" default-cascade="all">
 
     <class name="domain.Employee" table="tbl_employee" lazy="true">
-        <id name="id" type="long" column="employee_id">
+        <id name="id" type="long" column="id">
             <generator class="native"/>
         </id>
 
         <component name="employeeId" class="domain.valueobjects.EmployeeId">
-            <property name="employeeId" column="employeeId" type="java.util.UUID"/>
+            <property name="employeeId" column="employee_id" type="java.util.UUID"/>
         </component>
 
         <property name="name" column="name" type="java.lang.String"/>
         <property name="username" column="username" type="java.lang.String"/>
 
         <component name="shoppingCart" class="domain.ShoppingCart">
-            <list name="lineItems" cascade="all">
-                <key column="id"/>
+            <list name="lineItems" table="employee_lineItem" cascade="all">
+                <key column="employee_id"/>
                 <list-index column="idx"/>
-                <many-to-many class="domain.LineItem"/>
+                <many-to-many class="domain.LineItem" column="lineItem_id"/>
             </list>
         </component>
     </class>
