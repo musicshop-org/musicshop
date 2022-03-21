@@ -5,6 +5,7 @@ import java.util.List;
 
 public class ShoppingCart {
 
+    private long id;
     private List<LineItem> lineItems;
 
     public ShoppingCart(){this.lineItems = new LinkedList<>();};

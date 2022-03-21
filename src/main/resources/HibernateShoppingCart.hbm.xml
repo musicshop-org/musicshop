@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping default-access="field" default-cascade="all">
+
+    <class name="domain.ShoppingCart" table="tbl_shoppingCart" lazy="true">
+        <id name="id" type="long" column="shoppingCart_id">
+            <generator class="native"/>
+        </id>
+
+        <list name="lineItems" cascade="all">
+            <key column="shoppingCart_id"/>
+            <list-index column="idx"/>
+            <many-to-many class="domain.LineItem"/>
+        </list>
+    </class>
+</hibernate-mapping>
