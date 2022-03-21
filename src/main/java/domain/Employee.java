@@ -8,6 +8,7 @@ public class Employee {
 
     private Employee(){};
 
+    private long id;
     private EmployeeId employeeId;
     private String name;
     private String username;

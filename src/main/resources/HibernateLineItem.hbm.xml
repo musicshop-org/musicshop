@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping default-access="field" default-cascade="all">
+
+    <class name="domain.LineItem" table="tbl_lineItem" lazy="true">
+        <id name="id" type="long" column="lineItem_id">
+            <generator class="native"/>
+        </id>
+
+        <property name="name" column="name" type="java.lang.String"/>
+        <property name="quantity" column="stock" type="java.lang.Integer"/>
+        <property name="price" column="price" type="java.math.BigDecimal"/>
+    </class>
+</hibernate-mapping>

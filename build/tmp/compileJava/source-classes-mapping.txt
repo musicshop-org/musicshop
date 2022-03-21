@@ -1,7 +1,11 @@
+domain/Employee.java
+ domain.Employee
 domain/Product.java
  domain.Product
-Main.java
- Main
+domain/valueobjects/EmployeeId.java
+ domain.valueobjects.EmployeeId
+domain/Artist.java
+ domain.Artist
 domain/Album.java
  domain.Album
 domain/enums/MediumType.java
@@ -10,5 +14,9 @@ domain/valueobjects/AlbumId.java
  domain.valueobjects.AlbumId
 domain/Song.java
  domain.Song
-domain/Artist.java
- domain.Artist
+domain/ShoppingCart.java
+ domain.ShoppingCart
+domain/LineItem.java
+ domain.LineItem
+Main.java
+ Main
