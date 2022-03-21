@@ -28,6 +28,10 @@
                 <index column="idx"></index>
                 <many-to-many class="domain.Artist" column="artist_id"/>
             </list>
+            <set name="inAlbum" table="album_song" inverse="true">
+                <key column="song_id"/>
+                <many-to-many class="domain.Album" column="album_id"/>
+            </set>
         </subclass>
 
         <subclass name="domain.Album" discriminator-value="album">
@@ -35,11 +39,10 @@
             <component name="albumId" class="domain.valueobjects.AlbumId">
                 <property name="albumId" column="albumId" type="java.util.UUID"/>
             </component>
-            <list name="songs" table="album_song" cascade="all">
+            <set name="songs" table="album_song" cascade="all">
                 <key column="album_id"/>
-                <index column="idx"></index>
                 <many-to-many class="domain.Song" column="song_id"/>
-            </list>
+            </set>
         </subclass>
 
     </class>

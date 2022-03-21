@@ -12,9 +12,7 @@ import org.hibernate.cfg.Configuration;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class Main {
     private static SessionFactory sessionFactory;
@@ -29,24 +27,26 @@ public class Main {
 
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        /*
+    /*
         List<Artist> artists = new LinkedList<Artist>();
         artists.add(new Artist("Jake"));
 
-        List<Song> songs = new LinkedList<Song>();
+        Set<Song> songs = new HashSet<Song>();
         for (int i = 0; i < 5; i++) {
             String title = "test title " + i;
             songs.add(new Song(title, BigDecimal.valueOf(3.00),99999, MediumType.DIGITAL, LocalDate.of(1990,03,13),"test genre", artists));
         }
         Album album = new Album("Test Album", BigDecimal.valueOf(30.00),10, MediumType.CD, LocalDate.of(1992,03,13),new AlbumId(),"Test label",songs);
         session.persist(album);
+
+        album = new Album("Test Album 2", BigDecimal.valueOf(15.00),10, MediumType.CD, LocalDate.of(1992,03,13),new AlbumId(),"Test label 2",songs);
+        session.persist(album);
         session.getTransaction().commit();
+*/
+        List<Album> albums = session.createQuery("from Album",Album.class).list();
+        System.out.println(albums.get(0).toString());
 
-        List<Song> songs1 = session.createQuery("from Song",Song.class).list();
-        Song song1 = songs1.get(0);
-        System.out.println(song1);
 
-         */
         session.close();
     }
 }
