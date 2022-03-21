@@ -1,0 +1,14 @@
+domain/Product.java
+ domain.Product
+Main.java
+ Main
+domain/Album.java
+ domain.Album
+domain/enums/MediumType.java
+ domain.enums.MediumType
+domain/valueobjects/AlbumId.java
+ domain.valueobjects.AlbumId
+domain/Song.java
+ domain.Song
+domain/Artist.java
+ domain.Artist

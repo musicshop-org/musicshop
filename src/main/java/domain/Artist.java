@@ -4,20 +4,18 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 public class Artist {
 
-    private final String name;
+    private Artist(){}
 
-    @Builder
+    private long id;
+    private String name;
+
     public Artist(String name) {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return "Artist{" +
-                "name='" + name + '\'' +
-                '}';
-    }
 }
