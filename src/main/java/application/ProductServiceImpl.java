@@ -20,6 +20,7 @@ public class ProductServiceImpl extends UnicastRemoteObject  implements ProductS
     public ProductServiceImpl() throws RemoteException {
     }
 
+    @Override
     public List<AlbumDTO> findAlbumsByTitle(String title) throws RemoteException {
         List<AlbumDTO> albumDTOs = new LinkedList<>();
         List<String> albumTitles = productRepository.findAlbumsByTitle(title);
@@ -31,6 +32,7 @@ public class ProductServiceImpl extends UnicastRemoteObject  implements ProductS
         return albumDTOs;
     }
 
+    @Override
     public List<SongDTO> findSongsByTitle(String title) throws RemoteException {
         List<SongDTO> songDTOs = new LinkedList<>();
         List<String> songTitles = productRepository.findSongsByTitle(title);
@@ -42,6 +44,7 @@ public class ProductServiceImpl extends UnicastRemoteObject  implements ProductS
         return songDTOs;
     }
 
+    @Override
     public List<ArtistDTO> findArtistsByName(String name) throws RemoteException {
         List<ArtistDTO> artistDTOs = new LinkedList<>();
         List<String> artistNames = productRepository.findArtistsByName(name);
