@@ -7,7 +7,7 @@ import java.util.UUID;
 @Getter
 public class AlbumId {
 
-    private UUID albumId;
+    private final UUID albumId;
 
     public AlbumId() {
         this.albumId = UUID.randomUUID();
