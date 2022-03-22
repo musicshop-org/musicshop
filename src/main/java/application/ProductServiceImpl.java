@@ -1,12 +1,12 @@
 package application;
 
-import domain.Album;
-import domain.Song;
-import jakarta.persistence.SecondaryTable;
 import sharedrmi.application.api.ProductService;
 import sharedrmi.application.dto.AlbumDTO;
 import sharedrmi.application.dto.ArtistDTO;
 import sharedrmi.application.dto.SongDTO;
+
+import domain.Album;
+import domain.Song;
 
 import infrastructure.ProductRepository;
 import infrastructure.ProductRepositoryImpl;
@@ -29,9 +29,11 @@ public class ProductServiceImpl extends UnicastRemoteObject  implements ProductS
         List<AlbumDTO> albumDTOs = new LinkedList<>();
         Set<Album> albumTitles = productRepository.findAlbumsByTitle(title);
 
+        /*
         for (Album albumTitle : albumTitles) {
             albumDTOs.add(new AlbumDTO(albumTitle.getTitle(), null, null, null, null, 0));
         }
+         */
 
         return albumDTOs;
     }
