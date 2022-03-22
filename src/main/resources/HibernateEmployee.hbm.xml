@@ -16,6 +16,5 @@
 
         <property name="name" column="name" type="java.lang.String"/>
         <property name="username" column="username" type="java.lang.String"/>
-
     </class>
 </hibernate-mapping>

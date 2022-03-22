@@ -1,5 +1,5 @@
-domain/ShoppingCart.java
- domain.ShoppingCart
+domain/LineItem.java
+ domain.LineItem
 domain/Product.java
  domain.Product
 domain/valueobjects/EmployeeId.java
@@ -14,9 +14,9 @@ domain/valueobjects/AlbumId.java
  domain.valueobjects.AlbumId
 domain/Song.java
  domain.Song
-domain/Employee.java
- domain.Employee
 Main.java
  Main
-domain/LineItem.java
- domain.LineItem
+domain/Employee.java
+ domain.Employee
+domain/ShoppingCart.java
+ domain.ShoppingCart
