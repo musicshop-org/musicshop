@@ -1,0 +1,20 @@
+infrastructure/ProductRepository.java
+ infrastructure.ProductRepository
+domain/Product.java
+ domain.Product
+Main.java
+ Main
+application/ProductServiceImpl.java
+ application.ProductServiceImpl
+domain/Album.java
+ domain.Album
+domain/enums/MediumType.java
+ domain.enums.MediumType
+domain/valueobjects/AlbumId.java
+ domain.valueobjects.AlbumId
+domain/Song.java
+ domain.Song
+infrastructure/ProductRepositoryImpl.java
+ infrastructure.ProductRepositoryImpl
+domain/Artist.java
+ domain.Artist

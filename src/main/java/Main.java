@@ -1,37 +1,29 @@
+import application.ProductServiceImpl;
 import domain.Album;
-import domain.Artist;
-import domain.Song;
-import domain.enums.MediumType;
-import domain.valueobjects.AlbumId;
 import infrastructure.ProductRepositoryImpl;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
-import java.math.BigDecimal;
+import java.rmi.Naming;
 import java.rmi.RemoteException;
-import java.time.LocalDate;
-import java.util.*;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 public class Main {
     private static SessionFactory sessionFactory;
     public static void main(String[] args) throws RemoteException {
 
-        ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
-        productRepository.findAlbumsByTitle("Beautiful");
-
-        System.out.println("Hello World");
         try {
-            sessionFactory = new Configuration().configure().buildSessionFactory();
-        }catch (Exception e){
+            ProductServiceImpl productService = new ProductServiceImpl();
+
+            LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
+            Naming.rebind("rmi://localhost/ProductService", productService);
+
+        } catch (Exception e){
             e.printStackTrace();
         }
 
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
     /*
         List<Artist> artists = new LinkedList<Artist>();
         artists.add(new Artist("Jake"));
@@ -48,10 +40,5 @@ public class Main {
         session.persist(album);
         session.getTransaction().commit();
 */
-        List<Album> albums = session.createQuery("from Album",Album.class).list();
-        System.out.println(albums.get(0).toString());
-
-
-        session.close();
     }
 }
