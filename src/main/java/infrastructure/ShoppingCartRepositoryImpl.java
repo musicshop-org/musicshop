@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class ShoppingCartRepositoryImpl implements ShoppingCartRepository{
-    private static List<ShoppingCart> shoppingCarts = new LinkedList<ShoppingCart>();
+    private static List<ShoppingCart> shoppingCarts = new LinkedList<>();
 
     @Override
     public Optional<ShoppingCart> findShoppingCartByEmployee(Employee employee) {
