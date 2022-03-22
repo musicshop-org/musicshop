@@ -2,6 +2,7 @@ import domain.*;
 import domain.enums.MediumType;
 import domain.valueobjects.AlbumId;
 import domain.valueobjects.EmployeeId;
+import infrastructure.ShoppingCartRepositoryImpl;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
@@ -17,7 +18,6 @@ public class Main {
     private static SessionFactory sessionFactory;
 
     public static void main(String[] args){
-
         try {
             sessionFactory = new Configuration().configure().buildSessionFactory();
         }catch (Exception e){
@@ -38,26 +38,17 @@ public class Main {
         lineItems2.add(new LineItem(MediumType.CD,"Thriller", 35, BigDecimal.valueOf(54)));
         lineItems2.add(new LineItem(MediumType.VINYL, "Thriller", 50, BigDecimal.valueOf(51)));
 
-        Employee emp = new Employee(new EmployeeId(), "John", "j2022", new ShoppingCart(lineItems));
-        Employee emp2 = new Employee(new EmployeeId(), "Karl", "k2022", new ShoppingCart(lineItems2));
+        Employee emp = new Employee(new EmployeeId(), "John", "j2022");
+        Employee emp2 = new Employee(new EmployeeId(), "Karl", "k2022");
 
-//        Set<Song> songs = new HashSet<Song>();
-//        for (int i = 0; i < 5; i++) {
-//            String title = "test title " + i;
-//            songs.add(new Song(title, BigDecimal.valueOf(3.00),99999, MediumType.DIGITAL, LocalDate.of(1990,03,13),"test genre", artists));
-//        }
-//        Album album = new Album("Test Album", BigDecimal.valueOf(30.00),10, MediumType.CD, LocalDate.of(1992,03,13),new AlbumId(),"Test label",songs);
-//        session.persist(album);
-//
-//        album = new Album("Test Album 2", BigDecimal.valueOf(15.00),10, MediumType.CD, LocalDate.of(1992,03,13),new AlbumId(),"Test label 2",songs);
         session.persist(emp);
         session.persist(emp2);
         session.getTransaction().commit();
-
-//        List<Album> albums = session.createQuery("from Album",Album.class).list();
-//        System.out.println(albums.get(0).toString());
-
-
         session.close();
+
+        ShoppingCartRepositoryImpl cartRepo = new ShoppingCartRepositoryImpl();
+        cartRepo.createShoppingCartForEmployee(emp);
+        cartRepo.findShoppingCartByEmployee(emp).get().addLineItem(lineItems.get(0));
+
     }
 }
