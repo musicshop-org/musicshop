@@ -1,8 +1,8 @@
 package domain;
 
-import sharedrmi.application.dto.enums.MediumType;
 
 import lombok.Getter;
+import sharedrmi.domain.enums.MediumType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

@@ -15,7 +15,7 @@
         <property name="stock" column="stock" type="java.lang.Integer"/>
         <property name="mediumType" column="mediumType">
             <type name="org.hibernate.type.EnumType">
-                <param name="enumClass">domain.enums.MediumType</param>
+                <param name="enumClass">sharedrmi.domain.enums.MediumType</param>
                 <param name="type">12</param>
             </type>
         </property>
@@ -36,7 +36,7 @@
 
         <subclass name="domain.Album" discriminator-value="album">
             <property name="label" column="label" type="java.lang.String"/>
-            <component name="albumId" class="domain.valueobjects.AlbumId">
+            <component name="albumId" class="sharedrmi.domain.valueobjects.AlbumId">
                 <property name="albumId" column="albumId" type="java.util.UUID"/>
             </component>
             <set name="songs" table="album_song" cascade="all">
