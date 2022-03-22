@@ -5,8 +5,9 @@ import domain.LineItem;
 import domain.ShoppingCart;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public interface ShoppingCartRepository {
-    Optional<ShoppingCart> findShoppingCartByEmployee (Employee employee);
-    void createShoppingCartForEmployee(Employee employee);
+    Optional<ShoppingCart> findShoppingCartByOwnerId (UUID ownerId);
+    void createShoppingCart(UUID ownerId);
 }

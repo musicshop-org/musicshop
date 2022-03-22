@@ -8,14 +8,15 @@ import domain.valueobjects.EmployeeId;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public class ShoppingCartRepositoryImpl implements ShoppingCartRepository{
     private static List<ShoppingCart> shoppingCarts = new LinkedList<>();
 
     @Override
-    public Optional<ShoppingCart> findShoppingCartByEmployee(Employee employee) {
+    public Optional<ShoppingCart> findShoppingCartByOwnerId (UUID ownerId) {
         for (ShoppingCart cart: shoppingCarts) {
-            if (cart.getEmployee().getEmployeeId().getEmployeeId().equals(employee.getEmployeeId().getEmployeeId())){
+            if (cart.getOwnerId().equals(ownerId)) {
                 return Optional.of(cart);
             }
         }
@@ -23,8 +24,8 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository{
     }
 
     @Override
-    public void createShoppingCartForEmployee(Employee employee) {
-        shoppingCarts.add(new ShoppingCart(employee));
+    public void createShoppingCart(UUID ownerId) {
+        shoppingCarts.add(new ShoppingCart(ownerId));
     }
 
 }

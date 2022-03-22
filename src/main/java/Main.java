@@ -47,8 +47,8 @@ public class Main {
         session.close();
 
         ShoppingCartRepositoryImpl cartRepo = new ShoppingCartRepositoryImpl();
-        cartRepo.createShoppingCartForEmployee(emp);
-        cartRepo.findShoppingCartByEmployee(emp).get().addLineItem(lineItems.get(0));
+        cartRepo.createShoppingCart(emp.getEmployeeId().getEmployeeId());
+        cartRepo.findShoppingCartByOwnerId(emp.getEmployeeId().getEmployeeId()).get().addLineItem(lineItems.get(0));
 
     }
 }

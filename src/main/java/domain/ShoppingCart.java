@@ -11,7 +11,6 @@ public class ShoppingCart {
 
     private final UUID ownerId;
     private List<LineItem> lineItems;
-    private Employee employee;
 
 
     public ShoppingCart(UUID ownerId){
@@ -22,7 +21,6 @@ public class ShoppingCart {
     public ShoppingCart(UUID ownerId, List<LineItem> lineItems) {
         this.ownerId = ownerId;
         this.lineItems = lineItems;
-        this.employee = employee;
     }
 
     public void addLineItem(LineItem item){
