@@ -3,6 +3,7 @@ import domain.Artist;
 import domain.Song;
 import domain.enums.MediumType;
 import domain.valueobjects.AlbumId;
+import infrastructure.ProductRepositoryImpl;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
@@ -11,12 +12,16 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
 import java.math.BigDecimal;
+import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.util.*;
 
 public class Main {
     private static SessionFactory sessionFactory;
-    public static void main(String[] args){
+    public static void main(String[] args) throws RemoteException {
+
+        ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
+        productRepository.findAlbumsByTitle("Beautiful");
 
         System.out.println("Hello World");
         try {

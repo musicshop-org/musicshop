@@ -29,4 +29,19 @@ public class Song extends Product {
         this.mediumType = mediumType;
         this.releaseDate = releaseDate;
     }
+
+    @Override
+    public String toString() {
+        return "Song{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", price=" + price +
+                ", stock=" + stock +
+                ", mediumType=" + mediumType +
+                ", releaseDate=" + releaseDate +
+                ", genre='" + genre + '\'' +
+                ", artists=" + artists +
+                ", inAlbum=" + inAlbum +
+                '}';
+    }
 }

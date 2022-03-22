@@ -1,14 +1,18 @@
 package infrastructure;
 
+import domain.Album;
+import domain.Song;
+
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 
 public interface ProductRepository {
 
-    List<String> findAlbumsByTitle(String title) throws RemoteException;
+    Set<Album> findAlbumsByTitle(String title) throws RemoteException;
 
-    List<String> findSongsByTitle(String title) throws RemoteException;
+    List<Song> findSongsByTitle(String title) throws RemoteException;
 
     List<String> findArtistsByName(String name) throws RemoteException;
 

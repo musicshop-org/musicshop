@@ -17,6 +17,7 @@ dependencies {
     implementation 'org.postgresql:postgresql:42.3.3'
     implementation fileTree(dir: 'lib', include: ['*.jar'])
     compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
 }
 
 test {

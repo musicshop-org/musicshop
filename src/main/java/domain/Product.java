@@ -1,10 +1,12 @@
 package domain;
 
 import domain.enums.MediumType;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@Getter
 public abstract class Product {
 
     protected long id;
