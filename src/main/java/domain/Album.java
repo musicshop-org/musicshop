@@ -13,11 +13,13 @@ import java.util.Set;
 @Getter
 public class Album extends Product {
 
-    private Album(){}
-
     private String label;
     private AlbumId albumId;
-    private Set<Song> songs= new HashSet<Song>();
+    private Set<Song> songs = new HashSet<>();
+
+    public Album() {
+
+    }
 
     public Album(String title, BigDecimal price, int stock, MediumType mediumType, LocalDate releaseDate, AlbumId albumId, String label, Set<Song> songs) {
         this.label = label;
