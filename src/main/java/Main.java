@@ -18,13 +18,13 @@ public class Main {
 
     public static void main(String[] args){
 
-        try {
-            sessionFactory = new Configuration().configure().buildSessionFactory();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        Session session = sessionFactory.openSession();
+//        try {
+//            sessionFactory = new Configuration().configure().buildSessionFactory();
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//
+//        Session session = sessionFactory.openSession();
 //        session.beginTransaction();
 //
 //        List<LineItem> lineItems = new LinkedList<>();

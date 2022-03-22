@@ -6,15 +6,12 @@
 <hibernate-configuration>
     <session-factory>
         <property name="connection.driver_class">org.postgresql.Driver</property>
-<!--        <property name="connection.url">jdbc:postgresql://10.0.40.162:5432/postgres</property>-->
-<!--        <property name="connection.username">postgres</property>-->
-<!--        <property name="connection.password">dbadmin!2020</property>-->
-        <property name="connection.url">jdbc:postgresql://localhost/postgres</property>
+        <property name="connection.url">jdbc:postgresql://10.0.40.162:5432/postgres</property>
         <property name="connection.username">postgres</property>
-        <property name="connection.password">admin</property>
+        <property name="connection.password">dbadmin!2020</property>
         <property name="show_sql">true</property>
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
-        <property name="hbm2ddl.auto">create</property>
+        <property name="hbm2ddl.auto">update</property>
         <mapping resource="HibernateArtist.hbm.xml"/>
         <mapping resource="HibernateProduct.hbm.xml"/>
         <mapping resource="HibernateEmployee.hbm.xml"/>
