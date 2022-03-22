@@ -13,11 +13,13 @@ import java.util.Set;
 @Getter
 public class Song extends Product {
 
-    private Song(){}
-
     private String genre;
     private List<Artist> artists;
-    private Set<Album> inAlbum = new HashSet<Album>();
+    private Set<Album> inAlbum = new HashSet<>();
+
+    public Song() {
+
+    }
 
     public Song(String title, BigDecimal price, int stock, MediumType mediumType, LocalDate releaseDate, String genre, List<Artist> artists) {
         this.genre = genre;
