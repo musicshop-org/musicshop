@@ -12,19 +12,10 @@ public class Employee {
     private EmployeeId employeeId;
     private String name;
     private String username;
-    private ShoppingCart shoppingCart;
 
     public Employee(EmployeeId employeeId, String name, String username) {
         this.employeeId = employeeId;
         this.name = name;
         this.username = username;
-        this.shoppingCart = new ShoppingCart();
-    }
-
-    public Employee(EmployeeId employeeId, String name, String username, ShoppingCart shoppingCart) {
-        this.employeeId = employeeId;
-        this.name = name;
-        this.username = username;
-        this.shoppingCart = shoppingCart;
     }
 }
