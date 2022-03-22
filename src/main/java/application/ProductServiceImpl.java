@@ -13,6 +13,7 @@ import infrastructure.ProductRepositoryImpl;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -27,39 +28,52 @@ public class ProductServiceImpl extends UnicastRemoteObject  implements ProductS
     @Override
     public List<AlbumDTO> findAlbumsByTitle(String title) throws RemoteException {
         List<AlbumDTO> albumDTOs = new LinkedList<>();
-        Set<Album> albumTitles = productRepository.findAlbumsByTitle(title);
 
-        /*
-        for (Album albumTitle : albumTitles) {
-            albumDTOs.add(new AlbumDTO(albumTitle.getTitle(), null, null, null, null, 0));
+        Set<Album> albums = productRepository.findAlbumsByTitle(title);
+
+        for (Album album : albums) {
+            Set<SongDTO> songDTOs = new HashSet<>();
+
+            for (Song song : album.getSongs()) {
+                songDTOs.add(new SongDTO(
+                        song.getTitle(),
+                        song.getPrice(),
+                        song.getStock(),
+                        song.getMediumType(),
+                        song.getReleaseDate(),
+                        song.getGenre(),
+                        null,
+                        null
+                ));
+            }
+
+            albumDTOs.add(new AlbumDTO(
+                    album.getTitle(),
+                    album.getPrice(),
+                    album.getStock(),
+                    album.getMediumType(),
+                    album.getReleaseDate(),
+                    album.getAlbumId(),
+                    album.getLabel(),
+                    songDTOs
+            ));
         }
-         */
 
         return albumDTOs;
     }
 
     @Override
     public List<SongDTO> findSongsByTitle(String title) throws RemoteException {
-        List<SongDTO> songDTOs = new LinkedList<>();
-        List<Song> songTitles = productRepository.findSongsByTitle(title);
+        // todo: implement method
 
-        for (Song songTitle : songTitles) {
-            songDTOs.add(new SongDTO(songTitle.getTitle(), null, null, 0, null, null, 0));
-        }
-
-        return songDTOs;
+        return null;
     }
 
     @Override
     public List<ArtistDTO> findArtistsByName(String name) throws RemoteException {
-        List<ArtistDTO> artistDTOs = new LinkedList<>();
-        List<String> artistNames = productRepository.findArtistsByName(name);
+        // todo: implement method
 
-        for (String artistName : artistNames) {
-            artistDTOs.add(new ArtistDTO(artistName));
-        }
-
-        return artistDTOs;
+        return null;
     }
 
 }
