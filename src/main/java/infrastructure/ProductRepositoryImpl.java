@@ -14,7 +14,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     private SessionFactory sessionFactory;
 
     @Override
-    public Set<Album> findAlbumsByTitle(String albumTitle) throws RemoteException {
+    public Set<Album> findAlbumsByTitle(String title) throws RemoteException {
 
         try {
             sessionFactory = new Configuration().configure().buildSessionFactory();
@@ -25,10 +25,10 @@ public class ProductRepositoryImpl implements ProductRepository {
         Set<Album> albums = new HashSet<>();
         Session session = sessionFactory.openSession();
 
-        List<Song> songResults = session.createQuery("from Song where title = :albumTitle", Song.class).setParameter("albumTitle", albumTitle).list();
+        List<Song> songResults = session.createQuery("from Song where title = :title", Song.class).setParameter("title", title).list();
 
-        for (int i = 0; i < songResults.size(); i++) {
-            for (Album album : songResults.get(i).getInAlbum()) {
+        for (Song songResult : songResults) {
+            for (Album album : songResult.getInAlbum()) {
                 albums.add(album);
             }
         }
@@ -46,7 +46,7 @@ public class ProductRepositoryImpl implements ProductRepository {
         }
 
         Session session = sessionFactory.openSession();
-        List<Song> songResults = session.createQuery("from Song where title = 'Beautiful'", Song.class).list();
+        List<Song> songResults = session.createQuery("from Song where title = :title", Song.class).setParameter("title", title).list();
 
         return songResults;
     }
