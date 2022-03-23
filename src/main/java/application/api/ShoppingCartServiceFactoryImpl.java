@@ -1,6 +1,7 @@
 package application.api;
 
-import java.rmi.Remote;
+import sharedrmi.application.api.ShoppingCartService;
+import sharedrmi.application.api.ShoppingCartServiceFactory;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.UUID;

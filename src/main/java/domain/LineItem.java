@@ -22,4 +22,17 @@ public class LineItem {
         this.quantity = quantity;
         this.price = price;
     }
+
+    public void changeQuantity(int newQuantity){
+        this.quantity = newQuantity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LineItem lineItem = (LineItem) o;
+        return quantity == lineItem.quantity && mediumType == lineItem.mediumType && name.equals(lineItem.name) && price.equals(lineItem.price);
+    }
+
 }

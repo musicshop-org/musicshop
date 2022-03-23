@@ -23,7 +23,13 @@ public class ShoppingCart {
         this.lineItems = lineItems;
     }
 
-    public void addLineItem(LineItem item){
-        this.lineItems.add(item);
+    public void addLineItem(LineItem newItem){
+        for (LineItem item: lineItems) {
+            if (item.equals(newItem)){
+                item.changeQuantity(item.getQuantity()+ newItem.getQuantity());
+                return;
+            }
+        }
+        this.lineItems.add(newItem);
     }
 }
