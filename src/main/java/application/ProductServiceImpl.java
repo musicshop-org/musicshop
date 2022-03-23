@@ -26,7 +26,7 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
     }
 
     @Override
-    public List<AlbumDTO> findAlbumsByTitle(String title) throws RemoteException {
+    public List<AlbumDTO> findAlbumsBySongTitle(String title) throws RemoteException {
         List<AlbumDTO> albumDTOs = new LinkedList<>();
 
         Set<Album> albums = productRepository.findAlbumsBySongTitle(title);
