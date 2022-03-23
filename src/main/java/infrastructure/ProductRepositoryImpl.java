@@ -14,7 +14,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     private SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 
     @Override
-    public Set<Album> findAlbumsByTitle(String title) throws RemoteException {
+    public Set<Album> findAlbumsBySongTitle(String title) throws RemoteException {
 
 
 

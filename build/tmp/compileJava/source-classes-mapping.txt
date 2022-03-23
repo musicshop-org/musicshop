@@ -1,11 +1,9 @@
 infrastructure/ProductRepository.java
  infrastructure.ProductRepository
-domain/Artist.java
- domain.Artist
-Main.java
- Main
 domain/Product.java
  domain.Product
+Main.java
+ Main
 application/ProductServiceImpl.java
  application.ProductServiceImpl
 domain/Album.java
@@ -14,3 +12,5 @@ domain/Song.java
  domain.Song
 infrastructure/ProductRepositoryImpl.java
  infrastructure.ProductRepositoryImpl
+domain/Artist.java
+ domain.Artist

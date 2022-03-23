@@ -10,7 +10,7 @@ import java.util.Set;
 
 public interface ProductRepository {
 
-    Set<Album> findAlbumsByTitle(String title) throws RemoteException;
+    Set<Album> findAlbumsBySongTitle(String title) throws RemoteException;
 
     List<Song> findSongsByTitle(String title) throws RemoteException;
 

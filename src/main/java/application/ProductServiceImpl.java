@@ -29,7 +29,7 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
     public List<AlbumDTO> findAlbumsByTitle(String title) throws RemoteException {
         List<AlbumDTO> albumDTOs = new LinkedList<>();
 
-        Set<Album> albums = productRepository.findAlbumsByTitle(title);
+        Set<Album> albums = productRepository.findAlbumsBySongTitle(title);
 
         for (Album album : albums) {
             Set<SongDTO> songDTOs = new HashSet<>();
