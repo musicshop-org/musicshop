@@ -28,7 +28,7 @@ public class TestProductRepositoryImpl {
         for (Album album : albums) {
             for (Song song : album.getSongs())
             {
-                if (song.getTitle().equals(songName))
+                if (song.getTitle().equalsIgnoreCase(songName))
                     foundSongs++;
             }
         }
@@ -48,5 +48,61 @@ public class TestProductRepositoryImpl {
 
         // then
         assertEquals(albums.size(), 0);
+    }
+
+    @Test
+    void given_existingsongwithrandomcase_when_findalbumsbysongtitle_then_expectsong() throws RemoteException {
+
+        // given
+        ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
+        String songName = "bEaUtiFul";
+
+        // when
+        Set <Album> albums = productRepository.findAlbumsBySongTitle(songName);
+
+        // then
+        assertEquals(albums.size(), 1);
+    }
+
+    @Test
+    void given_existingsong_when_findSongsByTitle_then_expectemptylist() throws RemoteException {
+
+        // given
+        ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
+        String songName = "Beautiful";
+
+        // when
+        List<Song> songs = productRepository.findSongsByTitle(songName);
+
+        // then
+        assertEquals(songs.size(), 1);
+    }
+
+    @Test
+    void given_notexistingsong_when_findSongsByTitle_then_expectemptylist() throws RemoteException {
+
+        // given
+        ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
+        String songName = "notExistingSongName";
+
+        // when
+        List<Song> songs = productRepository.findSongsByTitle(songName);
+
+        // then
+        assertEquals(songs.size(), 0);
+    }
+
+    @Test
+    void given_existingsongwithrandomcase_when_findSongsByTitle_then_expectsong() throws RemoteException {
+
+        // given
+        ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
+        String songName = "beaUtiFul";
+
+        // when
+        List<Song> songs = productRepository.findSongsByTitle(songName);
+
+        // then
+        assertEquals(songs.size(), 1);
     }
 }
