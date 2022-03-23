@@ -1,6 +1,7 @@
 package infrastructure;
 
 import domain.Album;
+import domain.Artist;
 import domain.Song;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -18,7 +19,6 @@ public class ProductRepositoryImpl implements ProductRepository {
 
         Set<Album> albums = new HashSet<>();
         Session session = sessionFactory.openSession();
-
         List<Song> songResults = session.createQuery("from Song where lower(title) = lower(:title)", Song.class).setParameter("title", title).list();
 
         for (Song songResult : songResults) {
@@ -27,7 +27,6 @@ public class ProductRepositoryImpl implements ProductRepository {
             }
         }
 
-        session.close();
         return albums;
     }
 
@@ -36,13 +35,16 @@ public class ProductRepositoryImpl implements ProductRepository {
 
         Session session = sessionFactory.openSession();
         List<Song> songResults = session.createQuery("from Song where lower(title) = lower(:title)", Song.class).setParameter("title", title).list();
-        session.close();
+
         return songResults;
     }
 
-    // TODO: implement methods
     @Override
-    public List<String> findArtistsByName(String name) throws RemoteException {
-        return null;
+    public List<Artist> findArtistsByName(String name) throws RemoteException {
+
+        Session session = sessionFactory.openSession();
+        List<Artist> artistResults = session.createQuery("from Artist where lower(name) = lower(:name)", Artist.class).setParameter("name", name).list();
+
+        return artistResults;
     }
 }

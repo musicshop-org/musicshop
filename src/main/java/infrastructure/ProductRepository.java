@@ -1,6 +1,7 @@
 package infrastructure;
 
 import domain.Album;
+import domain.Artist;
 import domain.Song;
 
 import java.rmi.RemoteException;
@@ -13,6 +14,6 @@ public interface ProductRepository {
 
     List<Song> findSongsByTitle(String title) throws RemoteException;
 
-    List<String> findArtistsByName(String name) throws RemoteException;
+    List<Artist> findArtistsByName(String name) throws RemoteException;
 
 }

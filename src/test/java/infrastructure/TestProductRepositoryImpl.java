@@ -2,6 +2,7 @@ package infrastructure;
 
 import domain.Album;
 
+import domain.Artist;
 import domain.Song;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,7 +14,6 @@ import java.util.List;
 import java.util.Set;
 
 public class TestProductRepositoryImpl {
-//wenn null zrück kommt; Case sensitive
 
     @Test
     void given_songname_when_findalbumsbysongtitle_then_expectallalbumswiththissongin() throws RemoteException {
@@ -104,5 +104,47 @@ public class TestProductRepositoryImpl {
 
         // then
         assertEquals(songs.size(), 1);
+    }
+
+    @Test
+    void given_artist_when_findartistsbyname_then_expectartist() throws RemoteException {
+
+        // given
+        ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
+        String artistName = "Seeed";
+
+        // when
+        List<Artist> artists = productRepository.findArtistsByName(artistName);
+
+        // then
+        assertEquals(artists.size(), 1);
+    }
+
+    @Test
+    void given_notexistingartist_when_findartistsbyname_then_expectemptylist() throws RemoteException {
+
+        // given
+        ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
+        String artistName = "notExistingArtistName";
+
+        // when
+        List<Artist> artists = productRepository.findArtistsByName(artistName);
+
+        // then
+        assertEquals(artists.size(), 0);
+    }
+
+    @Test
+    void given_existingartistwithrandomcase_when_findartistsbyname_then_expectartist() throws RemoteException {
+
+        // given
+        ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
+        String artistName = "seEed";
+
+        // when
+        List<Artist> artists = productRepository.findArtistsByName(artistName);
+
+        // then
+        assertEquals(artists.size(), 1);
     }
 }
