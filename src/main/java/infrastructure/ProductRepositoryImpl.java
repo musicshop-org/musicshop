@@ -21,7 +21,7 @@ public class ProductRepositoryImpl implements ProductRepository {
         Set<Album> albums = new HashSet<>();
         Session session = sessionFactory.openSession();
 
-        List<Song> songResults = session.createQuery("from Song where title LIKE :title", Song.class).setParameter("title", title).list();
+        List<Song> songResults = session.createQuery("from Song where title = :title", Song.class).setParameter("title", title).list();
 
         for (Song songResult : songResults) {
             for (Album album : songResult.getInAlbum()) {
