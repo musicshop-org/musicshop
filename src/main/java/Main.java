@@ -1,17 +1,12 @@
 import domain.*;
-import domain.enums.MediumType;
-import domain.valueobjects.AlbumId;
+import sharedrmi.domain.enums.MediumType;
 import domain.valueobjects.EmployeeId;
 import infrastructure.ShoppingCartRepositoryImpl;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.*;
 
 public class Main {

@@ -1,6 +1,6 @@
 package domain;
 
-import domain.enums.MediumType;
+import sharedrmi.domain.enums.MediumType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

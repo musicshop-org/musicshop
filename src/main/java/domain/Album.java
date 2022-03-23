@@ -1,15 +1,12 @@
 package domain;
 
-import domain.enums.MediumType;
-import domain.valueobjects.AlbumId;
-import lombok.Builder;
+import sharedrmi.domain.valueobjects.AlbumId;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import sharedrmi.domain.enums.MediumType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Getter

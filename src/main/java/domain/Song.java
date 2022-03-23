@@ -1,13 +1,11 @@
 package domain;
 
-import domain.enums.MediumType;
+import sharedrmi.domain.enums.MediumType;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 

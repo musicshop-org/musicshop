@@ -36,7 +36,7 @@
 
         <subclass name="domain.Album" discriminator-value="album">
             <property name="label" column="label" type="java.lang.String"/>
-            <component name="albumId" class="domain.valueobjects.AlbumId">
+            <component name="albumId" class="sharedrmi.domain.valueobjects.AlbumId">
                 <property name="albumId" column="albumId" type="java.util.UUID"/>
             </component>
             <set name="songs" table="album_song" cascade="all">

@@ -1,6 +1,6 @@
 package domain;
 
-import domain.enums.MediumType;
+import sharedrmi.domain.enums.MediumType;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
