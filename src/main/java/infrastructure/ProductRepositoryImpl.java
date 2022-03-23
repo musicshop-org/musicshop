@@ -11,16 +11,12 @@ import java.rmi.RemoteException;
 import java.util.*;
 
 public class ProductRepositoryImpl implements ProductRepository {
-    private SessionFactory sessionFactory;
+    private SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 
     @Override
     public Set<Album> findAlbumsByTitle(String title) throws RemoteException {
 
-        try {
-            sessionFactory = new Configuration().configure().buildSessionFactory();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
 
         Set<Album> albums = new HashSet<>();
         Session session = sessionFactory.openSession();
