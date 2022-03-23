@@ -65,7 +65,7 @@ public class TestProductRepositoryImpl {
     }
 
     @Test
-    void given_existingsong_when_findSongsByTitle_then_expectemptylist() throws RemoteException {
+    void given_existingsong_when_findSongsByTitle_then_expectsong() throws RemoteException {
 
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
