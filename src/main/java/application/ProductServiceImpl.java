@@ -1,5 +1,6 @@
 package application;
 
+import jakarta.transaction.Transactional;
 import sharedrmi.application.api.ProductService;
 import sharedrmi.application.dto.AlbumDTO;
 import sharedrmi.application.dto.ArtistDTO;
@@ -25,6 +26,7 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
     public ProductServiceImpl() throws RemoteException {
     }
 
+    @Transactional
     @Override
     public List<AlbumDTO> findAlbumsBySongTitle(String title) throws RemoteException {
         List<AlbumDTO> albumDTOs = new LinkedList<>();
@@ -62,6 +64,7 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
         return albumDTOs;
     }
 
+    @Transactional
     @Override
     public List<SongDTO> findSongsByTitle(String title) throws RemoteException {
         // todo: implement method
@@ -69,6 +72,7 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
         return null;
     }
 
+    @Transactional
     @Override
     public List<ArtistDTO> findArtistsByName(String name) throws RemoteException {
         // todo: implement method
