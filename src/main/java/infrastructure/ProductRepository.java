@@ -4,7 +4,6 @@ import domain.Album;
 import domain.Song;
 
 import java.rmi.RemoteException;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 

@@ -16,8 +16,6 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public Set<Album> findAlbumsBySongTitle(String title) throws RemoteException {
 
-
-
         Set<Album> albums = new HashSet<>();
         Session session = sessionFactory.openSession();
 
