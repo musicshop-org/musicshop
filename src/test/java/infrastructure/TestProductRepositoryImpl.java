@@ -14,9 +14,9 @@ import java.util.Set;
 
 
 public class TestProductRepositoryImpl {
-
+//wenn null zrück kommt; Case sensitive
     @Test
-    void given_songName_when_findAlbumsByTitle_then_expectallAlbumsWithThisSongInIt() throws RemoteException {
+    void given_songname_when_findalbumsbysongtitle_then_expectallalbumswiththissongin() throws RemoteException {
         //given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
         String songName = "Beautiful";
@@ -30,11 +30,7 @@ public class TestProductRepositoryImpl {
         }
 
         for (int i = 0; i < albumResult.size(); i++) {
-            if (AlbumTitleExpected.equals(albumResult.get(i).getTitle())){
-                System.out.println("passt");
-            }
             assertEquals(AlbumTitleExpected, albumResult.get(i).getTitle());
         }
-
     }
 }
