@@ -1,9 +1,6 @@
 package infrastructure;
 
-import domain.Employee;
-import domain.LineItem;
 import domain.ShoppingCart;
-import domain.valueobjects.EmployeeId;
 
 import java.util.LinkedList;
 import java.util.List;
