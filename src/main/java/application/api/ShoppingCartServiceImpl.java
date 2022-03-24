@@ -23,7 +23,7 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
 
     public ShoppingCartServiceImpl(UUID ownerId) throws RemoteException {
         super();
-        shoppingCartRepository = new ShoppingCartRepositoryImpl();
+        this.shoppingCartRepository = new ShoppingCartRepositoryImpl();
         Optional<ShoppingCart> existingCart = shoppingCartRepository.findShoppingCartByOwnerId(ownerId);
 
         if (existingCart.isPresent()){
@@ -31,6 +31,12 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
         }else{
             this.shoppingCart = new ShoppingCart(ownerId);
         }
+    };
+
+    public ShoppingCartServiceImpl(UUID ownerId, ShoppingCartRepository repo) throws RemoteException {
+        super();
+        this.shoppingCartRepository = repo;
+        this.shoppingCart = shoppingCartRepository.findShoppingCartByOwnerId(ownerId).get();
     };
 
     @Override
