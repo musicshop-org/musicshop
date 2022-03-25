@@ -1,8 +1,9 @@
 package domain;
 
+
+import sharedrmi.domain.valueobjects.AlbumId;
 import lombok.Getter;
 import sharedrmi.domain.enums.MediumType;
-import sharedrmi.domain.valueobjects.AlbumId;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

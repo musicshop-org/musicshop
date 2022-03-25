@@ -1,6 +1,5 @@
 package domain;
 
-
 import lombok.Getter;
 import sharedrmi.domain.enums.MediumType;
 
