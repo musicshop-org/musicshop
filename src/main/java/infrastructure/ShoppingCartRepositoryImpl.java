@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class ShoppingCartRepositoryImpl implements ShoppingCartRepository{
-    private static List<ShoppingCart> shoppingCarts = new LinkedList<>();
+    private static final List<ShoppingCart> shoppingCarts = new LinkedList<>();
 
     @Override
     public Optional<ShoppingCart> findShoppingCartByOwnerId (UUID ownerId) {

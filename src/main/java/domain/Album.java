@@ -1,14 +1,14 @@
 package domain;
 
-
 import sharedrmi.domain.valueobjects.AlbumId;
-import lombok.Getter;
 import sharedrmi.domain.enums.MediumType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+
+import lombok.Getter;
 
 @Getter
 public class Album extends Product {

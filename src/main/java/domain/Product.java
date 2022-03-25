@@ -15,4 +15,5 @@ public abstract class Product {
     protected int stock;
     protected MediumType mediumType;
     protected LocalDate releaseDate;
+
 }

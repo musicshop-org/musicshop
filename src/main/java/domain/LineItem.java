@@ -8,13 +8,14 @@ import java.math.BigDecimal;
 @Getter
 public class LineItem {
 
-    private LineItem(){};
-
     private long id;
     private MediumType mediumType;
     private String name;
     private int quantity;
     private BigDecimal price;
+
+    protected LineItem() {
+    }
 
     public LineItem(MediumType mediumType, String name, int quantity, BigDecimal price) {
         this.mediumType = mediumType;
@@ -23,7 +24,7 @@ public class LineItem {
         this.price = price;
     }
 
-    public void changeQuantity(int newQuantity){
+    public void changeQuantity(int newQuantity) {
         this.quantity = newQuantity;
     }
 

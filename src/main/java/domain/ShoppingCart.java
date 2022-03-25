@@ -12,7 +12,6 @@ public class ShoppingCart {
     private final UUID ownerId;
     private List<LineItem> lineItems;
 
-
     public ShoppingCart(UUID ownerId){
         this.ownerId = ownerId;
         this.lineItems = new LinkedList<>();
