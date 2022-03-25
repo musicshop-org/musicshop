@@ -2,13 +2,14 @@ package application.api;
 
 import sharedrmi.application.api.ShoppingCartService;
 import sharedrmi.application.api.ShoppingCartServiceFactory;
+
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.UUID;
 
 public class ShoppingCartServiceFactoryImpl extends UnicastRemoteObject implements ShoppingCartServiceFactory {
 
-    public ShoppingCartServiceFactoryImpl() throws RemoteException{
+    public ShoppingCartServiceFactoryImpl() throws RemoteException {
         super();
     }
 

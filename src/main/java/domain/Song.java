@@ -14,10 +14,9 @@ public class Song extends Product {
 
     private String genre;
     private List<Artist> artists;
-    private Set<Album> inAlbum = new HashSet<>();
+    private final Set<Album> inAlbum = new HashSet<>();
 
-    public Song() {
-
+    protected Song() {
     }
 
     public Song(String title, BigDecimal price, int stock, MediumType mediumType, LocalDate releaseDate, String genre, List<Artist> artists) {

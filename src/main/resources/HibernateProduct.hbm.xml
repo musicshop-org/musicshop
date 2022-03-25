@@ -9,7 +9,9 @@
         <id name="id" type="long" column="product_id">
             <generator class="native"/>
         </id>
-        <discriminator column="type" type="string"></discriminator>
+
+        <discriminator column="type" type="string"/>
+
         <property name="title" column="title" type="java.lang.String"/>
         <property name="price" column="price" type="java.math.BigDecimal"/>
         <property name="stock" column="stock" type="java.lang.Integer"/>
@@ -25,7 +27,7 @@
             <property name="genre" column="genre" type="java.lang.String"/>
             <list name="artists" table="artist_song" cascade="all">
                 <key column="song_id"/>
-                <index column="idx"></index>
+                <index column="idx"/>
                 <many-to-many class="domain.Artist" column="artist_id"/>
             </list>
             <set name="inAlbum" table="album_song" inverse="true">

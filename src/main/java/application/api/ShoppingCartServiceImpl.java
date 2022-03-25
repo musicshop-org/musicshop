@@ -4,6 +4,7 @@ import domain.LineItem;
 import domain.ShoppingCart;
 import infrastructure.ShoppingCartRepository;
 import infrastructure.ShoppingCartRepositoryImpl;
+
 import sharedrmi.application.dto.AlbumDTO;
 import sharedrmi.application.api.ShoppingCartService;
 import sharedrmi.application.dto.LineItemDTO;
@@ -18,37 +19,35 @@ import java.util.UUID;
 
 public class ShoppingCartServiceImpl extends UnicastRemoteObject implements ShoppingCartService {
 
-    private ShoppingCartRepository shoppingCartRepository;
-    private ShoppingCart shoppingCart;
+    private final ShoppingCartRepository shoppingCartRepository;
+    private final ShoppingCart shoppingCart;
 
     public ShoppingCartServiceImpl(UUID ownerId) throws RemoteException {
         super();
+
         this.shoppingCartRepository = new ShoppingCartRepositoryImpl();
         Optional<ShoppingCart> existingCart = shoppingCartRepository.findShoppingCartByOwnerId(ownerId);
-
-        if (existingCart.isPresent()){
-            this.shoppingCart = existingCart.get();
-        }else{
-            this.shoppingCart = new ShoppingCart(ownerId);
-        }
-    };
+        this.shoppingCart = existingCart.orElseGet(() -> new ShoppingCart(ownerId));
+    }
 
     public ShoppingCartServiceImpl(UUID ownerId, ShoppingCartRepository repo) throws RemoteException {
         super();
+
         this.shoppingCartRepository = repo;
         this.shoppingCart = shoppingCartRepository.findShoppingCartByOwnerId(ownerId).get();
-    };
+    }
 
     @Override
     public void addProductToCart(AlbumDTO album, int amount) throws RemoteException {
-        LineItem item = new LineItem(album.getMediumType(),album.getTitle(),amount,album.getPrice());
+        LineItem item = new LineItem(album.getMediumType(), album.getTitle(), amount, album.getPrice());
         this.shoppingCart.addLineItem(item);
     }
 
     @Override
     public ShoppingCartDTO displayCart() throws RemoteException {
         List<LineItemDTO> lineItemsDTO = new LinkedList<>();
-        for (LineItem item: shoppingCart.getLineItems()) {
+
+        for (LineItem item : shoppingCart.getLineItems()) {
             lineItemsDTO.add(new LineItemDTO(
                     item.getMediumType(),
                     item.getName(),
@@ -56,7 +55,8 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
                     item.getPrice()
             ));
         }
-        return new ShoppingCartDTO(shoppingCart.getOwnerId(),lineItemsDTO);
+
+        return new ShoppingCartDTO(shoppingCart.getOwnerId(), lineItemsDTO);
     }
 
 
