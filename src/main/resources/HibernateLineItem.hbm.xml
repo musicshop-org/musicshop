@@ -12,7 +12,7 @@
 
         <property name="mediumType" column="mediumType">
             <type name="org.hibernate.type.EnumType">
-                <param name="enumClass">domain.enums.MediumType</param>
+                <param name="enumClass">sharedrmi.domain.enums.MediumType</param>
                 <param name="type">12</param>
             </type>
         </property>

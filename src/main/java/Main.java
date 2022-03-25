@@ -22,6 +22,8 @@ public class Main {
             ShoppingCartServiceFactory cartFactory = new ShoppingCartServiceFactoryImpl();
             Naming.rebind("rmi://localhost/CartFactory", cartFactory);
 
+            System.out.println("Listening on port " + Registry.REGISTRY_PORT);
+
         } catch (RemoteException | MalformedURLException e) {
             e.printStackTrace();
         }
