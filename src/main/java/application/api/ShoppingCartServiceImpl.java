@@ -59,5 +59,13 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
         return new ShoppingCartDTO(shoppingCart.getOwnerId(), lineItemsDTO);
     }
 
+    //@Override für sharedlib wenn approved//
+
+    public void removeProductFromCart(LineItemDTO lineItemDTO) throws RemoteException {
+        LineItem item = new LineItem(lineItemDTO.getMediumType(), lineItemDTO.getName(), lineItemDTO.getQuantity(), lineItemDTO.getPrice());
+        this.shoppingCart.removeLineItem(item);
+
+    }
+
 
 }
