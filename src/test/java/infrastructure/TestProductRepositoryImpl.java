@@ -9,26 +9,25 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.rmi.RemoteException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 public class TestProductRepositoryImpl {
 
     @Test
-    void given_songname_when_findalbumsbysongtitle_then_expectallalbumswiththissongin() throws RemoteException {
+    void given_songTitle_when_findAlbumsBySongTitle_then_returnAlbumsWithThisSongIn() throws RemoteException {
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
-        String songName = "Thriller";
+        String songTitle = "Thriller";
 
         // when
-        Set <Album> albums = productRepository.findAlbumsBySongTitle(songName);
+        Set <Album> albums = productRepository.findAlbumsBySongTitle(songTitle);
         int foundSongs = 0;
 
         for (Album album : albums) {
             for (Song song : album.getSongs())
             {
-                if (song.getTitle().equalsIgnoreCase(songName))
+                if (song.getTitle().equalsIgnoreCase(songTitle))
                     foundSongs++;
             }
         }
@@ -37,17 +36,17 @@ public class TestProductRepositoryImpl {
     }
 
     @Test
-    void given_notexistingsong_when_findalbumsbysongtitle_then_expectemptyset() throws RemoteException {
+    void given_notExistingSongTitle_when_findAlbumsBySongTitle_then_returnEmptySet() throws RemoteException {
 
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
-        String songName = "notExistingSongName";
+        String songTitle = "notExistingSongTitle";
 
         // when
-        Set <Album> albums = productRepository.findAlbumsBySongTitle(songName);
+        Set <Album> albums = productRepository.findAlbumsBySongTitle(songTitle);
 
         // then
-        assertEquals(albums.size(), 0);
+        assertEquals(0, albums.size());
     }
 
     @Test

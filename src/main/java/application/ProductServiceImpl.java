@@ -22,9 +22,14 @@ import java.util.Set;
 
 public class ProductServiceImpl extends UnicastRemoteObject implements ProductService {
 
-    ProductRepository productRepository = new ProductRepositoryImpl();
+    private final ProductRepository productRepository;
 
     public ProductServiceImpl() throws RemoteException {
+        this.productRepository = new ProductRepositoryImpl();
+    }
+
+    public ProductServiceImpl(ProductRepository productRepository) throws RemoteException {
+        this.productRepository = productRepository;
     }
 
     @Transactional
