@@ -24,9 +24,9 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
-public class TestProductServiceImpl {
+public class ProductServiceTest {
 
-    private List<AlbumDTO> givenAlbumDTOs;
+    private final List<AlbumDTO> givenAlbumDTOs = new LinkedList<>();
     private ProductService productService;
 
     @Mock
@@ -34,6 +34,12 @@ public class TestProductServiceImpl {
 
     @BeforeEach
     void initMockAndService() throws RemoteException {
+        productService = new ProductServiceImpl(productRepository);
+    }
+
+    @Test
+    void given_songTitle_when_findAlbumsBySongTitle_then_returnAlbumsWithThisSongIn() throws RemoteException {
+        // given
         String songTitle = "Thriller";
 
         Set<Song> songs = new HashSet<>();
@@ -46,17 +52,11 @@ public class TestProductServiceImpl {
         Set<Album> albums = new HashSet<>();
         albums.add(new Album("Thriller", new BigDecimal(12), 4, MediumType.CD, LocalDate.of(1983, 6, 6), new AlbumId(), "Epic", songs));
 
-        givenAlbumDTOs = new LinkedList<>();
         givenAlbumDTOs.add(new AlbumDTO("Thriller", new BigDecimal(12), 4, MediumType.CD, LocalDate.of(1983, 6, 6), new AlbumId(), "Epic", songDTOs));
 
         Mockito.when(productRepository.findAlbumsBySongTitle(songTitle)).thenReturn(albums);
-        productService = new ProductServiceImpl(productRepository);
-    }
 
-    @Test
-    void given_songTitle_when_findAlbumsBySongTitle_then_returnAlbumsWithThisSongIn() throws RemoteException {
         // when
-        String songTitle = "Thriller";
         List<AlbumDTO> albumDTOs = productService.findAlbumsBySongTitle(songTitle);
 
         // then
@@ -73,16 +73,20 @@ public class TestProductServiceImpl {
 
     @Test
     void given_notExistingSongTitle_when_findAlbumsBySongTitle_then_returnEmptySet() throws RemoteException {
-        // when
+        // given
         String songTitle = "notExistingSongTitle";
+
+        Mockito.when(productRepository.findAlbumsBySongTitle(songTitle)).thenReturn(Collections.emptySet());
+
+        // when
         List<AlbumDTO> albumDTOs = productService.findAlbumsBySongTitle(songTitle);
 
         // then
-        assertEquals(0, albumDTOs.size());
+        assertEquals(givenAlbumDTOs.size(), albumDTOs.size());
     }
 
     @Test
-    void given_existingsongwithrandomcase_when_findalbumsbysongtitle_then_expectsong() throws RemoteException {
+    void given_existingSongWithRandomCase_when_findAlbumsBySongTitle_then_expectSong() throws RemoteException {
         // given
 
 
@@ -94,7 +98,7 @@ public class TestProductServiceImpl {
     }
 
     @Test
-    void given_existingsong_when_findSongsByTitle_then_expectemptylist() throws RemoteException {
+    void given_existingSong_when_findSongsByTitle_then_expectEmptyList() throws RemoteException {
         // given
 
 
@@ -106,7 +110,7 @@ public class TestProductServiceImpl {
     }
 
     @Test
-    void given_notexistingsong_when_findSongsByTitle_then_expectemptylist() throws RemoteException {
+    void given_notExistingSong_when_findSongsByTitle_then_expectEmptyList() throws RemoteException {
         // given
 
 
@@ -118,7 +122,7 @@ public class TestProductServiceImpl {
     }
 
     @Test
-    void given_existingsongwithrandomcase_when_findSongsByTitle_then_expectsong() throws RemoteException {
+    void given_existingSongWithRandomCase_when_findSongsByTitle_then_expectSong() throws RemoteException {
         // given
 
 

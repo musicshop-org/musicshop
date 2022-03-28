@@ -12,7 +12,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Set;
 
-public class TestProductRepositoryImpl {
+public class ProductRepositoryTest {
 
     @Test
     void given_songTitle_when_findAlbumsBySongTitle_then_returnAlbumsWithThisSongIn() throws RemoteException {
@@ -50,7 +50,7 @@ public class TestProductRepositoryImpl {
     }
 
     @Test
-    void given_existingsongwithrandomcase_when_findalbumsbysongtitle_then_expectsong() throws RemoteException {
+    void given_existingSongWithRandomCase_when_findAlbumsBySongTitle_then_expectSong() throws RemoteException {
 
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
@@ -64,7 +64,7 @@ public class TestProductRepositoryImpl {
     }
 
     @Test
-    void given_existingsong_when_findSongsByTitle_then_expectsong() throws RemoteException {
+    void given_existingSong_when_findSongsByTitle_then_expectSong() throws RemoteException {
 
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
@@ -78,7 +78,7 @@ public class TestProductRepositoryImpl {
     }
 
     @Test
-    void given_notexistingsong_when_findSongsByTitle_then_expectemptylist() throws RemoteException {
+    void given_notExistingSong_when_findSongsByTitle_then_expectEmptyList() throws RemoteException {
 
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
@@ -92,7 +92,7 @@ public class TestProductRepositoryImpl {
     }
 
     @Test
-    void given_existingsongwithrandomcase_when_findSongsByTitle_then_expectsong() throws RemoteException {
+    void given_existingSongWithRandomCase_when_findSongsByTitle_then_expectSong() throws RemoteException {
 
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
@@ -106,7 +106,7 @@ public class TestProductRepositoryImpl {
     }
 
     @Test
-    void given_artist_when_findartistsbyname_then_expectartist() throws RemoteException {
+    void given_artist_when_findArtistsByName_then_expectArtist() throws RemoteException {
 
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
@@ -120,7 +120,7 @@ public class TestProductRepositoryImpl {
     }
 
     @Test
-    void given_notexistingartist_when_findartistsbyname_then_expectemptylist() throws RemoteException {
+    void given_notExistingArtist_when_findArtistsByName_then_expectEmptyList() throws RemoteException {
 
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
@@ -134,7 +134,7 @@ public class TestProductRepositoryImpl {
     }
 
     @Test
-    void given_existingartistwithrandomcase_when_findartistsbyname_then_expectartist() throws RemoteException {
+    void given_existingArtistWithRandomCase_when_findArtistsByName_then_expectArtist() throws RemoteException {
 
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
