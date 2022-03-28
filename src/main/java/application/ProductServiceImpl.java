@@ -1,5 +1,6 @@
 package application;
 
+import domain.Artist;
 import jakarta.transaction.Transactional;
 import sharedrmi.application.api.ProductService;
 import sharedrmi.application.dto.AlbumDTO;
@@ -73,17 +74,40 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
     @Transactional
     @Override
     public List<SongDTO> findSongsByTitle(String title) throws RemoteException {
-        // todo: implement method
+        List<SongDTO> songDTOs = new LinkedList<>();
 
-        return null;
+        List<Song> songs = productRepository.findSongsByTitle(title);
+
+        for (Song song : songs) {
+            songDTOs.add(new SongDTO(
+                    song.getTitle(),
+                    song.getPrice(),
+                    song.getStock(),
+                    song.getMediumType(),
+                    song.getReleaseDate(),
+                    song.getGenre(),
+                    null,
+                    null
+            ));
+        }
+
+        return songDTOs;
     }
 
     @Transactional
     @Override
     public List<ArtistDTO> findArtistsByName(String name) throws RemoteException {
-        // todo: implement method
+        List<ArtistDTO> artistDTOs = new LinkedList<>();
 
-        return null;
+        List<Artist> artists = productRepository.findArtistsByName(name);
+
+        for (Artist artist : artists) {
+            artistDTOs.add(new ArtistDTO(
+                    artist.getName()
+            ));
+        }
+
+        return artistDTOs;
     }
 
 }

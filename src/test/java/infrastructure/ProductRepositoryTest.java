@@ -37,7 +37,6 @@ public class ProductRepositoryTest {
 
     @Test
     void given_notExistingSongTitle_when_findAlbumsBySongTitle_then_returnEmptySet() throws RemoteException {
-
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
         String songTitle = "notExistingSongTitle";
@@ -51,13 +50,12 @@ public class ProductRepositoryTest {
 
     @Test
     void given_existingSongWithRandomCase_when_findAlbumsBySongTitle_then_expectSong() throws RemoteException {
-
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
-        String songName = "bEaUtiFul";
+        String songTitle = "bEaUtiFul";
 
         // when
-        Set <Album> albums = productRepository.findAlbumsBySongTitle(songName);
+        Set <Album> albums = productRepository.findAlbumsBySongTitle(songTitle);
 
         // then
         assertEquals(albums.size(), 1);
@@ -65,13 +63,12 @@ public class ProductRepositoryTest {
 
     @Test
     void given_existingSong_when_findSongsByTitle_then_expectSong() throws RemoteException {
-
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
-        String songName = "Beautiful";
+        String songTitle = "Beautiful";
 
         // when
-        List<Song> songs = productRepository.findSongsByTitle(songName);
+        List<Song> songs = productRepository.findSongsByTitle(songTitle);
 
         // then
         assertEquals(songs.size(), 1);
@@ -79,13 +76,12 @@ public class ProductRepositoryTest {
 
     @Test
     void given_notExistingSong_when_findSongsByTitle_then_expectEmptyList() throws RemoteException {
-
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
-        String songName = "notExistingSongName";
+        String songTitle = "notExistingSongName";
 
         // when
-        List<Song> songs = productRepository.findSongsByTitle(songName);
+        List<Song> songs = productRepository.findSongsByTitle(songTitle);
 
         // then
         assertEquals(songs.size(), 0);
@@ -93,13 +89,12 @@ public class ProductRepositoryTest {
 
     @Test
     void given_existingSongWithRandomCase_when_findSongsByTitle_then_expectSong() throws RemoteException {
-
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
-        String songName = "beaUtiFul";
+        String songTitle = "beaUtiFul";
 
         // when
-        List<Song> songs = productRepository.findSongsByTitle(songName);
+        List<Song> songs = productRepository.findSongsByTitle(songTitle);
 
         // then
         assertEquals(songs.size(), 1);
@@ -107,7 +102,6 @@ public class ProductRepositoryTest {
 
     @Test
     void given_artist_when_findArtistsByName_then_expectArtist() throws RemoteException {
-
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
         String artistName = "Seeed";
@@ -121,7 +115,6 @@ public class ProductRepositoryTest {
 
     @Test
     void given_notExistingArtist_when_findArtistsByName_then_expectEmptyList() throws RemoteException {
-
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
         String artistName = "notExistingArtistName";
@@ -135,7 +128,6 @@ public class ProductRepositoryTest {
 
     @Test
     void given_existingArtistWithRandomCase_when_findArtistsByName_then_expectArtist() throws RemoteException {
-
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
         String artistName = "seEed";
