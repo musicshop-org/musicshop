@@ -32,13 +32,22 @@ public class ShoppingCart {
         }
         this.lineItems.add(newItem);
     }
-    
-    public void removeLineItem (LineItem lineItem){
-        for (int i = 0; i < this.lineItems.size(); i++) {
-            if (this.lineItems.get(i).equals(lineItem)){
-                this.lineItems.remove(lineItem);
-        }
 
+    public void changeQuantity (LineItem lineItem, int quantity) {
+        for (LineItem item: lineItems) {
+            if (item.equals(lineItem)){
+                item.changeQuantity(quantity);
+                return;
+            }
+        }
+    }
+    
+    public void removeLineItem (LineItem lineItemToRemove){
+        for (LineItem lineItem: lineItems) {
+            if (lineItem.equals(lineItemToRemove)){
+                lineItems.remove(lineItemToRemove);
+                return;
+            }
         }
     }
 }
