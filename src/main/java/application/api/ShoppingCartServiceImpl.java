@@ -33,12 +33,12 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
             this.shoppingCart = existingCart.get();
     }
 
-//    public ShoppingCartServiceImpl(UUID ownerId, ShoppingCartRepository repo) throws RemoteException {
-//        super();
-//
-//        this.shoppingCartRepository = repo;
-//        this.shoppingCart = shoppingCartRepository.findShoppingCartByOwnerId(ownerId).get();
-//    }
+    public ShoppingCartServiceImpl(UUID ownerId, ShoppingCartRepository repo) throws RemoteException {
+        super();
+
+        this.shoppingCartRepository = repo;
+        this.shoppingCart = shoppingCartRepository.findShoppingCartByOwnerId(ownerId).get();
+    }
 
     @Override
     public void addProductToCart(AlbumDTO album, int amount) throws RemoteException {
