@@ -14,5 +14,7 @@
         <property name="hbm2ddl.auto">update</property>
         <mapping resource="HibernateArtist.hbm.xml"/>
         <mapping resource="HibernateProduct.hbm.xml"/>
+        <mapping resource="HibernateEmployee.hbm.xml"/>
+        <mapping resource="HibernateLineItem.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

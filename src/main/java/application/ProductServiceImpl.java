@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 public class ProductServiceImpl extends UnicastRemoteObject implements ProductService {
@@ -51,7 +52,7 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
                         song.getMediumType(),
                         song.getReleaseDate(),
                         song.getGenre(),
-                        null,
+                        song.getArtists().stream().map(artist -> new ArtistDTO(artist.getName())).collect(Collectors.toList()),
                         null
                 ));
             }
