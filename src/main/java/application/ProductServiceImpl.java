@@ -87,7 +87,7 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
                     song.getMediumType(),
                     song.getReleaseDate(),
                     song.getGenre(),
-                    null,
+                    song.getArtists().stream().map(artist -> new ArtistDTO(artist.getName())).collect(Collectors.toList()),
                     null
             ));
         }
