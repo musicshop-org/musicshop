@@ -7,5 +7,5 @@ import java.util.UUID;
 
 public interface ShoppingCartRepository {
     Optional<ShoppingCart> findShoppingCartByOwnerId (UUID ownerId);
-    void createShoppingCart(UUID ownerId);
+    ShoppingCart createShoppingCart(UUID ownerId);
 }

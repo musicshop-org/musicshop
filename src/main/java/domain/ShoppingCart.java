@@ -1,6 +1,7 @@
 package domain;
 
 import lombok.Getter;
+import sharedrmi.application.dto.LineItemDTO;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -30,5 +31,23 @@ public class ShoppingCart {
             }
         }
         this.lineItems.add(newItem);
+    }
+
+    public void changeQuantity (LineItem lineItem, int quantity) {
+        for (LineItem item: lineItems) {
+            if (item.equals(lineItem)){
+                item.changeQuantity(quantity);
+                return;
+            }
+        }
+    }
+    
+    public void removeLineItem (LineItem lineItemToRemove){
+        for (LineItem lineItem: lineItems) {
+            if (lineItem.equals(lineItemToRemove)){
+                lineItems.remove(lineItemToRemove);
+                return;
+            }
+        }
     }
 }

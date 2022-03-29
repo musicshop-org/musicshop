@@ -21,8 +21,11 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository{
     }
 
     @Override
-    public void createShoppingCart(UUID ownerId) {
-        shoppingCarts.add(new ShoppingCart(ownerId));
+    public ShoppingCart createShoppingCart(UUID ownerId) {
+        ShoppingCart shoppingCart = new ShoppingCart(ownerId);
+        shoppingCarts.add(shoppingCart);
+
+        return shoppingCart;
     }
 
 }

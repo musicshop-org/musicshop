@@ -52,7 +52,7 @@ public class ShoppingCartServiceTest {
     @Test
     void when_displayCart_return_correct_dto() throws RemoteException {
         //when
-        ShoppingCartDTO cartDTO = shoppingCartService.displayCart();
+        ShoppingCartDTO cartDTO = shoppingCartService.getCart();
 
         //then
         assertEquals(givenCart.getOwnerId(),cartDTO.getOwnerId());
@@ -80,7 +80,7 @@ public class ShoppingCartServiceTest {
         shoppingCartService.addProductToCart(album,quantity);
 
         //then
-        ShoppingCartDTO cartDTO = shoppingCartService.displayCart();
+        ShoppingCartDTO cartDTO = shoppingCartService.getCart();
         assertEquals(givenCart.getOwnerId(),cartDTO.getOwnerId());
         assertAll("LineItem 3",
                 () -> assertEquals(album.getTitle(), cartDTO.getLineItems().get(2).getName()),

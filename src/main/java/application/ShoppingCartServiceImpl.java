@@ -23,11 +23,14 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
     private final ShoppingCart shoppingCart;
 
     public ShoppingCartServiceImpl(UUID ownerId) throws RemoteException {
-        super();
-
         this.shoppingCartRepository = new ShoppingCartRepositoryImpl();
+
         Optional<ShoppingCart> existingCart = shoppingCartRepository.findShoppingCartByOwnerId(ownerId);
-        this.shoppingCart = existingCart.orElseGet(() -> new ShoppingCart(ownerId));
+
+        if (existingCart.isEmpty())
+            this.shoppingCart = shoppingCartRepository.createShoppingCart(ownerId);
+        else
+            this.shoppingCart = existingCart.get();
     }
 
     public ShoppingCartServiceImpl(UUID ownerId, ShoppingCartRepository repo) throws RemoteException {
@@ -38,13 +41,7 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
     }
 
     @Override
-    public void addProductToCart(AlbumDTO album, int amount) throws RemoteException {
-        LineItem item = new LineItem(album.getMediumType(), album.getTitle(), amount, album.getPrice());
-        this.shoppingCart.addLineItem(item);
-    }
-
-    @Override
-    public ShoppingCartDTO displayCart() throws RemoteException {
+    public ShoppingCartDTO getCart() throws RemoteException {
         List<LineItemDTO> lineItemsDTO = new LinkedList<>();
 
         for (LineItem item : shoppingCart.getLineItems()) {
@@ -59,5 +56,21 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
         return new ShoppingCartDTO(shoppingCart.getOwnerId(), lineItemsDTO);
     }
 
+    @Override
+    public void addProductToCart(AlbumDTO album, int amount) throws RemoteException {
+        LineItem item = new LineItem(album.getMediumType(), album.getTitle(), amount, album.getPrice());
+        this.shoppingCart.addLineItem(item);
+    }
 
+    @Override
+    public void changeQuantity(LineItemDTO lineItemDTO, int quantity)throws RemoteException {
+        LineItem lineItem = new LineItem(lineItemDTO.getMediumType(), lineItemDTO.getName(), lineItemDTO.getQuantity(), lineItemDTO.getPrice());
+        this.shoppingCart.changeQuantity(lineItem, quantity);
+    }
+
+    @Override
+    public void removeProductFromCart(LineItemDTO lineItemDTO) throws RemoteException {
+        LineItem lineItem = new LineItem(lineItemDTO.getMediumType(), lineItemDTO.getName(), lineItemDTO.getQuantity(), lineItemDTO.getPrice());
+        this.shoppingCart.removeLineItem(lineItem);
+    }
 }
