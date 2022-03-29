@@ -50,5 +50,4 @@
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.glassfish.jaxb:txw2:3.0.2" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: com.sun.istack:istack-commons-runtime:4.0.1" level="project" />
   </component>
-  <component name="TestModuleProperties" production-module="musicshop.main" />
 </module>
