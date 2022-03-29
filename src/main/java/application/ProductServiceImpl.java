@@ -15,10 +15,7 @@ import infrastructure.ProductRepositoryImpl;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -53,7 +50,7 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
                         song.getReleaseDate(),
                         song.getGenre(),
                         song.getArtists().stream().map(artist -> new ArtistDTO(artist.getName())).collect(Collectors.toList()),
-                        null
+                        Collections.emptySet()
                 ));
             }
 
@@ -88,7 +85,7 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
                     song.getReleaseDate(),
                     song.getGenre(),
                     song.getArtists().stream().map(artist -> new ArtistDTO(artist.getName())).collect(Collectors.toList()),
-                    null
+                    Collections.emptySet()
             ));
         }
 

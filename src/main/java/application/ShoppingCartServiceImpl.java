@@ -1,4 +1,4 @@
-package application.api;
+package application;
 
 import domain.LineItem;
 import domain.ShoppingCart;

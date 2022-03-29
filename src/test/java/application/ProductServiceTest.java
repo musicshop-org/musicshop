@@ -48,10 +48,10 @@ public class ProductServiceTest {
         String songTitle = "Thriller";
 
         Set<Song> songs = new HashSet<>();
-        songs.add(new Song("Thriller", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(1982, 11, 30), "pop, disco, pop-soul", null));
+        songs.add(new Song("Thriller", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(1982, 11, 30), "pop, disco, pop-soul", Collections.emptyList()));
 
         Set<SongDTO> songDTOs = new HashSet<>();
-        songDTOs.add(new SongDTO("Thriller", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(1982, 11, 30), "pop, disco, pop-soul", null, null));
+        songDTOs.add(new SongDTO("Thriller", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(1982, 11, 30), "pop, disco, pop-soul", Collections.emptyList(), Collections.emptySet()));
 
 
         Set<Album> albums = new HashSet<>();
@@ -96,10 +96,10 @@ public class ProductServiceTest {
         String songTitle = "tHrIlLeR";
 
         Set<Song> songs = new HashSet<>();
-        songs.add(new Song("Thriller", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(1982, 11, 30), "pop, disco, pop-soul", null));
+        songs.add(new Song("Thriller", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(1982, 11, 30), "pop, disco, pop-soul", Collections.emptyList()));
 
         Set<SongDTO> songDTOs = new HashSet<>();
-        songDTOs.add(new SongDTO("Thriller", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(1982, 11, 30), "pop, disco, pop-soul", null, null));
+        songDTOs.add(new SongDTO("Thriller", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(1982, 11, 30), "pop, disco, pop-soul", Collections.emptyList(), Collections.emptySet()));
 
 
         Set<Album> albums = new HashSet<>();
@@ -130,9 +130,9 @@ public class ProductServiceTest {
         String songTitle = "Beautiful";
 
         List<Song> songs = new LinkedList<>();
-        songs.add(new Song(songTitle, new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(2012, 9, 28), "dancehall, reggae", null));
+        songs.add(new Song(songTitle, new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(2012, 9, 28), "dancehall, reggae", Collections.emptyList()));
 
-        givenSongDTOs.add(new SongDTO(songTitle, new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(2012, 9, 28), "dancehall, reggae", null, null));
+        givenSongDTOs.add(new SongDTO(songTitle, new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(2012, 9, 28), "dancehall, reggae", Collections.emptyList(), Collections.emptySet()));
 
         Mockito.when(productRepository.findSongsByTitle(songTitle)).thenReturn(songs);
 
@@ -170,9 +170,9 @@ public class ProductServiceTest {
         String songTitle = "beaUtiFul";
 
         List<Song> songs = new LinkedList<>();
-        songs.add(new Song("Beautiful", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(2012, 9, 28), "dancehall, reggae", null));
+        songs.add(new Song("Beautiful", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(2012, 9, 28), "dancehall, reggae", Collections.emptyList()));
 
-        givenSongDTOs.add(new SongDTO("Beautiful", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(2012, 9, 28), "dancehall, reggae", null, null));
+        givenSongDTOs.add(new SongDTO("Beautiful", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(2012, 9, 28), "dancehall, reggae", Collections.emptyList(), Collections.emptySet()));
 
         Mockito.when(productRepository.findSongsByTitle(songTitle)).thenReturn(songs);
 

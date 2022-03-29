@@ -1,4 +1,4 @@
-package application.api;
+package application;
 
 import sharedrmi.application.api.ShoppingCartService;
 import sharedrmi.application.api.ShoppingCartServiceFactory;
