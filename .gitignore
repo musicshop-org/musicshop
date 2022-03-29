@@ -397,3 +397,4 @@ gradle-app.setting
 **/build/
 
 # End of https://www.toptal.com/developers/gitignore/api/java,linux,macos,maven,gradle,windows,intellij,node,react
+/.idea/.name

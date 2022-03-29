@@ -1,4 +1,4 @@
-import application.api.ShoppingCartServiceFactoryImpl;
+import application.ShoppingCartServiceFactoryImpl;
 import application.ProductServiceImpl;
 
 import sharedrmi.application.api.ShoppingCartServiceFactory;
