@@ -108,13 +108,13 @@ public class ShoppingCartServiceTest {
     @Test
     void given_cart_when_removeProductFromCart_return_new_size() throws RemoteException {
         //given
-        int expectet = 1;
+        int expected = 1;
         LineItemDTO lineItemDTO = new LineItemDTO(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18));
 
         //when
         shoppingCartService.removeProductFromCart(lineItemDTO);
 
         //then
-        assertEquals(expectet,shoppingCartService.getCart().getLineItems().size());
+        assertEquals(expected,shoppingCartService.getCart().getLineItems().size());
     }
 }
