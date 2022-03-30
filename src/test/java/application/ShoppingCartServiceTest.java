@@ -11,6 +11,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sharedrmi.application.api.ShoppingCartService;
 import sharedrmi.application.dto.AlbumDTO;
+import sharedrmi.application.dto.LineItemDTO;
 import sharedrmi.application.dto.ShoppingCartDTO;
 import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.valueobjects.AlbumId;
@@ -90,4 +91,30 @@ public class ShoppingCartServiceTest {
         );
     }
 
+    @Test
+    void given_newquantity_when_changeQuantity_return_new_quantity() throws RemoteException{
+        //given
+        int newQuantity = 10;
+
+        LineItemDTO lineItemDTO = new LineItemDTO(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18));
+
+        //when
+        shoppingCartService.changeQuantity(lineItemDTO,newQuantity);
+
+        //then
+        assertEquals(newQuantity, shoppingCartService.getCart().getLineItems().get(0).getQuantity());
+    }
+
+    @Test
+    void given_cart_when_removeProductFromCart_return_new_size() throws RemoteException {
+        //given
+        int expected = 1;
+        LineItemDTO lineItemDTO = new LineItemDTO(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18));
+
+        //when
+        shoppingCartService.removeProductFromCart(lineItemDTO);
+
+        //then
+        assertEquals(expected,shoppingCartService.getCart().getLineItems().size());
+    }
 }
