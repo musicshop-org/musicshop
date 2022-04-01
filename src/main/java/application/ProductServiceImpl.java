@@ -17,7 +17,6 @@ import infrastructure.ProductRepositoryImpl;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
@@ -93,7 +92,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public List<ArtistDTO> findArtistsByName(String name)  {
+    public List<ArtistDTO> findArtistsByName(String name) {
         List<ArtistDTO> artistDTOs = new LinkedList<>();
 
         List<Artist> artists = productRepository.findArtistsByName(name);
