@@ -1,16 +1,17 @@
 package application;
 
 import application.api.SessionFacade;
-import domain.valueobjects.Role;
 
 import sharedrmi.application.api.ProductService;
 import sharedrmi.application.api.ShoppingCartService;
 import sharedrmi.application.dto.*;
+import sharedrmi.domain.valueobjects.Role;
 
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-public class SessionFacadeImpl implements SessionFacade {
+public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFacade {
 
     private final List<Role> roles;
     private final String username;

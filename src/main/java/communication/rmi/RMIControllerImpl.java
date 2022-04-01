@@ -4,13 +4,14 @@ import application.api.LoginService;
 import application.LoginServiceImpl;
 import application.api.SessionFacade;
 
-import domain.valueobjects.Role;
 import sharedrmi.application.dto.*;
 import sharedrmi.communication.rmi.RMIController;
+import sharedrmi.domain.valueobjects.Role;
 
 import javax.security.auth.login.FailedLoginException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Collections;
 import java.util.List;
 
 public class RMIControllerImpl extends UnicastRemoteObject implements RMIController {
@@ -59,10 +60,12 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
         sessionFacade.removeProductFromCart(lineItemDTO);
     }
 
+    @Override
     public List<Role> getRoles() {
         return sessionFacade.getRoles();
     }
 
+    @Override
     public String getUsername() {
         return sessionFacade.getUsername();
     }

@@ -1,6 +1,6 @@
 package application.api;
 
-import domain.valueobjects.Role;
+import sharedrmi.domain.valueobjects.Role;
 
 import javax.security.auth.login.FailedLoginException;
 import java.rmi.RemoteException;

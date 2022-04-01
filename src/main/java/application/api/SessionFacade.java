@@ -1,8 +1,8 @@
 package application.api;
 
-import domain.valueobjects.Role;
 import sharedrmi.application.api.ProductService;
 import sharedrmi.application.api.ShoppingCartService;
+import sharedrmi.domain.valueobjects.Role;
 
 import java.util.List;
 

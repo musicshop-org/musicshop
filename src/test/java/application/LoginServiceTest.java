@@ -2,8 +2,8 @@ package application;
 
 
 import application.api.LoginService;
-import domain.valueobjects.Role;
 import org.junit.jupiter.api.Test;
+import sharedrmi.domain.valueobjects.Role;
 
 import java.util.LinkedList;
 import java.util.List;

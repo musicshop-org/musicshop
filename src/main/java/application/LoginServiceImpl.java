@@ -2,7 +2,7 @@ package application;
 
 import application.api.LoginService;
 import application.api.SessionFacade;
-import domain.valueobjects.Role;
+import sharedrmi.domain.valueobjects.Role;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
