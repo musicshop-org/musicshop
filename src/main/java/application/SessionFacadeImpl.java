@@ -13,12 +13,15 @@ public class SessionFacadeImpl implements SessionFacade {
 
     private final List<Role> roles;
     private final String username;
+    private final ShoppingCartService shoppingCartService;
+
     private final ProductService productService = new ProductServiceImpl();
-    private final ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl();
 
     public SessionFacadeImpl(List<Role> roles, String username) {
         this.roles = roles;
         this.username = username;
+
+        this.shoppingCartService = new ShoppingCartServiceImpl(username);
     }
 
     @Override

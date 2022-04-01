@@ -3,9 +3,8 @@ package domain.repositories;
 import domain.ShoppingCart;
 
 import java.util.Optional;
-import java.util.UUID;
 
 public interface ShoppingCartRepository {
-    Optional<ShoppingCart> findShoppingCartByOwnerId (UUID ownerId);
-    ShoppingCart createShoppingCart(UUID ownerId);
+    Optional<ShoppingCart> findShoppingCartByOwnerId (String ownerId);
+    ShoppingCart createShoppingCart(String ownerId);
 }
