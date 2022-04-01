@@ -1,6 +1,8 @@
 import application.ShoppingCartServiceFactoryImpl;
 import application.ProductServiceImpl;
 
+import communication.rmi.RMIControllerFactoryImpl;
+import communication.rmi.api.RMIControllerFactory;
 import sharedrmi.application.api.ShoppingCartServiceFactory;
 
 import java.net.MalformedURLException;
@@ -14,13 +16,17 @@ public class Main {
 
         try {
 
-            ProductServiceImpl productService = new ProductServiceImpl();
+            RMIControllerFactory rmiControllerFactory = RMIControllerFactoryImpl.getInstance();
+            Naming.rebind("rmi://localhost/RMIControllerFactory", rmiControllerFactory);
 
-            LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
-            Naming.rebind("rmi://localhost/ProductService", productService);
 
-            ShoppingCartServiceFactory cartFactory = new ShoppingCartServiceFactoryImpl();
-            Naming.rebind("rmi://localhost/CartFactory", cartFactory);
+//            ProductServiceImpl productService = new ProductServiceImpl();
+//
+//            LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
+//            Naming.rebind("rmi://localhost/ProductService", productService);
+//
+//            ShoppingCartServiceFactory cartFactory = new ShoppingCartServiceFactoryImpl();
+//            Naming.rebind("rmi://localhost/CartFactory", cartFactory);
 
             System.out.println("Listening on port " + Registry.REGISTRY_PORT);
 

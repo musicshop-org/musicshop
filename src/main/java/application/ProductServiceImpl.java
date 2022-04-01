@@ -19,21 +19,21 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-public class ProductServiceImpl extends UnicastRemoteObject implements ProductService {
+public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
 
-    public ProductServiceImpl() throws RemoteException {
+    public ProductServiceImpl() {
         this.productRepository = new ProductRepositoryImpl();
     }
 
-    public ProductServiceImpl(ProductRepository productRepository) throws RemoteException {
+    public ProductServiceImpl(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
     @Transactional
     @Override
-    public List<AlbumDTO> findAlbumsBySongTitle(String title) throws RemoteException {
+    public List<AlbumDTO> findAlbumsBySongTitle(String title) {
         List<AlbumDTO> albumDTOs = new LinkedList<>();
 
         Set<Album> albums = productRepository.findAlbumsBySongTitle(title);
@@ -71,7 +71,7 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
 
     @Transactional
     @Override
-    public List<SongDTO> findSongsByTitle(String title) throws RemoteException {
+    public List<SongDTO> findSongsByTitle(String title) {
         List<SongDTO> songDTOs = new LinkedList<>();
 
         List<Song> songs = productRepository.findSongsByTitle(title);
@@ -94,7 +94,7 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
 
     @Transactional
     @Override
-    public List<ArtistDTO> findArtistsByName(String name) throws RemoteException {
+    public List<ArtistDTO> findArtistsByName(String name)  {
         List<ArtistDTO> artistDTOs = new LinkedList<>();
 
         List<Artist> artists = productRepository.findArtistsByName(name);
