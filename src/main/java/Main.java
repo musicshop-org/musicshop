@@ -20,6 +20,5 @@ public class Main {
         } catch (RemoteException | MalformedURLException e) {
             e.printStackTrace();
         }
-
     }
 }
