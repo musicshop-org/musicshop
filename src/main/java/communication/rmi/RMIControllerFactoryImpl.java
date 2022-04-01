@@ -3,7 +3,7 @@ package communication.rmi;
 import communication.rmi.api.RMIController;
 import communication.rmi.api.RMIControllerFactory;
 
-import javax.security.auth.login.LoginException;
+import javax.security.auth.login.FailedLoginException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -24,7 +24,7 @@ public class RMIControllerFactoryImpl extends UnicastRemoteObject implements RMI
     }
 
     @Override
-    public RMIController createRMIController(String username, String password) throws LoginException, RemoteException {
+    public RMIController createRMIController(String username, String password) throws FailedLoginException, RemoteException {
         return new RMIControllerImpl(username, password);
     }
 }

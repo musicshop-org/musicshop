@@ -16,15 +16,12 @@ import java.util.*;
 
 
 public class LoginServiceImpl implements LoginService {
+
     @Override
     public SessionFacade login(String username, String password) throws FailedLoginException {
 
         if (checkCredentials(username, password)) {
-
-            List<Role> roles = this.getRole(username);
-
-            return new SessionFacadeImpl(roles, username);
-
+            return new SessionFacadeImpl(this.getRole(username), username);
         } else {
             throw new FailedLoginException();
         }
@@ -32,7 +29,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public Boolean checkCredentials(String username, String password) {
-        Boolean matchingPassword = false;
+        boolean matchingPassword = false;
 
         Properties env = new Properties();
         env.put(Context.SECURITY_AUTHENTICATION, "none");

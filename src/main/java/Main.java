@@ -15,18 +15,8 @@ public class Main {
     public static void main(String[] args) {
 
         try {
-
             RMIControllerFactory rmiControllerFactory = RMIControllerFactoryImpl.getInstance();
             Naming.rebind("rmi://localhost/RMIControllerFactory", rmiControllerFactory);
-
-
-//            ProductServiceImpl productService = new ProductServiceImpl();
-//
-//            LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
-//            Naming.rebind("rmi://localhost/ProductService", productService);
-//
-//            ShoppingCartServiceFactory cartFactory = new ShoppingCartServiceFactoryImpl();
-//            Naming.rebind("rmi://localhost/CartFactory", cartFactory);
 
             System.out.println("Listening on port " + Registry.REGISTRY_PORT);
 

@@ -1,6 +1,5 @@
 package communication.rmi.api;
 
-import application.LoginService;
 import sharedrmi.application.api.ProductService;
 import sharedrmi.application.api.ShoppingCartService;
 

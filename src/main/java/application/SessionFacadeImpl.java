@@ -10,11 +10,10 @@ import java.util.List;
 
 public class SessionFacadeImpl implements SessionFacade {
 
-    List<Role> roles;
-    String username;
-
-    ProductService productService;
-    ShoppingCartService shoppingCartService;
+    private final List<Role> roles;
+    private final String username;
+    private final ProductService productService = new ProductServiceImpl();
+    private final ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl();
 
     public SessionFacadeImpl(List<Role> roles, String username) {
         this.roles = roles;
@@ -23,36 +22,44 @@ public class SessionFacadeImpl implements SessionFacade {
 
     @Override
     public List<AlbumDTO> findAlbumsBySongTitle(String s) throws RemoteException {
-        return productService.findAlbumsBySongTitle(s);
+        return this.productService.findAlbumsBySongTitle(s);
     }
 
     @Override
     public List<SongDTO> findSongsByTitle(String s) throws RemoteException {
-        return productService.findSongsByTitle(s);
+        return this.productService.findSongsByTitle(s);
     }
 
     @Override
     public List<ArtistDTO> findArtistsByName(String s) throws RemoteException {
-        return productService.findArtistsByName(s);
+        return this.productService.findArtistsByName(s);
     }
 
     @Override
     public ShoppingCartDTO getCart() throws RemoteException {
-        return shoppingCartService.getCart();
+        return this.shoppingCartService.getCart();
     }
 
     @Override
     public void addProductToCart(AlbumDTO albumDTO, int i) throws RemoteException {
-        shoppingCartService.addProductToCart(albumDTO, i);
+        this.shoppingCartService.addProductToCart(albumDTO, i);
     }
 
     @Override
     public void changeQuantity(LineItemDTO lineItemDTO, int i) throws RemoteException {
-        shoppingCartService.changeQuantity(lineItemDTO, i);
+        this.shoppingCartService.changeQuantity(lineItemDTO, i);
     }
 
     @Override
     public void removeProductFromCart(LineItemDTO lineItemDTO) throws RemoteException {
-        shoppingCartService.removeProductFromCart(lineItemDTO);
+        this.shoppingCartService.removeProductFromCart(lineItemDTO);
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public String getUsername() {
+        return username;
     }
 }
