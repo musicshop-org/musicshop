@@ -14,18 +14,22 @@ import domain.Song;
 import domain.repositories.ProductRepository;
 import infrastructure.ProductRepositoryImpl;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ProductServiceImpl implements ProductService {
+public class ProductServiceImpl extends UnicastRemoteObject implements ProductService {
 
     private final ProductRepository productRepository;
 
-    public ProductServiceImpl() {
+    public ProductServiceImpl() throws RemoteException {
+        super();
         this.productRepository = new ProductRepositoryImpl();
     }
 
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository) throws RemoteException {
+        super();
         this.productRepository = productRepository;
     }
 

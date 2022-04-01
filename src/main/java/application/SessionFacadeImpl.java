@@ -7,6 +7,7 @@ import sharedrmi.application.api.ProductService;
 import sharedrmi.application.api.ShoppingCartService;
 import sharedrmi.application.dto.*;
 
+import java.rmi.RemoteException;
 import java.util.List;
 
 public class SessionFacadeImpl implements SessionFacade {
@@ -17,7 +18,7 @@ public class SessionFacadeImpl implements SessionFacade {
 
     private final ProductService productService = new ProductServiceImpl();
 
-    public SessionFacadeImpl(List<Role> roles, String username) {
+    public SessionFacadeImpl(List<Role> roles, String username) throws RemoteException {
         this.roles = roles;
         this.username = username;
 

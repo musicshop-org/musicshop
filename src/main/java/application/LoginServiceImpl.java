@@ -12,6 +12,7 @@ import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.security.auth.login.FailedLoginException;
 import java.math.BigInteger;
+import java.rmi.RemoteException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -19,7 +20,7 @@ import java.util.*;
 public class LoginServiceImpl implements LoginService {
 
     @Override
-    public SessionFacade login(String username, String password) throws FailedLoginException {
+    public SessionFacade login(String username, String password) throws FailedLoginException, RemoteException {
 
         if (checkCredentials(username, password)) {
             return new SessionFacadeImpl(this.getRole(username), username);

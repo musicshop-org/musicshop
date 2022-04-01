@@ -10,21 +10,27 @@ import sharedrmi.application.dto.AlbumDTO;
 import sharedrmi.application.dto.LineItemDTO;
 import sharedrmi.application.dto.ShoppingCartDTO;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-public class ShoppingCartServiceImpl implements ShoppingCartService {
+public class ShoppingCartServiceImpl extends UnicastRemoteObject implements ShoppingCartService {
 
     private final ShoppingCartRepository shoppingCartRepository;
     private final ShoppingCart shoppingCart;
 
-    public ShoppingCartServiceImpl() {
+    public ShoppingCartServiceImpl() throws RemoteException {
+        super();
+
         this.shoppingCartRepository = new ShoppingCartRepositoryImpl();
         this.shoppingCart = new ShoppingCart();
     }
 
-    public ShoppingCartServiceImpl(String ownerId) {
+    public ShoppingCartServiceImpl(String ownerId) throws RemoteException {
+        super();
+
         this.shoppingCartRepository = new ShoppingCartRepositoryImpl();
 
         Optional<ShoppingCart> existingCart = shoppingCartRepository.findShoppingCartByOwnerId(ownerId);
@@ -36,7 +42,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         }
     }
 
-    public ShoppingCartServiceImpl(String ownerId, ShoppingCartRepository repo) {
+    public ShoppingCartServiceImpl(String ownerId, ShoppingCartRepository repo) throws RemoteException {
         super();
 
         this.shoppingCartRepository = repo;
