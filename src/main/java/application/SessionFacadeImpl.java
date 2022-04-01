@@ -26,37 +26,37 @@ public class SessionFacadeImpl implements SessionFacade {
     }
 
     @Override
-    public List<AlbumDTO> findAlbumsBySongTitle(String title) {
+    public List<AlbumDTO> findAlbumsBySongTitle(String title) throws RemoteException {
         return this.productService.findAlbumsBySongTitle(title);
     }
 
     @Override
-    public List<SongDTO> findSongsByTitle(String title) {
+    public List<SongDTO> findSongsByTitle(String title) throws RemoteException {
         return this.productService.findSongsByTitle(title);
     }
 
     @Override
-    public List<ArtistDTO> findArtistsByName(String name) {
+    public List<ArtistDTO> findArtistsByName(String name) throws RemoteException {
         return this.productService.findArtistsByName(name);
     }
 
     @Override
-    public ShoppingCartDTO getCart() {
+    public ShoppingCartDTO getCart() throws RemoteException {
         return this.shoppingCartService.getCart();
     }
 
     @Override
-    public void addProductToCart(AlbumDTO albumDTO, int i) {
+    public void addProductToCart(AlbumDTO albumDTO, int i) throws RemoteException {
         this.shoppingCartService.addProductToCart(albumDTO, i);
     }
 
     @Override
-    public void changeQuantity(LineItemDTO lineItemDTO, int i) {
+    public void changeQuantity(LineItemDTO lineItemDTO, int i) throws RemoteException {
         this.shoppingCartService.changeQuantity(lineItemDTO, i);
     }
 
     @Override
-    public void removeProductFromCart(LineItemDTO lineItemDTO) {
+    public void removeProductFromCart(LineItemDTO lineItemDTO) throws RemoteException {
         this.shoppingCartService.removeProductFromCart(lineItemDTO);
     }
 

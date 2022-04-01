@@ -24,37 +24,37 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     }
 
     @Override
-    public List<AlbumDTO> findAlbumsBySongTitle(String s) {
+    public List<AlbumDTO> findAlbumsBySongTitle(String s) throws RemoteException {
         return sessionFacade.findAlbumsBySongTitle(s);
     }
 
     @Override
-    public List<SongDTO> findSongsByTitle(String s) {
+    public List<SongDTO> findSongsByTitle(String s) throws RemoteException {
         return sessionFacade.findSongsByTitle(s);
     }
 
     @Override
-    public List<ArtistDTO> findArtistsByName(String s) {
+    public List<ArtistDTO> findArtistsByName(String s) throws RemoteException {
         return sessionFacade.findArtistsByName(s);
     }
 
     @Override
-    public ShoppingCartDTO getCart() {
+    public ShoppingCartDTO getCart() throws RemoteException {
         return sessionFacade.getCart();
     }
 
     @Override
-    public void addProductToCart(AlbumDTO albumDTO, int i) {
+    public void addProductToCart(AlbumDTO albumDTO, int i) throws RemoteException {
         sessionFacade.addProductToCart(albumDTO, i);
     }
 
     @Override
-    public void changeQuantity(LineItemDTO lineItemDTO, int i) {
+    public void changeQuantity(LineItemDTO lineItemDTO, int i) throws RemoteException {
         sessionFacade.changeQuantity(lineItemDTO, i);
     }
 
     @Override
-    public void removeProductFromCart(LineItemDTO lineItemDTO) {
+    public void removeProductFromCart(LineItemDTO lineItemDTO) throws RemoteException {
         sessionFacade.removeProductFromCart(lineItemDTO);
     }
 }
