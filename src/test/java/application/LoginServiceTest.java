@@ -1,8 +1,8 @@
 package application;
 
 
+import application.api.LoginService;
 import domain.valueobjects.Role;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;

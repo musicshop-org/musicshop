@@ -4,11 +4,11 @@ import domain.Album;
 import domain.Artist;
 import domain.Song;
 
+import domain.repositories.ProductRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import java.rmi.RemoteException;
 import java.util.*;
 
 public class ProductRepositoryImpl implements ProductRepository {

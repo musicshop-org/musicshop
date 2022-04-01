@@ -2,16 +2,14 @@ package application;
 
 import domain.LineItem;
 import domain.ShoppingCart;
-import infrastructure.ShoppingCartRepository;
+import domain.repositories.ShoppingCartRepository;
 import infrastructure.ShoppingCartRepositoryImpl;
 
-import sharedrmi.application.dto.AlbumDTO;
 import sharedrmi.application.api.ShoppingCartService;
+import sharedrmi.application.dto.AlbumDTO;
 import sharedrmi.application.dto.LineItemDTO;
 import sharedrmi.application.dto.ShoppingCartDTO;
 
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;

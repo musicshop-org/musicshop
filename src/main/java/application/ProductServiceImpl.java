@@ -2,6 +2,7 @@ package application;
 
 import domain.Artist;
 import jakarta.transaction.Transactional;
+
 import sharedrmi.application.api.ProductService;
 import sharedrmi.application.dto.AlbumDTO;
 import sharedrmi.application.dto.ArtistDTO;
@@ -10,11 +11,9 @@ import sharedrmi.application.dto.SongDTO;
 import domain.Album;
 import domain.Song;
 
-import infrastructure.ProductRepository;
+import domain.repositories.ProductRepository;
 import infrastructure.ProductRepositoryImpl;
 
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.util.stream.Collectors;
 

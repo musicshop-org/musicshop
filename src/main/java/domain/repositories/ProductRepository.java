@@ -1,4 +1,4 @@
-package infrastructure;
+package domain.repositories;
 
 import domain.Album;
 import domain.Artist;

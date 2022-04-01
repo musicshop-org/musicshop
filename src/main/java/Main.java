@@ -1,14 +1,11 @@
-import application.ShoppingCartServiceFactoryImpl;
-import application.ProductServiceImpl;
 
 import communication.rmi.RMIControllerFactoryImpl;
-import communication.rmi.api.RMIControllerFactory;
-import sharedrmi.application.api.ShoppingCartServiceFactory;
+
+import sharedrmi.communication.rmi.RMIControllerFactory;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 public class Main {

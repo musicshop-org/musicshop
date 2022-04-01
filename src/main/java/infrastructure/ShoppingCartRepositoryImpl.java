@@ -1,13 +1,14 @@
 package infrastructure;
 
 import domain.ShoppingCart;
+import domain.repositories.ShoppingCartRepository;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class ShoppingCartRepositoryImpl implements ShoppingCartRepository{
+public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
     private static final List<ShoppingCart> shoppingCarts = new LinkedList<>();
 
     @Override

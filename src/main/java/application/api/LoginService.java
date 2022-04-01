@@ -1,4 +1,4 @@
-package application;
+package application.api;
 
 import domain.valueobjects.Role;
 

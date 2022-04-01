@@ -1,7 +1,7 @@
 package communication.rmi;
 
-import communication.rmi.api.RMIController;
-import communication.rmi.api.RMIControllerFactory;
+import sharedrmi.communication.rmi.RMIControllerFactory;
+import sharedrmi.communication.rmi.RMIController;
 
 import javax.security.auth.login.FailedLoginException;
 import java.rmi.RemoteException;

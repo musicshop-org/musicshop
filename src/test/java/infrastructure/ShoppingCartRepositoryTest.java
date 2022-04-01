@@ -1,6 +1,7 @@
 package infrastructure;
 
 import domain.ShoppingCart;
+import domain.repositories.ShoppingCartRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

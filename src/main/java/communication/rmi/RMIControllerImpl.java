@@ -1,11 +1,11 @@
 package communication.rmi;
 
-import application.LoginService;
+import application.api.LoginService;
 import application.LoginServiceImpl;
-import application.SessionFacade;
+import application.api.SessionFacade;
 
-import communication.rmi.api.RMIController;
 import sharedrmi.application.dto.*;
+import sharedrmi.communication.rmi.RMIController;
 
 import javax.security.auth.login.FailedLoginException;
 import java.rmi.RemoteException;
@@ -24,37 +24,37 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     }
 
     @Override
-    public List<AlbumDTO> findAlbumsBySongTitle(String s) throws RemoteException {
+    public List<AlbumDTO> findAlbumsBySongTitle(String s) {
         return sessionFacade.findAlbumsBySongTitle(s);
     }
 
     @Override
-    public List<SongDTO> findSongsByTitle(String s) throws RemoteException {
+    public List<SongDTO> findSongsByTitle(String s) {
         return sessionFacade.findSongsByTitle(s);
     }
 
     @Override
-    public List<ArtistDTO> findArtistsByName(String s) throws RemoteException {
+    public List<ArtistDTO> findArtistsByName(String s) {
         return sessionFacade.findArtistsByName(s);
     }
 
     @Override
-    public ShoppingCartDTO getCart() throws RemoteException {
+    public ShoppingCartDTO getCart() {
         return sessionFacade.getCart();
     }
 
     @Override
-    public void addProductToCart(AlbumDTO albumDTO, int i) throws RemoteException {
+    public void addProductToCart(AlbumDTO albumDTO, int i) {
         sessionFacade.addProductToCart(albumDTO, i);
     }
 
     @Override
-    public void changeQuantity(LineItemDTO lineItemDTO, int i) throws RemoteException {
+    public void changeQuantity(LineItemDTO lineItemDTO, int i) {
         sessionFacade.changeQuantity(lineItemDTO, i);
     }
 
     @Override
-    public void removeProductFromCart(LineItemDTO lineItemDTO) throws RemoteException {
+    public void removeProductFromCart(LineItemDTO lineItemDTO) {
         sessionFacade.removeProductFromCart(lineItemDTO);
     }
 }
