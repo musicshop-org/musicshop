@@ -11,7 +11,6 @@ import sharedrmi.domain.valueobjects.Role;
 import javax.security.auth.login.FailedLoginException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Collections;
 import java.util.List;
 
 public class RMIControllerImpl extends UnicastRemoteObject implements RMIController {
@@ -61,12 +60,12 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     }
 
     @Override
-    public List<Role> getRoles() {
+    public List<Role> getRoles() throws RemoteException {
         return sessionFacade.getRoles();
     }
 
     @Override
-    public String getUsername() {
+    public String getUsername() throws RemoteException {
         return sessionFacade.getUsername();
     }
 }
