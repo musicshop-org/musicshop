@@ -4,6 +4,7 @@ import application.api.LoginService;
 import application.LoginServiceImpl;
 import application.api.SessionFacade;
 
+import domain.valueobjects.Role;
 import sharedrmi.application.dto.*;
 import sharedrmi.communication.rmi.RMIController;
 
@@ -56,5 +57,13 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     @Override
     public void removeProductFromCart(LineItemDTO lineItemDTO) throws RemoteException {
         sessionFacade.removeProductFromCart(lineItemDTO);
+    }
+
+    public List<Role> getRoles() {
+        return sessionFacade.getRoles();
+    }
+
+    public String getUsername() {
+        return sessionFacade.getUsername();
     }
 }

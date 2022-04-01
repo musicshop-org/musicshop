@@ -60,10 +60,12 @@ public class SessionFacadeImpl implements SessionFacade {
         this.shoppingCartService.removeProductFromCart(lineItemDTO);
     }
 
+    @Override
     public List<Role> getRoles() {
         return roles;
     }
 
+    @Override
     public String getUsername() {
         return username;
     }
