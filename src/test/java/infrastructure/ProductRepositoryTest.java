@@ -5,6 +5,7 @@ import domain.Album;
 import domain.Artist;
 import domain.Song;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.rmi.RemoteException;
@@ -21,18 +22,17 @@ public class ProductRepositoryTest {
         String songTitle = "Thriller";
 
         // when
-        Set <Album> albums = productRepository.findAlbumsBySongTitle(songTitle);
+        Set<Album> albums = productRepository.findAlbumsBySongTitle(songTitle);
         int foundSongs = 0;
 
         for (Album album : albums) {
-            for (Song song : album.getSongs())
-            {
+            for (Song song : album.getSongs()) {
                 if (song.getTitle().equalsIgnoreCase(songTitle))
                     foundSongs++;
             }
         }
 
-        assertEquals(albums.size(), foundSongs);
+        assertEquals(foundSongs, albums.size());
     }
 
     @Test
@@ -42,7 +42,7 @@ public class ProductRepositoryTest {
         String songTitle = "notExistingSongTitle";
 
         // when
-        Set <Album> albums = productRepository.findAlbumsBySongTitle(songTitle);
+        Set<Album> albums = productRepository.findAlbumsBySongTitle(songTitle);
 
         // then
         assertEquals(0, albums.size());
@@ -55,10 +55,10 @@ public class ProductRepositoryTest {
         String songTitle = "bEaUtiFul";
 
         // when
-        Set <Album> albums = productRepository.findAlbumsBySongTitle(songTitle);
+        Set<Album> albums = productRepository.findAlbumsBySongTitle(songTitle);
 
         // then
-        assertEquals(albums.size(), 1);
+        assertEquals(1, albums.size());
     }
 
     @Test
@@ -71,7 +71,7 @@ public class ProductRepositoryTest {
         List<Song> songs = productRepository.findSongsByTitle(songTitle);
 
         // then
-        assertEquals(songs.size(), 1);
+        assertEquals(2, songs.size());
     }
 
     @Test
@@ -84,7 +84,7 @@ public class ProductRepositoryTest {
         List<Song> songs = productRepository.findSongsByTitle(songTitle);
 
         // then
-        assertEquals(songs.size(), 0);
+        assertEquals(0, songs.size());
     }
 
     @Test
@@ -97,7 +97,7 @@ public class ProductRepositoryTest {
         List<Song> songs = productRepository.findSongsByTitle(songTitle);
 
         // then
-        assertEquals(songs.size(), 1);
+        assertEquals(2, songs.size());
     }
 
     @Test
@@ -110,7 +110,7 @@ public class ProductRepositoryTest {
         List<Artist> artists = productRepository.findArtistsByName(artistName);
 
         // then
-        assertEquals(artists.size(), 1);
+        assertEquals(1, artists.size());
     }
 
     @Test
@@ -123,7 +123,7 @@ public class ProductRepositoryTest {
         List<Artist> artists = productRepository.findArtistsByName(artistName);
 
         // then
-        assertEquals(artists.size(), 0);
+        assertEquals(0, artists.size());
     }
 
     @Test
@@ -136,6 +136,45 @@ public class ProductRepositoryTest {
         List<Artist> artists = productRepository.findArtistsByName(artistName);
 
         // then
-        assertEquals(artists.size(), 1);
+        assertEquals(1, artists.size());
+    }
+
+    @Test
+    void given_partialSongTitle_when_findSongsByTitle_then_relevantSongs() throws RemoteException {
+        // given
+        ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
+        String songTitle = "Beautiful";
+
+        // when
+        List<Song> songs = productRepository.findSongsByTitle(songTitle);
+
+        // then
+        assertEquals(2, songs.size());
+    }
+
+    @Test
+    void given_partialSongTitle_when_findAlbumsByTitle_then_relevantAlbums() throws RemoteException {
+        // given
+        ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
+        String songTitle = "il";
+
+        // when
+        Set <Album> albums = productRepository.findAlbumsBySongTitle(songTitle);
+
+        // then
+        assertEquals(4, albums.size());
+    }
+
+    @Test
+    void given_partialArtist_when_findArtistsByName_then_relevantArtists() throws RemoteException {
+        // given
+        ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
+        String artistName = "ma";
+
+        // when
+        List<Artist> artists = productRepository.findArtistsByName(artistName);
+
+        // then
+        assertEquals(2, artists.size());
     }
 }
