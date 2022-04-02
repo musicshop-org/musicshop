@@ -15,7 +15,7 @@ public class ShoppingCart {
     public ShoppingCart(UUID ownerId){
         this.ownerId = ownerId;
         this.cartLineItems = new LinkedList<>();
-    };
+    }
 
     public ShoppingCart(UUID ownerId, List<CartLineItem> cartLineItems) {
         this.ownerId = ownerId;

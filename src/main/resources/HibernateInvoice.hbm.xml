@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping default-access="field" default-cascade="all">
+
+    <class name="domain.Invoice" table="tbl_invoice" lazy="true">
+        <id name="id" type="long" column="id">
+            <generator class="native"/>
+        </id>
+
+        <component name="invoiceId" class="sharedrmi.domain.valueobjects.InvoiceId">
+            <property name="id" column="invoice_id" type="java.lang.Long"/>
+        </component>
+
+        <list name="invoiceLineItems" table="invoice_invoiceLineItems" cascade="all">
+            <key column="invoice_id"/>
+            <index column="idx"/>
+            <many-to-many class="domain.InvoiceLineItem" column="invoice_id"/>
+        </list>
+
+        <property name="paymentMethod" column="paymentMethod">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">sharedrmi.domain.enums.PaymentMethod</param>
+                <param name="type">12</param>
+            </type>
+        </property>
+
+        <property name="customerType" column="customerType">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">sharedrmi.domain.enums.CustomerType</param>
+                <param name="type">12</param>
+            </type>
+        </property>
+
+        <property name="date" column="date" type="java.time.LocalDate"/>
+    </class>
+</hibernate-mapping>
