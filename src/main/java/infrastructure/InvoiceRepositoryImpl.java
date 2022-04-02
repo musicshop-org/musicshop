@@ -25,6 +25,8 @@ public class InvoiceRepositoryImpl implements InvoiceRepository{
     public void createInvoice(Invoice invoice) throws RemoteException {
 
         Session session = sessionFactory.openSession();
+        session.persist();
+        //session.flush();
 
         // TODO: create query to insert invoice
 

@@ -17,19 +17,12 @@
         <list name="invoiceLineItems" table="invoice_invoiceLineItems" cascade="all">
             <key column="invoiceLineItems_id"/>
             <index column="idx"/>
-            <many-to-many class="domain.Invoice" column="invoice_id"/>
+            <one-to-many class="domain.Invoice"/>
         </list>
 
         <property name="paymentMethod" column="paymentMethod">
             <type name="org.hibernate.type.EnumType">
                 <param name="enumClass">sharedrmi.domain.enums.PaymentMethod</param>
-                <param name="type">12</param>
-            </type>
-        </property>
-
-        <property name="customerType" column="customerType">
-            <type name="org.hibernate.type.EnumType">
-                <param name="enumClass">sharedrmi.domain.enums.CustomerType</param>
                 <param name="type">12</param>
             </type>
         </property>
