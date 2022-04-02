@@ -1,7 +1,7 @@
-import application.ShoppingCartServiceFactoryImpl;
-import application.ProductServiceImpl;
 
-import sharedrmi.application.api.ShoppingCartServiceFactory;
+import communication.rmi.RMIControllerFactoryImpl;
+
+import sharedrmi.communication.rmi.RMIControllerFactory;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -13,20 +13,14 @@ public class Main {
     public static void main(String[] args) {
 
         try {
-
-            ProductServiceImpl productService = new ProductServiceImpl();
-
+            RMIControllerFactory rmiControllerFactory = RMIControllerFactoryImpl.getInstance();
             LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
-            Naming.rebind("rmi://localhost/ProductService", productService);
-
-            ShoppingCartServiceFactory cartFactory = new ShoppingCartServiceFactoryImpl();
-            Naming.rebind("rmi://localhost/CartFactory", cartFactory);
+            Naming.rebind("rmi://localhost/RMIControllerFactory", rmiControllerFactory);
 
             System.out.println("Listening on port " + Registry.REGISTRY_PORT);
 
         } catch (RemoteException | MalformedURLException e) {
             e.printStackTrace();
         }
-
     }
 }
