@@ -1,6 +1,6 @@
 package application;
 
-import domain.LineItem;
+import domain.CartLineItem;
 import domain.ShoppingCart;
 import domain.repositories.ShoppingCartRepository;
 import infrastructure.ShoppingCartRepositoryImpl;
@@ -53,7 +53,7 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
     public ShoppingCartDTO getCart() {
         List<LineItemDTO> lineItemsDTO = new LinkedList<>();
 
-        for (LineItem item : shoppingCart.getLineItems()) {
+        for (CartLineItem item : shoppingCart.getLineItems()) {
             lineItemsDTO.add(new LineItemDTO(
                     item.getMediumType(),
                     item.getName(),
