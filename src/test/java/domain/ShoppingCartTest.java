@@ -19,6 +19,6 @@ public class ShoppingCartTest {
         cart.addLineItem(expectedItem);
 
         //then
-        assertEquals(expectedItem, cart.getLineItems().get(0));
+        assertEquals(expectedItem, cart.getCartLineItems().get(0));
     }
 }

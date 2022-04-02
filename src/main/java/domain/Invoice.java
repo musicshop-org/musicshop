@@ -16,11 +16,13 @@ public class Invoice {
     private PaymentMethod paymentMethod;
     private LocalDate date;
 
+    protected Invoice() {
+    }
+
     public Invoice(InvoiceId invoiceId, List<InvoiceLineItem> invoiceLineItems, PaymentMethod paymentMethod, LocalDate date) {
         this.invoiceId = invoiceId;
         this.invoiceLineItems = invoiceLineItems;
         this.paymentMethod = paymentMethod;
         this.date = date;
     }
-
 }

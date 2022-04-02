@@ -53,7 +53,7 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
     public ShoppingCartDTO getCart() {
         List<CartLineItemDTO> cartLineItemsDTO = new LinkedList<>();
 
-        for (CartLineItem cartLineItem : shoppingCart.getLineItems()) {
+        for (CartLineItem cartLineItem : shoppingCart.getCartLineItems()) {
             cartLineItemsDTO.add(new CartLineItemDTO(
                     cartLineItem.getMediumType(),
                     cartLineItem.getName(),

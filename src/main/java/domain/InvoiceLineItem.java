@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 
 @Getter
 public class InvoiceLineItem {
+
     private long id;
     private MediumType mediumType;
     private String name;

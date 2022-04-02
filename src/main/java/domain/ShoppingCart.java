@@ -9,10 +9,10 @@ import java.util.List;
 public class ShoppingCart {
 
     private String ownerId;
-    private final List<CartLineItem> lineItems;
+    private final List<CartLineItem> cartLineItems;
 
     public ShoppingCart() {
-        this.lineItems = new ArrayList<>();
+        this.cartLineItems = new ArrayList<>();
     }
 
     public ShoppingCart(String ownerId) {
@@ -20,35 +20,35 @@ public class ShoppingCart {
         this.ownerId = ownerId;
     }
 
-    public ShoppingCart(String ownerId, List<CartLineItem> lineItems) {
+    public ShoppingCart(String ownerId, List<CartLineItem> cartLineItems) {
         this.ownerId = ownerId;
-        this.lineItems = lineItems;
+        this.cartLineItems = cartLineItems;
     }
 
     public void addLineItem(CartLineItem newItem) {
-        for (CartLineItem item : lineItems) {
-            if (item.equals(newItem)) {
-                item.changeQuantity(item.getQuantity() + newItem.getQuantity());
+        for (CartLineItem cartLineItem : cartLineItems) {
+            if (cartLineItem.equals(newItem)) {
+                cartLineItem.changeQuantity(cartLineItem.getQuantity() + newItem.getQuantity());
                 return;
             }
         }
 
-        this.lineItems.add(newItem);
+        this.cartLineItems.add(newItem);
     }
 
     public void changeQuantity(CartLineItem lineItem, int quantity) {
-        for (CartLineItem item : lineItems) {
-            if (item.equals(lineItem)) {
-                item.changeQuantity(quantity);
+        for (CartLineItem cartLineItem : cartLineItems) {
+            if (cartLineItem.equals(lineItem)) {
+                cartLineItem.changeQuantity(quantity);
                 return;
             }
         }
     }
 
-    public void removeLineItem(CartLineItem lineItemToRemove) {
-        for (CartLineItem lineItem : lineItems) {
-            if (lineItem.equals(lineItemToRemove)) {
-                lineItems.remove(lineItemToRemove);
+    public void removeLineItem(CartLineItem cartLineItemToRemove) {
+        for (CartLineItem cartLineItem : cartLineItems) {
+            if (cartLineItem.equals(cartLineItemToRemove)) {
+                cartLineItems.remove(cartLineItemToRemove);
                 return;
             }
         }

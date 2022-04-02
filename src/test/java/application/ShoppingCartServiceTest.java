@@ -59,16 +59,16 @@ public class ShoppingCartServiceTest {
         //then
         assertEquals(givenCart.getOwnerId(), cartDTO.getOwnerId());
         assertAll("LineItem 1",
-                () -> assertEquals(givenCart.getLineItems().get(0).getName(), cartDTO.getCartLineItems().get(0).getName()),
-                () -> assertEquals(givenCart.getLineItems().get(0).getQuantity(), cartDTO.getCartLineItems().get(0).getQuantity()),
-                () -> assertEquals(givenCart.getLineItems().get(0).getPrice(), cartDTO.getCartLineItems().get(0).getPrice()),
-                () -> assertEquals(givenCart.getLineItems().get(0).getMediumType(), cartDTO.getCartLineItems().get(0).getMediumType())
+                () -> assertEquals(givenCart.getCartLineItems().get(0).getName(), cartDTO.getCartLineItems().get(0).getName()),
+                () -> assertEquals(givenCart.getCartLineItems().get(0).getQuantity(), cartDTO.getCartLineItems().get(0).getQuantity()),
+                () -> assertEquals(givenCart.getCartLineItems().get(0).getPrice(), cartDTO.getCartLineItems().get(0).getPrice()),
+                () -> assertEquals(givenCart.getCartLineItems().get(0).getMediumType(), cartDTO.getCartLineItems().get(0).getMediumType())
         );
         assertAll("LineItem 2",
-                () -> assertEquals(givenCart.getLineItems().get(1).getName(), cartDTO.getCartLineItems().get(1).getName()),
-                () -> assertEquals(givenCart.getLineItems().get(1).getQuantity(), cartDTO.getCartLineItems().get(1).getQuantity()),
-                () -> assertEquals(givenCart.getLineItems().get(1).getPrice(), cartDTO.getCartLineItems().get(1).getPrice()),
-                () -> assertEquals(givenCart.getLineItems().get(1).getMediumType(), cartDTO.getCartLineItems().get(1).getMediumType())
+                () -> assertEquals(givenCart.getCartLineItems().get(1).getName(), cartDTO.getCartLineItems().get(1).getName()),
+                () -> assertEquals(givenCart.getCartLineItems().get(1).getQuantity(), cartDTO.getCartLineItems().get(1).getQuantity()),
+                () -> assertEquals(givenCart.getCartLineItems().get(1).getPrice(), cartDTO.getCartLineItems().get(1).getPrice()),
+                () -> assertEquals(givenCart.getCartLineItems().get(1).getMediumType(), cartDTO.getCartLineItems().get(1).getMediumType())
         );
     }
 
