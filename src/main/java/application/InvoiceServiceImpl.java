@@ -59,7 +59,7 @@ public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceSe
 
         Invoice invoice = new Invoice(new InvoiceId(),invoiceLineItems,invoiceDTO.getPaymentMethod(),invoiceDTO.getCustomerType(),invoiceDTO.getDate());
 
-        invoiceRepository.ereateInvoice(invoice);
+        invoiceRepository.createInvoice(invoice);
         //return invoice;
     }
 
