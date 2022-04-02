@@ -1,6 +1,8 @@
 package application;
 
-import domain.valueobjects.Role;
+import application.api.LoginService;
+import application.api.SessionFacade;
+import sharedrmi.domain.valueobjects.Role;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
@@ -8,17 +10,28 @@ import javax.naming.NamingException;
 import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
+import javax.security.auth.login.FailedLoginException;
 import java.math.BigInteger;
+import java.rmi.RemoteException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
+public class LoginServiceImpl implements LoginService {
 
-public class LoginServiceImpl implements LoginService{
+    @Override
+    public SessionFacade login(String username, String password) throws FailedLoginException, RemoteException {
+
+        if (checkCredentials(username, password)) {
+            return new SessionFacadeImpl(this.getRole(username), username);
+        } else {
+            throw new FailedLoginException();
+        }
+    }
 
     @Override
     public Boolean checkCredentials(String username, String password) {
-        Boolean matchingPassword = false;
+        boolean matchingPassword = false;
 
         Properties env = new Properties();
         env.put(Context.SECURITY_AUTHENTICATION, "none");
@@ -28,7 +41,7 @@ public class LoginServiceImpl implements LoginService{
         try {
             InitialDirContext ctx = new InitialDirContext(env);
 
-            String filter = "(&(objectClass=inetOrgPerson)(uid="+username+"))";
+            String filter = "(&(objectClass=inetOrgPerson)(uid=" + username + "))";
 
             String[] attrIDs = {"userpassword"};
 
@@ -37,22 +50,22 @@ public class LoginServiceImpl implements LoginService{
             searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
             String base = "ou=employees,dc=openmicroscopy,dc=org";
-            NamingEnumeration<SearchResult> resultList = ctx.search(base,filter,searchControls);
+            NamingEnumeration<SearchResult> resultList = ctx.search(base, filter, searchControls);
 
-            while(resultList.hasMore()){
+            while (resultList.hasMore()) {
                 SearchResult result = resultList.next();
                 String ldapPass = new String((byte[]) result.getAttributes().get("userPassword").get());
                 byte[] ldapDecoded = Base64.getDecoder().decode(ldapPass.split("}")[1]);
                 String ldapHex = String.format("%040x", new BigInteger(1, ldapDecoded));
 
 
-                if(ldapHex.equals(encryptSHA512(password))){
+                if (ldapHex.equals(encryptSHA512(password))) {
                     matchingPassword = true;
                 }
             }
 
             ctx.close();
-        }catch(NamingException ex) {
+        } catch (NamingException ex) {
             ex.printStackTrace();
         }
 
@@ -71,7 +84,7 @@ public class LoginServiceImpl implements LoginService{
         try {
             InitialDirContext ctx = new InitialDirContext(env);
 
-            String filter = "(&(objectClass=organizationalrole)(roleoccupant=uid="+username+",ou=employees,dc=openmicroscopy,dc=org))";
+            String filter = "(&(objectClass=organizationalrole)(roleoccupant=uid=" + username + ",ou=employees,dc=openmicroscopy,dc=org))";
 
             String[] attrIDs = {"*"};
 
@@ -80,16 +93,16 @@ public class LoginServiceImpl implements LoginService{
             searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
             String base = "ou=roles,dc=openmicroscopy,dc=org";
-            NamingEnumeration<SearchResult> resultList = ctx.search(base,filter,searchControls);
+            NamingEnumeration<SearchResult> resultList = ctx.search(base, filter, searchControls);
 
-            while(resultList.hasMore()){
+            while (resultList.hasMore()) {
                 SearchResult result = resultList.next();
                 String ldapRole = (String) result.getAttributes().get("cn").get();
                 roles.add(Role.valueOf(ldapRole.toUpperCase()));
             }
 
             ctx.close();
-        }catch(NamingException ex) {
+        } catch (NamingException ex) {
             ex.printStackTrace();
         }
         return roles;

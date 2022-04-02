@@ -5,6 +5,7 @@ import domain.Album;
 import domain.Artist;
 import domain.Song;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.rmi.RemoteException;
@@ -21,12 +22,11 @@ public class ProductRepositoryTest {
         String songTitle = "Thriller";
 
         // when
-        Set <Album> albums = productRepository.findAlbumsBySongTitle(songTitle);
+        Set<Album> albums = productRepository.findAlbumsBySongTitle(songTitle);
         int foundSongs = 0;
 
         for (Album album : albums) {
-            for (Song song : album.getSongs())
-            {
+            for (Song song : album.getSongs()) {
                 if (song.getTitle().equalsIgnoreCase(songTitle))
                     foundSongs++;
             }
@@ -42,7 +42,7 @@ public class ProductRepositoryTest {
         String songTitle = "notExistingSongTitle";
 
         // when
-        Set <Album> albums = productRepository.findAlbumsBySongTitle(songTitle);
+        Set<Album> albums = productRepository.findAlbumsBySongTitle(songTitle);
 
         // then
         assertEquals(0, albums.size());
@@ -55,7 +55,7 @@ public class ProductRepositoryTest {
         String songTitle = "bEaUtiFul";
 
         // when
-        Set <Album> albums = productRepository.findAlbumsBySongTitle(songTitle);
+        Set<Album> albums = productRepository.findAlbumsBySongTitle(songTitle);
 
         // then
         assertEquals(1, albums.size());
