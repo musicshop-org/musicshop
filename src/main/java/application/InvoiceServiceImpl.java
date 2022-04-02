@@ -2,7 +2,7 @@ package application;
 
 import domain.Invoice;
 import domain.InvoiceLineItem;
-import infrastructure.InvoiceRepository;
+import domain.repositories.InvoiceRepository;
 import infrastructure.InvoiceRepositoryImpl;
 import jakarta.transaction.Transactional;
 import sharedrmi.application.api.InvoiceService;
@@ -14,6 +14,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceService {
@@ -30,7 +31,7 @@ public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceSe
 
     @Transactional
     @Override
-    public List<InvoiceDTO> findInvoiceById(InvoiceId invoiceId) throws RemoteException {
+    public Optional<InvoiceDTO> findInvoiceById(InvoiceId invoiceId) throws RemoteException {
 
         List<InvoiceDTO> invoiceDTOs = new LinkedList<>();
 
@@ -41,12 +42,11 @@ public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceSe
                     invoice.getInvoiceId(),
                     invoice.getInvoiceLineItems().stream().map(invoiceLineItem -> new InvoiceLineItemDTO(invoiceLineItem.getMediumType(), invoiceLineItem.getName(), invoiceLineItem.getQuantity(), invoiceLineItem.getPrice())).collect(Collectors.toList()),
                     invoice.getPaymentMethod(),
-                    invoice.getCustomerType(),
                     invoice.getDate()
             ));
         }
 
-        return invoiceDTOs;
+        return null;
     }
 
     @Transactional
@@ -68,7 +68,6 @@ public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceSe
                 new InvoiceId(),
                 invoiceLineItems,
                 invoiceDTO.getPaymentMethod(),
-                invoiceDTO.getCustomerType(),
                 invoiceDTO.getDate()
         );
 

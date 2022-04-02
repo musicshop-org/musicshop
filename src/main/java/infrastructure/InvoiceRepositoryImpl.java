@@ -1,6 +1,7 @@
 package infrastructure;
 
 import domain.Invoice;
+import domain.repositories.InvoiceRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -9,7 +10,7 @@ import sharedrmi.domain.valueobjects.InvoiceId;
 import java.rmi.RemoteException;
 import java.util.List;
 
-public class InvoiceRepositoryImpl implements InvoiceRepository{
+public class InvoiceRepositoryImpl implements InvoiceRepository {
     private final SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 
     @Override
@@ -25,8 +26,8 @@ public class InvoiceRepositoryImpl implements InvoiceRepository{
     public void createInvoice(Invoice invoice) throws RemoteException {
 
         Session session = sessionFactory.openSession();
-        session.persist();
-        //session.flush();
+//        session.persist();
+//        session.flush();
 
         // TODO: create query to insert invoice
 

@@ -1,4 +1,4 @@
-package infrastructure;
+package domain.repositories;
 
 import domain.Invoice;
 import sharedrmi.domain.valueobjects.InvoiceId;

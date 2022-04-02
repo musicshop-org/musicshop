@@ -9,7 +9,7 @@ import java.util.List;
 public class ShoppingCart {
 
     private String ownerId;
-    private final List<LineItem> lineItems;
+    private final List<CartLineItem> lineItems;
 
     public ShoppingCart() {
         this.lineItems = new ArrayList<>();
@@ -20,13 +20,13 @@ public class ShoppingCart {
         this.ownerId = ownerId;
     }
 
-    public ShoppingCart(String ownerId, List<LineItem> lineItems) {
+    public ShoppingCart(String ownerId, List<CartLineItem> lineItems) {
         this.ownerId = ownerId;
         this.lineItems = lineItems;
     }
 
-    public void addLineItem(LineItem newItem) {
-        for (LineItem item : lineItems) {
+    public void addLineItem(CartLineItem newItem) {
+        for (CartLineItem item : lineItems) {
             if (item.equals(newItem)) {
                 item.changeQuantity(item.getQuantity() + newItem.getQuantity());
                 return;
@@ -36,8 +36,8 @@ public class ShoppingCart {
         this.lineItems.add(newItem);
     }
 
-    public void changeQuantity(LineItem lineItem, int quantity) {
-        for (LineItem item : lineItems) {
+    public void changeQuantity(CartLineItem lineItem, int quantity) {
+        for (CartLineItem item : lineItems) {
             if (item.equals(lineItem)) {
                 item.changeQuantity(quantity);
                 return;
@@ -45,8 +45,8 @@ public class ShoppingCart {
         }
     }
 
-    public void removeLineItem(LineItem lineItemToRemove) {
-        for (LineItem lineItem : lineItems) {
+    public void removeLineItem(CartLineItem lineItemToRemove) {
+        for (CartLineItem lineItem : lineItems) {
             if (lineItem.equals(lineItemToRemove)) {
                 lineItems.remove(lineItemToRemove);
                 return;

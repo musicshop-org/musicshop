@@ -1,7 +1,6 @@
 package domain;
 
 import lombok.Getter;
-import sharedrmi.domain.enums.CustomerType;
 import sharedrmi.domain.enums.PaymentMethod;
 import sharedrmi.domain.valueobjects.InvoiceId;
 
@@ -17,7 +16,7 @@ public class Invoice {
     private PaymentMethod paymentMethod;
     private LocalDate date;
 
-    public Invoice(InvoiceId invoiceId, List<InvoiceLineItem> invoiceLineItems, PaymentMethod paymentMethod, CustomerType customerType, LocalDate date) {
+    public Invoice(InvoiceId invoiceId, List<InvoiceLineItem> invoiceLineItems, PaymentMethod paymentMethod, LocalDate date) {
         this.invoiceId = invoiceId;
         this.invoiceLineItems = invoiceLineItems;
         this.paymentMethod = paymentMethod;
