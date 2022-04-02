@@ -15,9 +15,9 @@
         </component>
 
         <list name="invoiceLineItems" table="invoice_invoiceLineItems" cascade="all">
-            <key column="invoice_id"/>
+            <key column="invoiceLineItems_id"/>
             <index column="idx"/>
-            <many-to-many class="domain.InvoiceLineItem" column="invoice_id"/>
+            <many-to-many class="domain.Invoice" column="invoice_id"/>
         </list>
 
         <property name="paymentMethod" column="paymentMethod">
