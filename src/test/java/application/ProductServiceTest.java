@@ -3,7 +3,7 @@ package application;
 import domain.Album;
 import domain.Artist;
 import domain.Song;
-import infrastructure.ProductRepository;
+import domain.repositories.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

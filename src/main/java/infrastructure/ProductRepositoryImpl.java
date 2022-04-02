@@ -4,18 +4,18 @@ import domain.Album;
 import domain.Artist;
 import domain.Song;
 
+import domain.repositories.ProductRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import java.rmi.RemoteException;
 import java.util.*;
 
 public class ProductRepositoryImpl implements ProductRepository {
     private final SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 
     @Override
-    public Set<Album> findAlbumsBySongTitle(String title) throws RemoteException {
+    public Set<Album> findAlbumsBySongTitle(String title) {
 
         Set<Album> albums = new HashSet<>();
         Session session = sessionFactory.openSession();
@@ -31,7 +31,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<Song> findSongsByTitle(String title) throws RemoteException {
+    public List<Song> findSongsByTitle(String title) {
 
         Session session = sessionFactory.openSession();
         List<Song> songResults = session.createQuery("from Song where lower(title) = lower(:title)", Song.class).setParameter("title", title).list();
@@ -40,7 +40,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<Artist> findArtistsByName(String name) throws RemoteException {
+    public List<Artist> findArtistsByName(String name) {
 
         Session session = sessionFactory.openSession();
         List<Artist> artistResults = session.createQuery("from Artist where lower(name) = lower(:name)", Artist.class).setParameter("name", name).list();

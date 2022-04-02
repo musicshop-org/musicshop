@@ -1,6 +1,7 @@
 package infrastructure;
 
 import domain.ShoppingCart;
+import domain.repositories.ShoppingCartRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -12,29 +13,29 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ShoppingCartRepositoryTest {
     private static ShoppingCartRepository shoppingCartRepository;
-    private static UUID givenOwnerId;
+    private static String givenOwnerId;
 
     @BeforeAll
-    static void init_repository(){
+    static void init_repository() {
         shoppingCartRepository = new ShoppingCartRepositoryImpl();
-        givenOwnerId = UUID.randomUUID();
+        givenOwnerId = UUID.randomUUID().toString();
         shoppingCartRepository.createShoppingCart(givenOwnerId);
     }
 
     @Test
-    void when_given_ownerID_return_cart (){
+    void when_given_ownerID_return_cart() {
         //when
         Optional<ShoppingCart> actualCart = shoppingCartRepository.findShoppingCartByOwnerId(givenOwnerId);
 
         //then
         assertTrue(actualCart.isPresent());
-        assertEquals(givenOwnerId,actualCart.get().getOwnerId());
+        assertEquals(givenOwnerId, actualCart.get().getOwnerId());
     }
 
     @Test
-    void when_given_invalid_ownerID_return_empty (){
+    void when_given_invalid_ownerID_return_empty() {
         //given
-        UUID invalidOwnerId = UUID.randomUUID();
+        String invalidOwnerId = UUID.randomUUID().toString();
 
         //when
         Optional<ShoppingCart> actualCart = shoppingCartRepository.findShoppingCartByOwnerId(invalidOwnerId);
@@ -44,9 +45,9 @@ public class ShoppingCartRepositoryTest {
     }
 
     @Test
-    void when_given_ownerID_create_cart (){
+    void when_given_ownerID_create_cart() {
         //given
-        UUID ownerId = UUID.randomUUID();
+        String ownerId = UUID.randomUUID().toString();
         shoppingCartRepository.createShoppingCart(ownerId);
 
         //when
@@ -54,6 +55,6 @@ public class ShoppingCartRepositoryTest {
 
         //then
         assertTrue(actualCart.isPresent());
-        assertEquals(ownerId,actualCart.get().getOwnerId());
+        assertEquals(ownerId, actualCart.get().getOwnerId());
     }
 }
