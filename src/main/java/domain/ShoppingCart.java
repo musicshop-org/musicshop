@@ -1,7 +1,6 @@
 package domain;
 
 import lombok.Getter;
-import sharedrmi.application.dto.LineItemDTO;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -11,41 +10,41 @@ import java.util.UUID;
 public class ShoppingCart {
 
     private final UUID ownerId;
-    private List<LineItem> lineItems;
+    private List<CartLineItem> cartLineItems;
 
     public ShoppingCart(UUID ownerId){
         this.ownerId = ownerId;
-        this.lineItems = new LinkedList<>();
+        this.cartLineItems = new LinkedList<>();
     };
 
-    public ShoppingCart(UUID ownerId, List<LineItem> lineItems) {
+    public ShoppingCart(UUID ownerId, List<CartLineItem> cartLineItems) {
         this.ownerId = ownerId;
-        this.lineItems = lineItems;
+        this.cartLineItems = cartLineItems;
     }
 
-    public void addLineItem(LineItem newItem){
-        for (LineItem item: lineItems) {
+    public void addLineItem(CartLineItem newItem){
+        for (CartLineItem item: cartLineItems) {
             if (item.equals(newItem)){
                 item.changeQuantity(item.getQuantity()+ newItem.getQuantity());
                 return;
             }
         }
-        this.lineItems.add(newItem);
+        this.cartLineItems.add(newItem);
     }
 
-    public void changeQuantity (LineItem lineItem, int quantity) {
-        for (LineItem item: lineItems) {
-            if (item.equals(lineItem)){
+    public void changeQuantity (CartLineItem cartLineItem, int quantity) {
+        for (CartLineItem item: cartLineItems) {
+            if (item.equals(cartLineItem)){
                 item.changeQuantity(quantity);
                 return;
             }
         }
     }
     
-    public void removeLineItem (LineItem lineItemToRemove){
-        for (LineItem lineItem: lineItems) {
-            if (lineItem.equals(lineItemToRemove)){
-                lineItems.remove(lineItemToRemove);
+    public void removeLineItem (CartLineItem cartLineItemToRemove){
+        for (CartLineItem cartLineItem : cartLineItems) {
+            if (cartLineItem.equals(cartLineItemToRemove)){
+                cartLineItems.remove(cartLineItemToRemove);
                 return;
             }
         }
