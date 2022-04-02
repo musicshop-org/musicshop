@@ -19,7 +19,8 @@ public class ProductRepositoryImpl implements ProductRepository {
 
         Set<Album> albums = new HashSet<>();
         Session session = sessionFactory.openSession();
-        List<Song> songResults = session.createQuery("from Song where lower(title) = lower(:title)", Song.class).setParameter("title", title).list();
+        title = "%"+title+"%";
+        List<Song> songResults = session.createQuery("from Song where lower(title) LIKE lower(:title)", Song.class).setParameter("title", title).list();
 
         for (Song songResult : songResults) {
             for (Album album : songResult.getInAlbum()) {
@@ -34,7 +35,8 @@ public class ProductRepositoryImpl implements ProductRepository {
     public List<Song> findSongsByTitle(String title) throws RemoteException {
 
         Session session = sessionFactory.openSession();
-        List<Song> songResults = session.createQuery("from Song where lower(title) = lower(:title)", Song.class).setParameter("title", title).list();
+        title = "%"+title+"%";
+        List<Song> songResults = session.createQuery("from Song where lower(title) LIKE lower(:title)", Song.class).setParameter("title", title).list();
 
         return songResults;
     }
@@ -43,7 +45,8 @@ public class ProductRepositoryImpl implements ProductRepository {
     public List<Artist> findArtistsByName(String name) throws RemoteException {
 
         Session session = sessionFactory.openSession();
-        List<Artist> artistResults = session.createQuery("from Artist where lower(name) = lower(:name)", Artist.class).setParameter("name", name).list();
+        name = "%"+name+"%";
+        List<Artist> artistResults = session.createQuery("from Artist where lower(name) LIKE lower(:name)", Artist.class).setParameter("name", name).list();
 
         return artistResults;
     }
