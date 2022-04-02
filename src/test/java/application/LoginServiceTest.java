@@ -1,9 +1,9 @@
 package application;
 
 
-import domain.valueobjects.Role;
-import org.junit.jupiter.api.BeforeAll;
+import application.api.LoginService;
 import org.junit.jupiter.api.Test;
+import sharedrmi.domain.valueobjects.Role;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -13,49 +13,49 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LoginServiceTest {
 
-    private LoginService loginService = new LoginServiceImpl();
+    private final LoginService loginService = new LoginServiceImpl();
 
     @Test
-    void given_validCredentials_when_login_then_returnTrue(){
+    void given_validCredentials_when_login_then_returnTrue() {
         //given
         String username = "essiga";
         String password = "password01";
 
         //when
-        Boolean result = loginService.checkCredentials(username,password);
+        Boolean result = loginService.checkCredentials(username, password);
 
         //then
         assertTrue(result);
     }
 
     @Test
-    void given_invalidUsername_when_login_then_returnTrue(){
+    void given_invalidUsername_when_login_then_returnTrue() {
         //given
         String username = "ERROR";
         String password = "password01";
 
         //when
-        Boolean result = loginService.checkCredentials(username,password);
+        Boolean result = loginService.checkCredentials(username, password);
 
         //then
         assertFalse(result);
     }
 
     @Test
-    void given_invalidPassword_when_login_then_returnTrue(){
+    void given_invalidPassword_when_login_then_returnTrue() {
         //given
         String username = "essiga";
         String password = "ERROR";
 
         //when
-        Boolean result = loginService.checkCredentials(username,password);
+        Boolean result = loginService.checkCredentials(username, password);
 
         //then
         assertFalse(result);
     }
 
     @Test
-    void given_validUsername_when_getRole_then_returnCorrectRoles(){
+    void given_validUsername_when_getRole_then_returnCorrectRoles() {
         //given
         String username = "essiga";
         List<Role> expectedRoles = new LinkedList<>();
@@ -70,7 +70,7 @@ public class LoginServiceTest {
     }
 
     @Test
-    void given_userWithoutRoles_when_getRole_then_returnEmptyRoles(){
+    void given_userWithoutRoles_when_getRole_then_returnEmptyRoles() {
         //given
         String username = "unterkoflera";
 
@@ -82,7 +82,7 @@ public class LoginServiceTest {
     }
 
     @Test
-    void given_invalidUsername_when_getRole_then_returnEmptyRoles(){
+    void given_invalidUsername_when_getRole_then_returnEmptyRoles() {
         //given
         String username = "ERROR";
 
@@ -94,7 +94,7 @@ public class LoginServiceTest {
     }
 
     @Test
-    void given_userWithOneRole_when_getRole_then_returnOneRole(){
+    void given_userWithOneRole_when_getRole_then_returnOneRole() {
         //given
         String username = "mayerb";
         List<Role> expectedRoles = new LinkedList<>();
