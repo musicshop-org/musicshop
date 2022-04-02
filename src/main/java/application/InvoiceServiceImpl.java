@@ -4,10 +4,8 @@ import domain.Invoice;
 import domain.InvoiceLineItem;
 import infrastructure.InvoiceRepository;
 import infrastructure.InvoiceRepositoryImpl;
-import infrastructure.ProductRepository;
-import infrastructure.ProductRepositoryImpl;
 import jakarta.transaction.Transactional;
-import sharedrmi.application.dto.ArtistDTO;
+import sharedrmi.application.api.InvoiceService;
 import sharedrmi.application.dto.InvoiceDTO;
 import sharedrmi.application.dto.InvoiceLineItemDTO;
 import sharedrmi.domain.valueobjects.InvoiceId;
@@ -18,9 +16,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceService{
+public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceService {
 
-    private InvoiceRepository invoiceRepository;
+    private final InvoiceRepository invoiceRepository;
 
     public InvoiceServiceImpl() throws RemoteException {
         this.invoiceRepository = new InvoiceRepositoryImpl();
@@ -30,14 +28,16 @@ public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceSe
         this.invoiceRepository = invoiceRepository;
     }
 
+    @Transactional
     @Override
-    public List<InvoiceDTO> findInvoiceById(InvoiceId invoiceId) throws RemoteException{
-        List<InvoiceDTO> invoiceDTOS = new LinkedList<>();
+    public List<InvoiceDTO> findInvoiceById(InvoiceId invoiceId) throws RemoteException {
+
+        List<InvoiceDTO> invoiceDTOs = new LinkedList<>();
 
         List<Invoice> invoices = invoiceRepository.findInvoiceById(invoiceId);
 
-        for (Invoice invoice:invoices) {
-            invoiceDTOS.add(new InvoiceDTO(
+        for (Invoice invoice : invoices) {
+            invoiceDTOs.add(new InvoiceDTO(
                     invoice.getInvoiceId(),
                     invoice.getInvoiceLineItems().stream().map(invoiceLineItem -> new InvoiceLineItemDTO(invoiceLineItem.getMediumType(), invoiceLineItem.getName(), invoiceLineItem.getQuantity(), invoiceLineItem.getPrice())).collect(Collectors.toList()),
                     invoice.getPaymentMethod(),
@@ -46,22 +46,33 @@ public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceSe
             ));
         }
 
-        return invoiceDTOS;
+        return invoiceDTOs;
     }
 
     @Transactional
     @Override
-    public void createInvoice(InvoiceDTO invoiceDTO){
+    public void createInvoice(InvoiceDTO invoiceDTO) throws RemoteException {
+
         List <InvoiceLineItem> invoiceLineItems = new LinkedList<>();
-        for (InvoiceLineItemDTO invoiceLineItemDTO: invoiceDTO.getInvoiceLineItems()) {
-            invoiceLineItems.add(new InvoiceLineItem(invoiceLineItemDTO.getMediumType(),invoiceLineItemDTO.getName(),invoiceLineItemDTO.getQuantity(),invoiceLineItemDTO.getPrice()));
+
+        for (InvoiceLineItemDTO invoiceLineItemDTO : invoiceDTO.getInvoiceLineItems()) {
+            invoiceLineItems.add(new InvoiceLineItem(
+                    invoiceLineItemDTO.getMediumType(),
+                    invoiceLineItemDTO.getName(),
+                    invoiceLineItemDTO.getQuantity(),
+                    invoiceLineItemDTO.getPrice()
+            ));
         }
 
-        Invoice invoice = new Invoice(new InvoiceId(),invoiceLineItems,invoiceDTO.getPaymentMethod(),invoiceDTO.getCustomerType(),invoiceDTO.getDate());
+        Invoice invoice = new Invoice(
+                new InvoiceId(),
+                invoiceLineItems,
+                invoiceDTO.getPaymentMethod(),
+                invoiceDTO.getCustomerType(),
+                invoiceDTO.getDate()
+        );
 
-        invoiceRepository.createInvoice(invoice);
-        //return invoice;
+        this.invoiceRepository.createInvoice(invoice);
     }
-
 
 }

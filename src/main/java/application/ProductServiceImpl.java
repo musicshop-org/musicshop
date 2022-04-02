@@ -18,7 +18,6 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
 public class ProductServiceImpl extends UnicastRemoteObject implements ProductService {
 
     private final ProductRepository productRepository;
@@ -34,6 +33,7 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
     @Transactional
     @Override
     public List<AlbumDTO> findAlbumsBySongTitle(String title) throws RemoteException {
+
         List<AlbumDTO> albumDTOs = new LinkedList<>();
 
         Set<Album> albums = productRepository.findAlbumsBySongTitle(title);
@@ -72,6 +72,7 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
     @Transactional
     @Override
     public List<SongDTO> findSongsByTitle(String title) throws RemoteException {
+
         List<SongDTO> songDTOs = new LinkedList<>();
 
         List<Song> songs = productRepository.findSongsByTitle(title);
@@ -95,6 +96,7 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
     @Transactional
     @Override
     public List<ArtistDTO> findArtistsByName(String name) throws RemoteException {
+
         List<ArtistDTO> artistDTOs = new LinkedList<>();
 
         List<Artist> artists = productRepository.findArtistsByName(name);

@@ -1,17 +1,13 @@
 package infrastructure;
 
 import domain.Invoice;
-import domain.Song;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import sharedrmi.application.dto.InvoiceDTO;
 import sharedrmi.domain.valueobjects.InvoiceId;
 
 import java.rmi.RemoteException;
 import java.util.List;
-import java.util.Optional;
 
 public class InvoiceRepositoryImpl implements InvoiceRepository{
     private final SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
@@ -26,14 +22,18 @@ public class InvoiceRepositoryImpl implements InvoiceRepository{
     }
 
     @Override
-    public void createInvoice(Invoice invoice){
+    public void createInvoice(Invoice invoice) throws RemoteException {
+
         Session session = sessionFactory.openSession();
+
+        // TODO: create query to insert invoice
+
     }
 
     public static void main(String[] args) throws RemoteException {
+
         InvoiceRepositoryImpl invoiceRepository = new InvoiceRepositoryImpl();
         List<Invoice> list = invoiceRepository.findInvoiceById(new InvoiceId());
         System.out.println(list.get(0).toString());
-
     }
 }
