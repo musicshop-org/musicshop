@@ -11,31 +11,15 @@
         </id>
 
         <component name="invoiceId" class="sharedrmi.domain.valueobjects.InvoiceId">
-            <property name="id" column="invoice_id" type="java.lang.Long"/>
+            <property name="invoiceId" column="invoice_id" type="long"/>
         </component>
 
         <!-- List<InvoiceLineItem> invoiceLineItems -->
-        <list name="invoiceLineItems" table="tbl_invoicelineitem">
-            <key column="id"/>
+        <list name="invoiceLineItems" table="invoice_invoiceLineItem" cascade="all">
+            <key column="invoiceId"/>
             <index column="idx"/>
-            <composite-element class="domain.InvoiceLineItem">
-                <property name="mediumType" column="mediumtype">
-                    <type name="org.hibernate.type.EnumType">
-                        <param name="enumClass">sharedrmi.domain.enums.MediumType</param>
-                        <param name="type">12</param>
-                    </type>
-                </property>
-                <property name="name" column="name" type="java.lang.String"/>
-                <property name="quantity" column="quantity" type="java.lang.Integer"/>
-                <property name="price" column="price" type="java.math.BigDecimal"/>
-            </composite-element>
+            <one-to-many class="domain.InvoiceLineItem"/>
         </list>
-
-<!--        <list name="invoiceLineItems" table="invoice_invoiceLineItems" cascade="all">-->
-<!--            <key column="invoiceLineItems_id"/>-->
-<!--            <index column="idx"/>-->
-<!--            <one-to-many class="domain.Invoice"/>-->
-<!--        </list>-->
 
         <property name="paymentMethod" column="paymentMethod">
             <type name="org.hibernate.type.EnumType">
@@ -45,5 +29,22 @@
         </property>
 
         <property name="date" column="date" type="java.time.LocalDate"/>
+    </class>
+
+    <class name="domain.InvoiceLineItem" table="tbl_invoiceLineItem">
+        <id name="id" type="long" column="id">
+            <generator class="native"/>
+        </id>
+
+        <property name="mediumType" column="mediumType">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">sharedrmi.domain.enums.MediumType</param>
+                <param name="type">12</param>
+            </type>
+        </property>
+
+        <property name="name" column="name" type="java.lang.String"/>
+        <property name="quantity" column="quantity" type="java.lang.Integer"/>
+        <property name="price" column="price" type="java.math.BigDecimal"/>
     </class>
 </hibernate-mapping>

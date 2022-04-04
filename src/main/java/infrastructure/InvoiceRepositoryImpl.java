@@ -28,16 +28,11 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
     public void createInvoice(Invoice invoice) throws RemoteException {
 
         Session session = sessionFactory.openSession();
-//        session.persist();
-//        session.flush();
+
+        session.persist(invoice);
 
         // TODO: create query to insert invoice
 
     }
 
-//    public static void main(String[] args) throws RemoteException {
-//        InvoiceRepositoryImpl invoiceRepository = new InvoiceRepositoryImpl();
-//        List<Invoice> list = invoiceRepository.findInvoiceById(new InvoiceId());
-//        System.out.println(list.get(0).toString());
-//    }
 }
