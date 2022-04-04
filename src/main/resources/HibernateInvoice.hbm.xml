@@ -11,11 +11,11 @@
         </id>
 
         <component name="invoiceId" class="sharedrmi.domain.valueobjects.InvoiceId">
-            <property name="invoiceId" column="invoice_id" type="long"/>
+            <property name="invoiceId" column="invoiceId" type="long"/>
         </component>
 
         <!-- List<InvoiceLineItem> invoiceLineItems -->
-        <list name="invoiceLineItems" table="invoice_invoiceLineItem" cascade="all">
+        <list name="invoiceLineItems" cascade="all">
             <key column="invoiceId"/>
             <index column="idx"/>
             <one-to-many class="domain.InvoiceLineItem"/>

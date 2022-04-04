@@ -30,9 +30,8 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
         Session session = sessionFactory.openSession();
 
         session.persist(invoice);
-
-        // TODO: create query to insert invoice
-
+        session.beginTransaction().commit();
+        session.close();
     }
 
 }
