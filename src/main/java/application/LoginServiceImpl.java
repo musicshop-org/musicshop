@@ -25,7 +25,7 @@ public class LoginServiceImpl implements LoginService {
         if (checkCredentials(username, password)) {
             return new SessionFacadeImpl(this.getRole(username), username);
         } else {
-            throw new FailedLoginException();
+            throw new FailedLoginException("Login failed!");
         }
     }
 
