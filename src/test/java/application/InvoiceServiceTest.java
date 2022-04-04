@@ -6,11 +6,14 @@ import domain.repositories.InvoiceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sharedrmi.application.api.InvoiceService;
 import sharedrmi.application.dto.InvoiceDTO;
+import sharedrmi.application.dto.InvoiceLineItemDTO;
 import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.enums.PaymentMethod;
 import sharedrmi.domain.valueobjects.InvoiceId;
@@ -18,7 +21,6 @@ import sharedrmi.domain.valueobjects.InvoiceId;
 import java.math.BigDecimal;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,19 +30,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(MockitoExtension.class)
 public class InvoiceServiceTest {
 
-    private InvoiceId givenInvoiceId;
     private Invoice givenInvoice;
 
     private InvoiceService invoiceService;
+
+    @Captor
+    ArgumentCaptor<Invoice> invoiceCaptor;
 
     @Mock
     private static InvoiceRepository invoiceRepository;
 
     @BeforeEach
     void initMockAndService() throws RemoteException {
-        givenInvoiceId = new InvoiceId(111);
         givenInvoice = new Invoice(
-                givenInvoiceId,
+                new InvoiceId(111),
                 List.of(new InvoiceLineItem(
                         MediumType.DIGITAL,
                         "Song",
@@ -88,30 +91,33 @@ public class InvoiceServiceTest {
     }
 
     @Test
-    void given_invoice_when_createInvoice_then_addInvoiceToDatabase() throws RemoteException {
+    void given_invoiceDTO_when_createInvoice_then_validInvoice() throws RemoteException {
         // given
-        List<InvoiceLineItem> items = new LinkedList<>();
-        items.add(new InvoiceLineItem(
-                MediumType.DIGITAL,
-                "Song",
-                4,
-                new BigDecimal("5.00")
-        ));
-
-        InvoiceId invoiceId = new InvoiceId();
-        Invoice invoice = new Invoice(
-                invoiceId,
-                items,
-                PaymentMethod.CREDIT_CARD,
-                LocalDate.now()
+        InvoiceDTO invoiceDTO = new InvoiceDTO(
+                givenInvoice.getInvoiceId(),
+                List.of(new InvoiceLineItemDTO(
+                        givenInvoice.getInvoiceLineItems().get(0).getMediumType(),
+                        givenInvoice.getInvoiceLineItems().get(0).getName(),
+                        givenInvoice.getInvoiceLineItems().get(0).getQuantity(),
+                        givenInvoice.getInvoiceLineItems().get(0).getPrice()
+                )),
+                givenInvoice.getPaymentMethod(),
+                givenInvoice.getDate()
         );
 
         // when
+        invoiceService.createInvoice(invoiceDTO);
 
+        Mockito.verify(invoiceRepository).createInvoice(invoiceCaptor.capture());
+        Invoice invoice = invoiceCaptor.getValue();
 
         // then
-
-
+        assertAll(
+                () -> assertEquals(givenInvoice.getInvoiceId().getInvoiceId(), invoice.getInvoiceId().getInvoiceId()),
+                () -> assertEquals(givenInvoice.getInvoiceLineItems().size(), invoice.getInvoiceLineItems().size()),
+                () -> assertEquals(givenInvoice.getPaymentMethod(), invoice.getPaymentMethod()),
+                () -> assertEquals(givenInvoice.getDate(), invoice.getDate())
+        );
     }
 
 }

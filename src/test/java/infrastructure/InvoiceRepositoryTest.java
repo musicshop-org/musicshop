@@ -44,6 +44,7 @@ public class InvoiceRepositoryTest {
         assertTrue(invoice.isEmpty());
     }
 
+    /*
     @Test
     void given_invoice_when_createInvoice_then_addInvoiceToDatabase() throws RemoteException {
         // given
@@ -68,5 +69,6 @@ public class InvoiceRepositoryTest {
         // then
         assertEquals(invoiceId.getInvoiceId(), invoiceRepository.findInvoiceById(invoiceId).get().getInvoiceId().getInvoiceId());
     }
+     */
 
 }

@@ -12,6 +12,7 @@ import org.hibernate.cfg.Configuration;
 import java.util.*;
 
 public class ProductRepositoryImpl implements ProductRepository {
+
     private final SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 
     @Override

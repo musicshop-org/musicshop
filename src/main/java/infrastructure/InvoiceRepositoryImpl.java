@@ -11,6 +11,7 @@ import java.rmi.RemoteException;
 import java.util.Optional;
 
 public class InvoiceRepositoryImpl implements InvoiceRepository {
+
     private final SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 
     @Override
