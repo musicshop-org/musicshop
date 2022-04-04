@@ -14,11 +14,28 @@
             <property name="id" column="invoice_id" type="java.lang.Long"/>
         </component>
 
-        <list name="invoiceLineItems" table="invoice_invoiceLineItems" cascade="all">
-            <key column="invoiceLineItems_id"/>
+        <!-- List<InvoiceLineItem> invoiceLineItems -->
+        <list name="invoiceLineItems" table="tbl_invoicelineitem">
+            <key column="id"/>
             <index column="idx"/>
-            <one-to-many class="domain.Invoice"/>
+            <composite-element class="domain.InvoiceLineItem">
+                <property name="mediumType" column="mediumtype">
+                    <type name="org.hibernate.type.EnumType">
+                        <param name="enumClass">sharedrmi.domain.enums.MediumType</param>
+                        <param name="type">12</param>
+                    </type>
+                </property>
+                <property name="name" column="name" type="java.lang.String"/>
+                <property name="quantity" column="quantity" type="java.lang.Integer"/>
+                <property name="price" column="price" type="java.math.BigDecimal"/>
+            </composite-element>
         </list>
+
+<!--        <list name="invoiceLineItems" table="invoice_invoiceLineItems" cascade="all">-->
+<!--            <key column="invoiceLineItems_id"/>-->
+<!--            <index column="idx"/>-->
+<!--            <one-to-many class="domain.Invoice"/>-->
+<!--        </list>-->
 
         <property name="paymentMethod" column="paymentMethod">
             <type name="org.hibernate.type.EnumType">

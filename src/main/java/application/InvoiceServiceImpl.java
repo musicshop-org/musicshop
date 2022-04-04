@@ -33,20 +33,20 @@ public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceSe
     @Override
     public Optional<InvoiceDTO> findInvoiceById(InvoiceId invoiceId) throws RemoteException {
 
-        List<InvoiceDTO> invoiceDTOs = new LinkedList<>();
+        Optional<Invoice> result = invoiceRepository.findInvoiceById(invoiceId);
 
-        List<Invoice> invoices = invoiceRepository.findInvoiceById(invoiceId);
-
-        for (Invoice invoice : invoices) {
-            invoiceDTOs.add(new InvoiceDTO(
-                    invoice.getInvoiceId(),
-                    invoice.getInvoiceLineItems().stream().map(invoiceLineItem -> new InvoiceLineItemDTO(invoiceLineItem.getMediumType(), invoiceLineItem.getName(), invoiceLineItem.getQuantity(), invoiceLineItem.getPrice())).collect(Collectors.toList()),
-                    invoice.getPaymentMethod(),
-                    invoice.getDate()
-            ));
-        }
-
-        return null;
+        return result.map(invoice -> new InvoiceDTO(
+                invoice.getInvoiceId(),
+                invoice.getInvoiceLineItems()
+                        .stream().map(invoiceLineItem -> new InvoiceLineItemDTO(
+                                invoiceLineItem.getMediumType(),
+                                invoiceLineItem.getName(),
+                                invoiceLineItem.getQuantity(),
+                                invoiceLineItem.getPrice()))
+                        .collect(Collectors.toList()),
+                invoice.getPaymentMethod(),
+                invoice.getDate()
+        ));
     }
 
     @Transactional

@@ -17,6 +17,5 @@
         <mapping resource="HibernateEmployee.hbm.xml"/>
         <mapping resource="HibernateCartLineItem.hbm.xml"/>
         <mapping resource="HibernateInvoice.hbm.xml"/>
-        <mapping resource="HibernateInvoiceLineItem.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>
