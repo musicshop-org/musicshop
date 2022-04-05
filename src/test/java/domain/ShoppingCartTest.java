@@ -13,12 +13,12 @@ public class ShoppingCartTest {
     void when_lineItem_added_return_equal() {
         //given
         ShoppingCart cart = new ShoppingCart(UUID.randomUUID().toString());
-        LineItem expectedItem = new LineItem(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18));
+        CartLineItem expectedItem = new CartLineItem(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18));
 
         //when
         cart.addLineItem(expectedItem);
 
         //then
-        assertEquals(expectedItem, cart.getLineItems().get(0));
+        assertEquals(expectedItem, cart.getCartLineItems().get(0));
     }
 }

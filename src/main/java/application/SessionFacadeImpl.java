@@ -52,13 +52,13 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public void changeQuantity(LineItemDTO lineItemDTO, int i) throws RemoteException {
-        this.shoppingCartService.changeQuantity(lineItemDTO, i);
+    public void changeQuantity(CartLineItemDTO cartLineItemDTO, int i) throws RemoteException {
+        this.shoppingCartService.changeQuantity(cartLineItemDTO, i);
     }
 
     @Override
-    public void removeProductFromCart(LineItemDTO lineItemDTO) throws RemoteException {
-        this.shoppingCartService.removeProductFromCart(lineItemDTO);
+    public void removeProductFromCart(CartLineItemDTO cartLineItemDTO) throws RemoteException {
+        this.shoppingCartService.removeProductFromCart(cartLineItemDTO);
     }
 
     @Override

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping default-access="field" default-cascade="all">
+
+    <class name="domain.Invoice" table="tbl_invoice" lazy="true">
+        <id name="id" type="long" column="id">
+            <generator class="native"/>
+        </id>
+
+        <component name="invoiceId" class="sharedrmi.domain.valueobjects.InvoiceId">
+            <property name="invoiceId" column="invoiceId" type="long"/>
+        </component>
+
+        <!-- List<InvoiceLineItem> invoiceLineItems -->
+        <list name="invoiceLineItems" cascade="all">
+            <key column="invoiceId"/>
+            <index column="idx"/>
+            <one-to-many class="domain.InvoiceLineItem"/>
+        </list>
+
+        <property name="paymentMethod" column="paymentMethod">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">sharedrmi.domain.enums.PaymentMethod</param>
+                <param name="type">12</param>
+            </type>
+        </property>
+
+        <property name="date" column="date" type="java.time.LocalDate"/>
+    </class>
+
+    <class name="domain.InvoiceLineItem" table="tbl_invoiceLineItem">
+        <id name="id" type="long" column="id">
+            <generator class="native"/>
+        </id>
+
+        <property name="mediumType" column="mediumType">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">sharedrmi.domain.enums.MediumType</param>
+                <param name="type">12</param>
+            </type>
+        </property>
+
+        <property name="name" column="name" type="java.lang.String"/>
+        <property name="quantity" column="quantity" type="java.lang.Integer"/>
+        <property name="price" column="price" type="java.math.BigDecimal"/>
+    </class>
+</hibernate-mapping>

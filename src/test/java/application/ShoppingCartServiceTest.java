@@ -1,6 +1,6 @@
 package application;
 
-import domain.LineItem;
+import domain.CartLineItem;
 import domain.ShoppingCart;
 import domain.repositories.ShoppingCartRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import sharedrmi.application.api.ShoppingCartService;
 import sharedrmi.application.dto.AlbumDTO;
-import sharedrmi.application.dto.LineItemDTO;
+import sharedrmi.application.dto.CartLineItemDTO;
 import sharedrmi.application.dto.ShoppingCartDTO;
 import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.valueobjects.AlbumId;
@@ -41,9 +41,9 @@ public class ShoppingCartServiceTest {
     void initMockAndService() throws RemoteException {
         String ownerId = UUID.randomUUID().toString();
 
-        List<LineItem> lineItems = new LinkedList<>();
-        lineItems.add(new LineItem(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18)));
-        lineItems.add(new LineItem(MediumType.CD, "BAM BAM", 20, BigDecimal.valueOf(36)));
+        List<CartLineItem> lineItems = new LinkedList<>();
+        lineItems.add(new CartLineItem(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18)));
+        lineItems.add(new CartLineItem(MediumType.CD, "BAM BAM", 20, BigDecimal.valueOf(36)));
 
         givenCart = new ShoppingCart(ownerId, lineItems);
 
@@ -59,16 +59,16 @@ public class ShoppingCartServiceTest {
         //then
         assertEquals(givenCart.getOwnerId(), cartDTO.getOwnerId());
         assertAll("LineItem 1",
-                () -> assertEquals(givenCart.getLineItems().get(0).getName(), cartDTO.getLineItems().get(0).getName()),
-                () -> assertEquals(givenCart.getLineItems().get(0).getQuantity(), cartDTO.getLineItems().get(0).getQuantity()),
-                () -> assertEquals(givenCart.getLineItems().get(0).getPrice(), cartDTO.getLineItems().get(0).getPrice()),
-                () -> assertEquals(givenCart.getLineItems().get(0).getMediumType(), cartDTO.getLineItems().get(0).getMediumType())
+                () -> assertEquals(givenCart.getCartLineItems().get(0).getName(), cartDTO.getCartLineItems().get(0).getName()),
+                () -> assertEquals(givenCart.getCartLineItems().get(0).getQuantity(), cartDTO.getCartLineItems().get(0).getQuantity()),
+                () -> assertEquals(givenCart.getCartLineItems().get(0).getPrice(), cartDTO.getCartLineItems().get(0).getPrice()),
+                () -> assertEquals(givenCart.getCartLineItems().get(0).getMediumType(), cartDTO.getCartLineItems().get(0).getMediumType())
         );
         assertAll("LineItem 2",
-                () -> assertEquals(givenCart.getLineItems().get(1).getName(), cartDTO.getLineItems().get(1).getName()),
-                () -> assertEquals(givenCart.getLineItems().get(1).getQuantity(), cartDTO.getLineItems().get(1).getQuantity()),
-                () -> assertEquals(givenCart.getLineItems().get(1).getPrice(), cartDTO.getLineItems().get(1).getPrice()),
-                () -> assertEquals(givenCart.getLineItems().get(1).getMediumType(), cartDTO.getLineItems().get(1).getMediumType())
+                () -> assertEquals(givenCart.getCartLineItems().get(1).getName(), cartDTO.getCartLineItems().get(1).getName()),
+                () -> assertEquals(givenCart.getCartLineItems().get(1).getQuantity(), cartDTO.getCartLineItems().get(1).getQuantity()),
+                () -> assertEquals(givenCart.getCartLineItems().get(1).getPrice(), cartDTO.getCartLineItems().get(1).getPrice()),
+                () -> assertEquals(givenCart.getCartLineItems().get(1).getMediumType(), cartDTO.getCartLineItems().get(1).getMediumType())
         );
     }
 
@@ -85,10 +85,10 @@ public class ShoppingCartServiceTest {
         ShoppingCartDTO cartDTO = shoppingCartService.getCart();
         assertEquals(givenCart.getOwnerId(), cartDTO.getOwnerId());
         assertAll("LineItem 3",
-                () -> assertEquals(album.getTitle(), cartDTO.getLineItems().get(2).getName()),
-                () -> assertEquals(quantity, cartDTO.getLineItems().get(2).getQuantity()),
-                () -> assertEquals(album.getPrice(), cartDTO.getLineItems().get(2).getPrice()),
-                () -> assertEquals(album.getMediumType(), cartDTO.getLineItems().get(2).getMediumType())
+                () -> assertEquals(album.getTitle(), cartDTO.getCartLineItems().get(2).getName()),
+                () -> assertEquals(quantity, cartDTO.getCartLineItems().get(2).getQuantity()),
+                () -> assertEquals(album.getPrice(), cartDTO.getCartLineItems().get(2).getPrice()),
+                () -> assertEquals(album.getMediumType(), cartDTO.getCartLineItems().get(2).getMediumType())
         );
     }
 
@@ -97,25 +97,25 @@ public class ShoppingCartServiceTest {
         //given
         int newQuantity = 10;
 
-        LineItemDTO lineItemDTO = new LineItemDTO(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18));
+        CartLineItemDTO lineItemDTO = new CartLineItemDTO(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18));
 
         //when
         shoppingCartService.changeQuantity(lineItemDTO, newQuantity);
 
         //then
-        assertEquals(newQuantity, shoppingCartService.getCart().getLineItems().get(0).getQuantity());
+        assertEquals(newQuantity, shoppingCartService.getCart().getCartLineItems().get(0).getQuantity());
     }
 
     @Test
     void given_cart_when_removeProductFromCart_return_new_size() throws RemoteException {
         //given
         int expected = 1;
-        LineItemDTO lineItemDTO = new LineItemDTO(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18));
+        CartLineItemDTO lineItemDTO = new CartLineItemDTO(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18));
 
         //when
         shoppingCartService.removeProductFromCart(lineItemDTO);
 
         //then
-        assertEquals(expected, shoppingCartService.getCart().getLineItems().size());
+        assertEquals(expected, shoppingCartService.getCart().getCartLineItems().size());
     }
 }
