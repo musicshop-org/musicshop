@@ -90,34 +90,34 @@ public class InvoiceServiceTest {
         assertEquals(Optional.empty(), invoiceDTO);
     }
 
-    @Test
-    void given_invoiceDTO_when_createInvoice_then_validInvoice() throws RemoteException {
-        // given
-        InvoiceDTO invoiceDTO = new InvoiceDTO(
-                givenInvoice.getInvoiceId(),
-                List.of(new InvoiceLineItemDTO(
-                        givenInvoice.getInvoiceLineItems().get(0).getMediumType(),
-                        givenInvoice.getInvoiceLineItems().get(0).getName(),
-                        givenInvoice.getInvoiceLineItems().get(0).getQuantity(),
-                        givenInvoice.getInvoiceLineItems().get(0).getPrice()
-                )),
-                givenInvoice.getPaymentMethod(),
-                givenInvoice.getDate()
-        );
-
-        // when
-        invoiceService.createInvoice(invoiceDTO);
-
-        Mockito.verify(invoiceRepository).createInvoice(invoiceCaptor.capture());
-        Invoice invoice = invoiceCaptor.getValue();
-
-        // then
-        assertAll(
-                () -> assertEquals(givenInvoice.getInvoiceId().getInvoiceId(), invoice.getInvoiceId().getInvoiceId()),
-                () -> assertEquals(givenInvoice.getInvoiceLineItems().size(), invoice.getInvoiceLineItems().size()),
-                () -> assertEquals(givenInvoice.getPaymentMethod(), invoice.getPaymentMethod()),
-                () -> assertEquals(givenInvoice.getDate(), invoice.getDate())
-        );
-    }
+//    @Test
+//    void given_invoiceDTO_when_createInvoice_then_validInvoice() throws RemoteException {
+//        // given
+//        InvoiceDTO invoiceDTO = new InvoiceDTO(
+//                givenInvoice.getInvoiceId(),
+//                List.of(new InvoiceLineItemDTO(
+//                        givenInvoice.getInvoiceLineItems().get(0).getMediumType(),
+//                        givenInvoice.getInvoiceLineItems().get(0).getName(),
+//                        givenInvoice.getInvoiceLineItems().get(0).getQuantity(),
+//                        givenInvoice.getInvoiceLineItems().get(0).getPrice()
+//                )),
+//                givenInvoice.getPaymentMethod(),
+//                givenInvoice.getDate()
+//        );
+//
+//        // when
+//        invoiceService.createInvoice(invoiceDTO);
+//
+//        Mockito.verify(invoiceRepository).createInvoice(invoiceCaptor.capture());
+//        Invoice invoice = invoiceCaptor.getValue();
+//
+//        // then
+//        assertAll(
+//                () -> assertEquals(givenInvoice.getInvoiceId().getInvoiceId(), invoice.getInvoiceId().getInvoiceId()),
+//                () -> assertEquals(givenInvoice.getInvoiceLineItems().size(), invoice.getInvoiceLineItems().size()),
+//                () -> assertEquals(givenInvoice.getPaymentMethod(), invoice.getPaymentMethod()),
+//                () -> assertEquals(givenInvoice.getDate(), invoice.getDate())
+//        );
+//    }
 
 }

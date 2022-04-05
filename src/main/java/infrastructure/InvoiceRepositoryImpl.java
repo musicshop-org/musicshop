@@ -4,6 +4,7 @@ import domain.Invoice;
 import domain.repositories.InvoiceRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import sharedrmi.domain.valueobjects.InvoiceId;
 
@@ -29,9 +30,10 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
     public void createInvoice(Invoice invoice) throws RemoteException {
 
         Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
 
         session.persist(invoice);
-        session.beginTransaction().commit();
+        transaction.commit();
         session.close();
     }
 

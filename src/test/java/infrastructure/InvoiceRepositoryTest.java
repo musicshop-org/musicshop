@@ -2,7 +2,9 @@ package infrastructure;
 
 import domain.Invoice;
 import domain.InvoiceLineItem;
+import domain.repositories.InvoiceRepository;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.enums.PaymentMethod;
 import sharedrmi.domain.valueobjects.InvoiceId;
@@ -17,6 +19,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class InvoiceRepositoryTest {
+
+    @Mock
+    InvoiceRepository invoiceRepository;
 
     @Test
     void given_invoiceId_when_findInvoiceById_then_returnInvoice() throws RemoteException {
@@ -44,7 +49,6 @@ public class InvoiceRepositoryTest {
         assertTrue(invoice.isEmpty());
     }
 
-    /*
     @Test
     void given_invoice_when_createInvoice_then_addInvoiceToDatabase() throws RemoteException {
         // given
@@ -69,6 +73,5 @@ public class InvoiceRepositoryTest {
         // then
         assertEquals(invoiceId.getInvoiceId(), invoiceRepository.findInvoiceById(invoiceId).get().getInvoiceId().getInvoiceId());
     }
-     */
 
 }
