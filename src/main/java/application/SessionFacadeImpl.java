@@ -2,13 +2,18 @@ package application;
 
 import application.api.SessionFacade;
 
+import sharedrmi.application.api.CustomerService;
 import sharedrmi.application.api.ProductService;
 import sharedrmi.application.api.ShoppingCartService;
 import sharedrmi.application.dto.*;
 import sharedrmi.domain.valueobjects.Role;
 
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.LinkedList;
 import java.util.List;
 
 public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFacade {
@@ -16,6 +21,7 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     private final List<Role> roles;
     private final String username;
     private final ShoppingCartService shoppingCartService;
+    private CustomerService customerService;
 
     private final ProductService productService = new ProductServiceImpl();
 
@@ -24,6 +30,13 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
         this.username = username;
 
         this.shoppingCartService = new ShoppingCartServiceImpl(username);
+
+        try {
+            customerService = (CustomerService) Naming.lookup("rmi://localhost/CustomerService");
+        } catch (NotBoundException | MalformedURLException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -52,13 +65,25 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public void changeQuantity(LineItemDTO lineItemDTO, int i) throws RemoteException {
+    public void changeQuantity(CartLineItemDTO lineItemDTO, int i) throws RemoteException {
         this.shoppingCartService.changeQuantity(lineItemDTO, i);
     }
 
     @Override
-    public void removeProductFromCart(LineItemDTO lineItemDTO) throws RemoteException {
+    public void removeProductFromCart(CartLineItemDTO lineItemDTO) throws RemoteException {
         this.shoppingCartService.removeProductFromCart(lineItemDTO);
+    }
+
+    @Override
+    public List<CustomerDTO> findCustomersByName(String name) {
+
+        List<CustomerDTO> customers = new LinkedList<>();
+        try {
+            customers = customerService.findCustomersByName(name);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return customers;
     }
 
     @Override

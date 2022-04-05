@@ -7,7 +7,7 @@ import infrastructure.ShoppingCartRepositoryImpl;
 
 import sharedrmi.application.api.ShoppingCartService;
 import sharedrmi.application.dto.AlbumDTO;
-import sharedrmi.application.dto.LineItemDTO;
+import sharedrmi.application.dto.CartLineItemDTO;
 import sharedrmi.application.dto.ShoppingCartDTO;
 
 import java.rmi.RemoteException;
@@ -51,10 +51,10 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
 
     @Override
     public ShoppingCartDTO getCart() {
-        List<LineItemDTO> lineItemsDTO = new LinkedList<>();
+        List<CartLineItemDTO> lineItemsDTO = new LinkedList<>();
 
         for (LineItem item : shoppingCart.getLineItems()) {
-            lineItemsDTO.add(new LineItemDTO(
+            lineItemsDTO.add(new CartLineItemDTO(
                     item.getMediumType(),
                     item.getName(),
                     item.getQuantity(),
@@ -77,7 +77,7 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
     }
 
     @Override
-    public void changeQuantity(LineItemDTO lineItemDTO, int quantity) {
+    public void changeQuantity(CartLineItemDTO lineItemDTO, int quantity) {
         LineItem lineItem = new LineItem(
                 lineItemDTO.getMediumType(),
                 lineItemDTO.getName(),
@@ -89,7 +89,7 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
     }
 
     @Override
-    public void removeProductFromCart(LineItemDTO lineItemDTO) {
+    public void removeProductFromCart(CartLineItemDTO lineItemDTO) {
         LineItem lineItem = new LineItem(
                 lineItemDTO.getMediumType(),
                 lineItemDTO.getName(),

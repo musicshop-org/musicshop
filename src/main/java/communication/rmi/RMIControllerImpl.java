@@ -50,12 +50,12 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     }
 
     @Override
-    public void changeQuantity(LineItemDTO lineItemDTO, int i) throws RemoteException {
+    public void changeQuantity(CartLineItemDTO lineItemDTO, int i) throws RemoteException {
         sessionFacade.changeQuantity(lineItemDTO, i);
     }
 
     @Override
-    public void removeProductFromCart(LineItemDTO lineItemDTO) throws RemoteException {
+    public void removeProductFromCart(CartLineItemDTO lineItemDTO) throws RemoteException {
         sessionFacade.removeProductFromCart(lineItemDTO);
     }
 
