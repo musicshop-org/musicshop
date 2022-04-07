@@ -27,7 +27,7 @@ public class LoginServiceImpl implements LoginService {
 
         if (checkCredentials(username, password)) {
 
-            List<Role> roles = getRole(username);
+            List<Role> roles = this.getRole(username);
 
             if (roles.size() == 0) {
                 throw new AccessDeniedException("access denied - no permission!");
