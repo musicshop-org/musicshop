@@ -62,6 +62,11 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
+    public void clearCart() throws RemoteException {
+        this.shoppingCartService.clearCart();
+    }
+
+    @Override
     public List<Role> getRoles() {
         return roles;
     }

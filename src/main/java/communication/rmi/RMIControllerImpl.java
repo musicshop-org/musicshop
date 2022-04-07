@@ -60,6 +60,11 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     }
 
     @Override
+    public void clearCart() throws RemoteException {
+        sessionFacade.clearCart();
+    }
+
+    @Override
     public List<Role> getRoles() throws RemoteException {
         return sessionFacade.getRoles();
     }
