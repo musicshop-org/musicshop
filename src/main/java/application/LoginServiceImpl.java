@@ -32,7 +32,9 @@ public class LoginServiceImpl implements LoginService {
             if (roles.size() == 0) {
                 throw new AccessDeniedException("access denied - no permission!");
             }
+
             return new SessionFacadeImpl(roles, username);
+
         } else {
             throw new FailedLoginException("wrong username or password");
         }
