@@ -99,4 +99,9 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
 
         this.shoppingCart.removeLineItem(cartLineItem);
     }
+
+    @Override
+    public void clearCart() throws RemoteException {
+
+    }
 }

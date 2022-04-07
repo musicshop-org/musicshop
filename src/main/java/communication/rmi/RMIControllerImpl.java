@@ -9,6 +9,7 @@ import sharedrmi.communication.rmi.RMIController;
 import sharedrmi.domain.valueobjects.Role;
 
 import javax.security.auth.login.FailedLoginException;
+import java.nio.file.AccessDeniedException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
@@ -17,7 +18,7 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
 
     private final SessionFacade sessionFacade;
 
-    protected RMIControllerImpl(String username, String password) throws FailedLoginException, RemoteException {
+    protected RMIControllerImpl(String username, String password) throws FailedLoginException, RemoteException, AccessDeniedException {
         super();
 
         LoginService loginService = new LoginServiceImpl();
@@ -57,6 +58,11 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     @Override
     public void removeProductFromCart(CartLineItemDTO cartLineItemDTO) throws RemoteException {
         sessionFacade.removeProductFromCart(cartLineItemDTO);
+    }
+
+    @Override
+    public void clearCart() throws RemoteException {
+        sessionFacade.clearCart();
     }
 
     @Override

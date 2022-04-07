@@ -12,6 +12,7 @@ import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.security.auth.login.FailedLoginException;
 import java.math.BigInteger;
+import java.nio.file.AccessDeniedException;
 import java.rmi.RemoteException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -20,12 +21,20 @@ import java.util.*;
 public class LoginServiceImpl implements LoginService {
 
     @Override
-    public SessionFacade login(String username, String password) throws FailedLoginException, RemoteException {
+    public SessionFacade login(String username, String password) throws FailedLoginException, RemoteException, AccessDeniedException {
+
+
 
         if (checkCredentials(username, password)) {
-            return new SessionFacadeImpl(this.getRole(username), username);
+
+            List<Role> roles = getRole(username);
+
+            if (roles.size() == 0) {
+                throw new AccessDeniedException("access denied - no permission!");
+            }
+            return new SessionFacadeImpl(roles, username);
         } else {
-            throw new FailedLoginException("login failed!");
+            throw new FailedLoginException("wrong username or password");
         }
     }
 
