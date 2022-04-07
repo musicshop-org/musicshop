@@ -36,31 +36,5 @@ public class Main {
         } catch (RemoteException | MalformedURLException e) {
             e.printStackTrace();
         }
-
-//        InvoiceRepository invoiceRepository = new InvoiceRepositoryImpl();
-//
-//        List<InvoiceLineItem> items = new LinkedList<>();
-//
-//        items.add(new InvoiceLineItem(
-//                MediumType.DIGITAL,
-//                "Song",
-//                4,
-//                new BigDecimal("5.00")
-//        ));
-//
-//        items.add(new InvoiceLineItem(
-//                MediumType.DIGITAL,
-//                "Song Two",
-//                5,
-//                new BigDecimal("3.00")
-//        ));
-//
-//        invoiceRepository.createInvoice(new Invoice(
-//                new InvoiceId(),
-//                items,
-//                PaymentMethod.CREDIT_CARD,
-//                LocalDate.now()
-//        ));
-
     }
 }

@@ -29,7 +29,7 @@ public class LoginServiceImpl implements LoginService {
 
             List<Role> roles = this.getRole(username);
 
-            if (roles.size() == 0) {
+            if (roles.isEmpty()) {
                 throw new AccessDeniedException("access denied - no permission!");
             }
 
