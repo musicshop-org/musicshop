@@ -26,7 +26,7 @@ public class ShoppingCart {
     }
 
     public void addLineItem(CartLineItem newItem) {
-        for (CartLineItem cartLineItem : cartLineItems) {
+        for (CartLineItem cartLineItem : this.cartLineItems) {
             if (cartLineItem.equals(newItem)) {
                 cartLineItem.changeQuantity(cartLineItem.getQuantity() + newItem.getQuantity());
                 return;
@@ -37,7 +37,7 @@ public class ShoppingCart {
     }
 
     public void changeQuantity(CartLineItem lineItem, int quantity) {
-        for (CartLineItem cartLineItem : cartLineItems) {
+        for (CartLineItem cartLineItem : this.cartLineItems) {
             if (cartLineItem.equals(lineItem)) {
                 cartLineItem.changeQuantity(quantity);
                 return;
@@ -48,9 +48,13 @@ public class ShoppingCart {
     public void removeLineItem(CartLineItem cartLineItemToRemove) {
         for (CartLineItem cartLineItem : cartLineItems) {
             if (cartLineItem.equals(cartLineItemToRemove)) {
-                cartLineItems.remove(cartLineItemToRemove);
+                this.cartLineItems.remove(cartLineItemToRemove);
                 return;
             }
         }
+    }
+
+    public void clear() {
+        this.cartLineItems.clear();
     }
 }

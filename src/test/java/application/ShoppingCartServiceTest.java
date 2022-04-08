@@ -118,4 +118,16 @@ public class ShoppingCartServiceTest {
         //then
         assertEquals(expected, shoppingCartService.getCart().getCartLineItems().size());
     }
+
+    @Test
+    void given_cart_when_clearCart_return_empty_cart() throws RemoteException {
+        //given
+        int expected = 0;
+
+        //when
+        shoppingCartService.clearCart();
+
+        //then
+        assertEquals(expected, shoppingCartService.getCart().getCartLineItems().size());
+    }
 }
