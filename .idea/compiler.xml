@@ -10,6 +10,6 @@
         <module name="musicshop.main" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="11" />
+    <bytecodeTargetLevel target="15" />
   </component>
 </project>
