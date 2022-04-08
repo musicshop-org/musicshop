@@ -31,23 +31,25 @@ public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceSe
 
     @Transactional
     @Override
-    public InvoiceDTO findInvoiceById(InvoiceId invoiceId) throws RemoteException {
+    public InvoiceDTO findInvoiceById(InvoiceId invoiceId) throws RemoteException, Exception {
 
         Optional<Invoice> result = invoiceRepository.findInvoiceById(invoiceId);
 
-        Invoice invoice = result.get();
+        if (result.isEmpty()) {
+            throw new Exception("invoice not found");
+        }
 
         return new InvoiceDTO(
-                invoice.getInvoiceId(),
-                invoice.getInvoiceLineItems()
+                result.get().getInvoiceId(),
+                result.get().getInvoiceLineItems()
                         .stream().map(invoiceLineItem -> new InvoiceLineItemDTO(
                                 invoiceLineItem.getMediumType(),
                                 invoiceLineItem.getName(),
                                 invoiceLineItem.getQuantity(),
                                 invoiceLineItem.getPrice()))
                         .collect(Collectors.toList()),
-                invoice.getPaymentMethod(),
-                invoice.getDate()
+                result.get().getPaymentMethod(),
+                result.get().getDate()
         );
     }
 
