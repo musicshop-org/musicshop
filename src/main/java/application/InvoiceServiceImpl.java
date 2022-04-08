@@ -31,11 +31,13 @@ public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceSe
 
     @Transactional
     @Override
-    public Optional<InvoiceDTO> findInvoiceById(InvoiceId invoiceId) throws RemoteException {
+    public InvoiceDTO findInvoiceById(InvoiceId invoiceId) throws RemoteException {
 
         Optional<Invoice> result = invoiceRepository.findInvoiceById(invoiceId);
 
-        return result.map(invoice -> new InvoiceDTO(
+        Invoice invoice = result.get();
+
+        return new InvoiceDTO(
                 invoice.getInvoiceId(),
                 invoice.getInvoiceLineItems()
                         .stream().map(invoiceLineItem -> new InvoiceLineItemDTO(
@@ -46,7 +48,7 @@ public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceSe
                         .collect(Collectors.toList()),
                 invoice.getPaymentMethod(),
                 invoice.getDate()
-        ));
+        );
     }
 
     @Transactional
