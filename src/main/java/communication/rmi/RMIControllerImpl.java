@@ -6,18 +6,22 @@ import application.api.SessionFacade;
 
 import sharedrmi.application.dto.*;
 import sharedrmi.communication.rmi.RMIController;
+import sharedrmi.domain.valueobjects.InvoiceId;
 import sharedrmi.domain.valueobjects.Role;
 
+import javax.naming.NoPermissionException;
 import javax.security.auth.login.FailedLoginException;
+import java.nio.file.AccessDeniedException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
+import java.util.Optional;
 
 public class RMIControllerImpl extends UnicastRemoteObject implements RMIController {
 
     private final SessionFacade sessionFacade;
 
-    protected RMIControllerImpl(String username, String password) throws FailedLoginException, RemoteException {
+    protected RMIControllerImpl(String username, String password) throws FailedLoginException, RemoteException, AccessDeniedException {
         super();
 
         LoginService loginService = new LoginServiceImpl();
@@ -40,23 +44,28 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     }
 
     @Override
-    public ShoppingCartDTO getCart() throws RemoteException {
+    public ShoppingCartDTO getCart() throws RemoteException, NoPermissionException {
         return sessionFacade.getCart();
     }
 
     @Override
-    public void addProductToCart(AlbumDTO albumDTO, int i) throws RemoteException {
+    public void addProductToCart(AlbumDTO albumDTO, int i) throws RemoteException, NoPermissionException {
         sessionFacade.addProductToCart(albumDTO, i);
     }
 
     @Override
-    public void changeQuantity(CartLineItemDTO cartLineItemDTO, int i) throws RemoteException {
+    public void changeQuantity(CartLineItemDTO cartLineItemDTO, int i) throws RemoteException, NoPermissionException {
         sessionFacade.changeQuantity(cartLineItemDTO, i);
     }
 
     @Override
-    public void removeProductFromCart(CartLineItemDTO cartLineItemDTO) throws RemoteException {
+    public void removeProductFromCart(CartLineItemDTO cartLineItemDTO) throws RemoteException, NoPermissionException {
         sessionFacade.removeProductFromCart(cartLineItemDTO);
+    }
+
+    @Override
+    public void clearCart() throws RemoteException, NoPermissionException {
+        sessionFacade.clearCart();
     }
 
     @Override
@@ -67,5 +76,15 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     @Override
     public String getUsername() throws RemoteException {
         return sessionFacade.getUsername();
+    }
+
+    @Override
+    public Optional<InvoiceDTO> findInvoiceById(InvoiceId invoiceId) throws RemoteException {
+        return sessionFacade.findInvoiceById(invoiceId);
+    }
+
+    @Override
+    public void createInvoice(InvoiceDTO invoiceDTO) throws RemoteException {
+        sessionFacade.createInvoice(invoiceDTO);
     }
 }

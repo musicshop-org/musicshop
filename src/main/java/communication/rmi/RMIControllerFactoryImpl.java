@@ -4,6 +4,7 @@ import sharedrmi.communication.rmi.RMIControllerFactory;
 import sharedrmi.communication.rmi.RMIController;
 
 import javax.security.auth.login.FailedLoginException;
+import java.nio.file.AccessDeniedException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -24,7 +25,7 @@ public class RMIControllerFactoryImpl extends UnicastRemoteObject implements RMI
     }
 
     @Override
-    public RMIController createRMIController(String username, String password) throws FailedLoginException, RemoteException {
+    public RMIController createRMIController(String username, String password) throws FailedLoginException, RemoteException, AccessDeniedException {
         return new RMIControllerImpl(username, password);
     }
 }

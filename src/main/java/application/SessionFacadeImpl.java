@@ -2,14 +2,18 @@ package application;
 
 import application.api.SessionFacade;
 
+import sharedrmi.application.api.InvoiceService;
 import sharedrmi.application.api.ProductService;
 import sharedrmi.application.api.ShoppingCartService;
 import sharedrmi.application.dto.*;
+import sharedrmi.domain.valueobjects.InvoiceId;
 import sharedrmi.domain.valueobjects.Role;
 
+import javax.naming.NoPermissionException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
+import java.util.Optional;
 
 public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFacade {
 
@@ -18,6 +22,7 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     private final ShoppingCartService shoppingCartService;
 
     private final ProductService productService = new ProductServiceImpl();
+    private final InvoiceService invoiceService = new InvoiceServiceImpl();
 
     public SessionFacadeImpl(List<Role> roles, String username) throws RemoteException {
         this.roles = roles;
@@ -42,23 +47,72 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public ShoppingCartDTO getCart() throws RemoteException {
-        return this.shoppingCartService.getCart();
+    public ShoppingCartDTO getCart() throws RemoteException, NoPermissionException {
+
+        for (Role role : this.roles)
+        {
+            if (role.equals(Role.SALESPERSON)) {
+                return this.shoppingCartService.getCart();
+            }
+        }
+
+        throw new NoPermissionException("no permission to call this method!");
     }
 
     @Override
-    public void addProductToCart(AlbumDTO albumDTO, int i) throws RemoteException {
-        this.shoppingCartService.addProductToCart(albumDTO, i);
+    public void addProductToCart(AlbumDTO albumDTO, int i) throws RemoteException, NoPermissionException {
+
+        for (Role role : this.roles)
+        {
+            if (role.equals(Role.SALESPERSON)) {
+                this.shoppingCartService.addProductToCart(albumDTO, i);
+                return;
+            }
+        }
+
+        throw new NoPermissionException("no permission to call this method!");
     }
 
     @Override
-    public void changeQuantity(CartLineItemDTO cartLineItemDTO, int i) throws RemoteException {
-        this.shoppingCartService.changeQuantity(cartLineItemDTO, i);
+    public void changeQuantity(CartLineItemDTO cartLineItemDTO, int i) throws RemoteException, NoPermissionException {
+
+        for (Role role : this.roles)
+        {
+            if (role.equals(Role.SALESPERSON)) {
+                this.shoppingCartService.changeQuantity(cartLineItemDTO, i);
+                return;
+            }
+        }
+
+        throw new NoPermissionException("no permission to call this method!");
     }
 
     @Override
-    public void removeProductFromCart(CartLineItemDTO cartLineItemDTO) throws RemoteException {
-        this.shoppingCartService.removeProductFromCart(cartLineItemDTO);
+    public void removeProductFromCart(CartLineItemDTO cartLineItemDTO) throws RemoteException, NoPermissionException {
+
+        for (Role role : this.roles)
+        {
+            if (role.equals(Role.SALESPERSON)) {
+                this.shoppingCartService.removeProductFromCart(cartLineItemDTO);
+                return;
+            }
+        }
+
+        throw new NoPermissionException("no permission to call this method!");
+    }
+
+    @Override
+    public void clearCart() throws RemoteException, NoPermissionException {
+
+        for (Role role : this.roles)
+        {
+            if (role.equals(Role.SALESPERSON)) {
+                this.shoppingCartService.clearCart();
+                return;
+            }
+        }
+
+        throw new NoPermissionException("no permission to call this method!");
     }
 
     @Override
@@ -69,5 +123,15 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     @Override
     public String getUsername() {
         return username;
+    }
+
+    @Override
+    public Optional<InvoiceDTO> findInvoiceById(InvoiceId invoiceId) throws RemoteException {
+        return invoiceService.findInvoiceById(invoiceId);
+    }
+
+    @Override
+    public void createInvoice(InvoiceDTO invoiceDTO) throws RemoteException {
+        invoiceService.createInvoice(invoiceDTO);
     }
 }
