@@ -2,15 +2,18 @@ package application;
 
 import application.api.SessionFacade;
 
+import sharedrmi.application.api.InvoiceService;
 import sharedrmi.application.api.ProductService;
 import sharedrmi.application.api.ShoppingCartService;
 import sharedrmi.application.dto.*;
+import sharedrmi.domain.valueobjects.InvoiceId;
 import sharedrmi.domain.valueobjects.Role;
 
 import javax.naming.NoPermissionException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
+import java.util.Optional;
 
 public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFacade {
 
@@ -19,6 +22,7 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     private final ShoppingCartService shoppingCartService;
 
     private final ProductService productService = new ProductServiceImpl();
+    private final InvoiceService invoiceService = new InvoiceServiceImpl();
 
     public SessionFacadeImpl(List<Role> roles, String username) throws RemoteException {
         this.roles = roles;
@@ -119,5 +123,15 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     @Override
     public String getUsername() {
         return username;
+    }
+
+    @Override
+    public Optional<InvoiceDTO> findInvoiceById(InvoiceId invoiceId) throws RemoteException {
+        return invoiceService.findInvoiceById(invoiceId);
+    }
+
+    @Override
+    public void createInvoice(InvoiceDTO invoiceDTO) throws RemoteException {
+        invoiceService.createInvoice(invoiceDTO);
     }
 }

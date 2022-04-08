@@ -6,6 +6,7 @@ import application.api.SessionFacade;
 
 import sharedrmi.application.dto.*;
 import sharedrmi.communication.rmi.RMIController;
+import sharedrmi.domain.valueobjects.InvoiceId;
 import sharedrmi.domain.valueobjects.Role;
 
 import javax.naming.NoPermissionException;
@@ -14,6 +15,7 @@ import java.nio.file.AccessDeniedException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
+import java.util.Optional;
 
 public class RMIControllerImpl extends UnicastRemoteObject implements RMIController {
 
@@ -74,5 +76,15 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     @Override
     public String getUsername() throws RemoteException {
         return sessionFacade.getUsername();
+    }
+
+    @Override
+    public Optional<InvoiceDTO> findInvoiceById(InvoiceId invoiceId) throws RemoteException {
+        return sessionFacade.findInvoiceById(invoiceId);
+    }
+
+    @Override
+    public void createInvoice(InvoiceDTO invoiceDTO) throws RemoteException {
+        sessionFacade.createInvoice(invoiceDTO);
     }
 }
