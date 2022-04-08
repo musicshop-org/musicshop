@@ -7,6 +7,7 @@ import sharedrmi.application.api.ShoppingCartService;
 import sharedrmi.application.dto.*;
 import sharedrmi.domain.valueobjects.Role;
 
+import javax.naming.NoPermissionException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
@@ -42,27 +43,27 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public ShoppingCartDTO getCart() throws RemoteException {
+    public ShoppingCartDTO getCart() throws RemoteException, NoPermissionException {
         return this.shoppingCartService.getCart();
     }
 
     @Override
-    public void addProductToCart(AlbumDTO albumDTO, int i) throws RemoteException {
+    public void addProductToCart(AlbumDTO albumDTO, int i) throws RemoteException, NoPermissionException {
         this.shoppingCartService.addProductToCart(albumDTO, i);
     }
 
     @Override
-    public void changeQuantity(CartLineItemDTO cartLineItemDTO, int i) throws RemoteException {
+    public void changeQuantity(CartLineItemDTO cartLineItemDTO, int i) throws RemoteException, NoPermissionException {
         this.shoppingCartService.changeQuantity(cartLineItemDTO, i);
     }
 
     @Override
-    public void removeProductFromCart(CartLineItemDTO cartLineItemDTO) throws RemoteException {
+    public void removeProductFromCart(CartLineItemDTO cartLineItemDTO) throws RemoteException, NoPermissionException {
         this.shoppingCartService.removeProductFromCart(cartLineItemDTO);
     }
 
     @Override
-    public void clearCart() throws RemoteException {
+    public void clearCart() throws RemoteException, NoPermissionException {
         this.shoppingCartService.clearCart();
     }
 
