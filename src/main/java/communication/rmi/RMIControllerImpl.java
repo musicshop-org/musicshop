@@ -87,4 +87,9 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     public void createInvoice(InvoiceDTO invoiceDTO) throws RemoteException {
         sessionFacade.createInvoice(invoiceDTO);
     }
+
+    @Override
+    public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws RemoteException, Exception {
+        sessionFacade.returnInvoiceLineItem(invoiceId,invoiceLineItemDTO,returnQuantity);
+    }
 }

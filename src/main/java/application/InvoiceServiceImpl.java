@@ -46,7 +46,8 @@ public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceSe
                                 invoiceLineItem.getMediumType(),
                                 invoiceLineItem.getName(),
                                 invoiceLineItem.getQuantity(),
-                                invoiceLineItem.getPrice()))
+                                invoiceLineItem.getPrice(),
+                                invoiceLineItem.getReturnedQuantity()))
                         .collect(Collectors.toList()),
                 result.get().getPaymentMethod(),
                 result.get().getDate()
@@ -76,6 +77,23 @@ public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceSe
         );
 
         this.invoiceRepository.createInvoice(invoice);
+    }
+
+    @Transactional
+    @Override
+    public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws RemoteException, Exception{
+        Optional<Invoice> result = invoiceRepository.findInvoiceById(invoiceId);
+
+        if (result.isEmpty()) {
+            throw new Exception("invoice not found");
+        }
+
+        for (InvoiceLineItem invoiceLineItem: result.get().getInvoiceLineItems()) {
+            if (invoiceLineItem.getName().equals(invoiceLineItemDTO.getName()) &&
+                    invoiceLineItem.getMediumType().equals(invoiceLineItemDTO.getMediumType())){
+                invoiceLineItem.returnInvoiceLineItem(returnQuantity);
+            }
+        }
     }
 
 }

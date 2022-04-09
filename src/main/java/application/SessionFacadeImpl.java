@@ -134,4 +134,9 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     public void createInvoice(InvoiceDTO invoiceDTO) throws RemoteException {
         invoiceService.createInvoice(invoiceDTO);
     }
+
+    @Override
+    public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws RemoteException, Exception {
+        invoiceService.returnInvoiceLineItem(invoiceId, invoiceLineItemDTO, returnQuantity);
+    }
 }

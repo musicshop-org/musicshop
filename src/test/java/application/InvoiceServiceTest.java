@@ -82,11 +82,24 @@ public class InvoiceServiceTest {
 
         Mockito.when(invoiceRepository.findInvoiceById(invoiceId)).thenReturn(Optional.empty());
 
-        // when
-        InvoiceDTO invoiceDTO = invoiceService.findInvoiceById(invoiceId);
+        //when...then
+        assertThrows(Exception.class, () ->invoiceService.findInvoiceById(invoiceId));
+    }
 
-        // then
-        assertNull(invoiceDTO);
+    @Test
+    void given_InvoiceLineItemDTOandAmount_when_returnInvoiceLineItem_then_addReturnQuantity() throws RemoteException, Exception {
+        //given
+        InvoiceId invoiceId = new InvoiceId(111);
+        Mockito.when(invoiceRepository.findInvoiceById(invoiceId)).thenReturn(Optional.of(givenInvoice));
+
+        InvoiceLineItemDTO invoiceLineItemDTO = new InvoiceLineItemDTO(MediumType.DIGITAL, "Song", 4, new BigDecimal("5.00"),0);
+        int returnQuantity = 2;
+
+        //when
+        invoiceService.returnInvoiceLineItem(invoiceId,invoiceLineItemDTO,returnQuantity);
+
+        //then
+        assertEquals(returnQuantity,givenInvoice.getInvoiceLineItems().get(0).getReturnedQuantity());
     }
 
 //    @Test
