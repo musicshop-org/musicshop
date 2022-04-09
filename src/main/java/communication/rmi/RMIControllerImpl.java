@@ -79,7 +79,7 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     }
 
     @Override
-    public Optional<InvoiceDTO> findInvoiceById(InvoiceId invoiceId) throws RemoteException {
+    public InvoiceDTO findInvoiceById(InvoiceId invoiceId) throws RemoteException, Exception {
         return sessionFacade.findInvoiceById(invoiceId);
     }
 

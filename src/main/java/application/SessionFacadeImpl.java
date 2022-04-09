@@ -126,7 +126,7 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public Optional<InvoiceDTO> findInvoiceById(InvoiceId invoiceId) throws RemoteException {
+    public InvoiceDTO findInvoiceById(InvoiceId invoiceId) throws RemoteException, Exception {
         return invoiceService.findInvoiceById(invoiceId);
     }
 
