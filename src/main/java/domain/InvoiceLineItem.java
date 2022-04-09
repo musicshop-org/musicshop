@@ -13,6 +13,7 @@ public class InvoiceLineItem {
     private String name;
     private int quantity;
     private BigDecimal price;
+    private int returnedQuantity;
 
     protected InvoiceLineItem() {
     }
@@ -22,5 +23,10 @@ public class InvoiceLineItem {
         this.name = name;
         this.quantity = quantity;
         this.price = price;
+        this.returnedQuantity = 0;
+    }
+
+    public void returnInvoiceLineItem(int amount){
+        this.returnedQuantity += amount;
     }
 }
