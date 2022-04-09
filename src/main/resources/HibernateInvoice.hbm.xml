@@ -46,6 +46,6 @@
         <property name="name" column="name" type="java.lang.String"/>
         <property name="quantity" column="quantity" type="java.lang.Integer"/>
         <property name="price" column="price" type="java.math.BigDecimal"/>
-        <property name="returnedQuantity" column="quantity" type="java.lang.Integer"/>
+        <property name="returnedQuantity" column="returnedQuantity" type="java.lang.Integer"/>
     </class>
 </hibernate-mapping>
