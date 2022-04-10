@@ -37,4 +37,14 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
         session.close();
     }
 
+    @Override
+    public void update(Invoice invoice) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+        session.merge(invoice);
+        transaction.commit();
+        session.close();
+    }
+
 }

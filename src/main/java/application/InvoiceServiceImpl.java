@@ -1,9 +1,12 @@
 package application;
 
+import domain.Album;
 import domain.Invoice;
 import domain.InvoiceLineItem;
 import domain.repositories.InvoiceRepository;
+import domain.repositories.ProductRepository;
 import infrastructure.InvoiceRepositoryImpl;
+import infrastructure.ProductRepositoryImpl;
 import jakarta.transaction.Transactional;
 import sharedrmi.application.api.InvoiceService;
 import sharedrmi.application.dto.InvoiceDTO;
@@ -16,18 +19,22 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceService {
 
     private final InvoiceRepository invoiceRepository;
+    private final ProductRepository productRepository;
 
     public InvoiceServiceImpl() throws RemoteException {
         this.invoiceRepository = new InvoiceRepositoryImpl();
+        this.productRepository = new ProductRepositoryImpl();
     }
 
-    public InvoiceServiceImpl(InvoiceRepository invoiceRepository) throws RemoteException {
+    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, ProductRepository productRepository) throws RemoteException {
         this.invoiceRepository = invoiceRepository;
+        this.productRepository = productRepository;
     }
 
     @Transactional
@@ -83,18 +90,28 @@ public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceSe
     @Transactional
     @Override
     public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws RemoteException, InvoiceNotFoundException {
-        Optional<Invoice> result = invoiceRepository.findInvoiceById(invoiceId);
+        Optional<Invoice> invoice = invoiceRepository.findInvoiceById(invoiceId);
 
-        if (result.isEmpty()) {
+        if (invoice.isEmpty()) {
             throw new InvoiceNotFoundException("invoice not found");
         }
 
-        for (InvoiceLineItem invoiceLineItem : result.get().getInvoiceLineItems()) {
+        for (InvoiceLineItem invoiceLineItem : invoice.get().getInvoiceLineItems()) {
             if (invoiceLineItem.getName().equals(invoiceLineItemDTO.getName()) &&
                     invoiceLineItem.getMediumType().equals(invoiceLineItemDTO.getMediumType())) {
                 invoiceLineItem.returnInvoiceLineItem(returnQuantity);
             }
         }
+        invoiceRepository.update(invoice.get());
+
+        List<Album> albums = productRepository.findAlbumsByAlbumTitle(invoiceLineItemDTO.getName());
+        for (Album album: albums) {
+            if (album.getMediumType().equals(invoiceLineItemDTO.getMediumType())){
+                album.increaseStock(returnQuantity);
+                productRepository.updateAlbum(album);
+            }
+        }
+
     }
 
 }
