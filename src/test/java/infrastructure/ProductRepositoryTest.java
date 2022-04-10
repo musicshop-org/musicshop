@@ -177,4 +177,30 @@ public class ProductRepositoryTest {
         // then
         assertEquals(2, artists.size());
     }
+
+    @Test
+    void given_existingAlbum_when_findAlbumsByTitle_then_expectAlbums() throws RemoteException {
+        // given
+        ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
+        String albumTitle = "Bad";
+
+        // when
+        List<Album> albums = productRepository.findAlbumsByAlbumTitle(albumTitle);
+
+        // then
+        assertEquals(2, albums.size());
+    }
+
+    @Test
+    void given_notExistingAlbum_when_findAlbumsByTitle_then_empty() throws RemoteException {
+        // given
+        ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
+        String albumTitle = "ERROR";
+
+        // when
+        List<Album> albums = productRepository.findAlbumsByAlbumTitle(albumTitle);
+
+        // then
+        assertEquals(0, albums.size());
+    }
 }
