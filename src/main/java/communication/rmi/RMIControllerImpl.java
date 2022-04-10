@@ -5,6 +5,7 @@ import application.LoginServiceImpl;
 import application.api.SessionFacade;
 
 import sharedrmi.application.dto.*;
+import sharedrmi.application.exceptions.InvoiceNotFoundException;
 import sharedrmi.communication.rmi.RMIController;
 import sharedrmi.domain.valueobjects.InvoiceId;
 import sharedrmi.domain.valueobjects.Role;
@@ -15,7 +16,6 @@ import java.nio.file.AccessDeniedException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
-import java.util.Optional;
 
 public class RMIControllerImpl extends UnicastRemoteObject implements RMIController {
 
@@ -79,12 +79,17 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     }
 
     @Override
-    public Optional<InvoiceDTO> findInvoiceById(InvoiceId invoiceId) throws RemoteException {
+    public InvoiceDTO findInvoiceById(InvoiceId invoiceId) throws RemoteException, InvoiceNotFoundException {
         return sessionFacade.findInvoiceById(invoiceId);
     }
 
     @Override
     public void createInvoice(InvoiceDTO invoiceDTO) throws RemoteException {
         sessionFacade.createInvoice(invoiceDTO);
+    }
+
+    @Override
+    public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws RemoteException, InvoiceNotFoundException {
+        sessionFacade.returnInvoiceLineItem(invoiceId,invoiceLineItemDTO,returnQuantity);
     }
 }

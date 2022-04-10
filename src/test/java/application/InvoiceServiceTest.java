@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sharedrmi.application.api.InvoiceService;
 import sharedrmi.application.dto.InvoiceDTO;
 import sharedrmi.application.dto.InvoiceLineItemDTO;
+import sharedrmi.application.exceptions.InvoiceNotFoundException;
 import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.enums.PaymentMethod;
 import sharedrmi.domain.valueobjects.InvoiceId;
@@ -24,8 +25,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 public class InvoiceServiceTest {
@@ -58,36 +58,49 @@ public class InvoiceServiceTest {
     }
 
     @Test
-    void given_invoiceId_when_findInvoiceById_then_returnInvoice() throws RemoteException {
+    void given_invoiceId_when_findInvoiceById_then_returnInvoice() throws RemoteException, InvoiceNotFoundException {
         // given
         InvoiceId invoiceId = new InvoiceId(111);
 
         Mockito.when(invoiceRepository.findInvoiceById(invoiceId)).thenReturn(Optional.of(givenInvoice));
 
         // when
-        Optional<InvoiceDTO> invoiceDTO = invoiceService.findInvoiceById(invoiceId);
+        InvoiceDTO invoiceDTO = invoiceService.findInvoiceById(invoiceId);
 
         // then
         assertAll(
-                () -> assertEquals(givenInvoice.getInvoiceId().getInvoiceId(), invoiceDTO.get().getInvoiceId().getInvoiceId()),
-                () -> assertEquals(givenInvoice.getInvoiceLineItems().size(), invoiceDTO.get().getInvoiceLineItems().size()),
-                () -> assertEquals(givenInvoice.getPaymentMethod(), invoiceDTO.get().getPaymentMethod()),
-                () -> assertEquals(givenInvoice.getDate(), invoiceDTO.get().getDate())
+                () -> assertEquals(givenInvoice.getInvoiceId().getInvoiceId(), invoiceDTO.getInvoiceId().getInvoiceId()),
+                () -> assertEquals(givenInvoice.getInvoiceLineItems().size(), invoiceDTO.getInvoiceLineItems().size()),
+                () -> assertEquals(givenInvoice.getPaymentMethod(), invoiceDTO.getPaymentMethod()),
+                () -> assertEquals(givenInvoice.getDate(), invoiceDTO.getDate())
         );
     }
 
     @Test
-    void given_notExistingInvoiceId_when_findInvoiceById_then_returnEmptyOptional() throws RemoteException {
+    void given_notExistingInvoiceId_when_findInvoiceById_then_returnEmptyOptional() throws RemoteException, InvoiceNotFoundException {
         // given
         InvoiceId invoiceId = new InvoiceId(-111);
 
         Mockito.when(invoiceRepository.findInvoiceById(invoiceId)).thenReturn(Optional.empty());
 
-        // when
-        Optional<InvoiceDTO> invoiceDTO = invoiceService.findInvoiceById(invoiceId);
+        //when...then
+        assertThrows(InvoiceNotFoundException.class, () -> invoiceService.findInvoiceById(invoiceId));
+    }
 
-        // then
-        assertEquals(Optional.empty(), invoiceDTO);
+    @Test
+    void given_InvoiceLineItemDTOandAmount_when_returnInvoiceLineItem_then_addReturnQuantity() throws RemoteException, InvoiceNotFoundException {
+        //given
+        InvoiceId invoiceId = new InvoiceId(111);
+        Mockito.when(invoiceRepository.findInvoiceById(invoiceId)).thenReturn(Optional.of(givenInvoice));
+
+        InvoiceLineItemDTO invoiceLineItemDTO = new InvoiceLineItemDTO(MediumType.DIGITAL, "Song", 4, new BigDecimal("5.00"),0);
+        int returnQuantity = 2;
+
+        //when
+        invoiceService.returnInvoiceLineItem(invoiceId,invoiceLineItemDTO,returnQuantity);
+
+        //then
+        assertEquals(returnQuantity,givenInvoice.getInvoiceLineItems().get(0).getReturnedQuantity());
     }
 
 //    @Test

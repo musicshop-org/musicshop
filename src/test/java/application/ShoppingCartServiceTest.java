@@ -17,6 +17,7 @@ import sharedrmi.application.dto.ShoppingCartDTO;
 import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.valueobjects.AlbumId;
 
+import javax.naming.NoPermissionException;
 import java.math.BigDecimal;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
@@ -52,7 +53,7 @@ public class ShoppingCartServiceTest {
     }
 
     @Test
-    void when_displayCart_return_correct_dto() throws RemoteException {
+    void when_displayCart_return_correct_dto() throws RemoteException, NoPermissionException {
         //when
         ShoppingCartDTO cartDTO = shoppingCartService.getCart();
 
@@ -73,7 +74,7 @@ public class ShoppingCartServiceTest {
     }
 
     @Test
-    void given_album_when_addProduct_return_new_entry() throws RemoteException {
+    void given_album_when_addProduct_return_new_entry() throws RemoteException, NoPermissionException {
         //given
         int quantity = 2;
         AlbumDTO album = new AlbumDTO("TestAlbum", BigDecimal.TEN, 10, MediumType.CD, LocalDate.now(), new AlbumId(), "TestLabel", null);
@@ -93,7 +94,7 @@ public class ShoppingCartServiceTest {
     }
 
     @Test
-    void given_newquantity_when_changeQuantity_return_new_quantity() throws RemoteException {
+    void given_newquantity_when_changeQuantity_return_new_quantity() throws RemoteException, NoPermissionException {
         //given
         int newQuantity = 10;
 
@@ -107,7 +108,7 @@ public class ShoppingCartServiceTest {
     }
 
     @Test
-    void given_cart_when_removeProductFromCart_return_new_size() throws RemoteException {
+    void given_cart_when_removeProductFromCart_return_new_size() throws RemoteException, NoPermissionException {
         //given
         int expected = 1;
         CartLineItemDTO lineItemDTO = new CartLineItemDTO(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18));
@@ -120,7 +121,7 @@ public class ShoppingCartServiceTest {
     }
 
     @Test
-    void given_cart_when_clearCart_return_empty_cart() throws RemoteException {
+    void given_cart_when_clearCart_return_empty_cart() throws RemoteException, NoPermissionException {
         //given
         int expected = 0;
 

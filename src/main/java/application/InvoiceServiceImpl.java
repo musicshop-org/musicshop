@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import sharedrmi.application.api.InvoiceService;
 import sharedrmi.application.dto.InvoiceDTO;
 import sharedrmi.application.dto.InvoiceLineItemDTO;
+import sharedrmi.application.exceptions.InvoiceNotFoundException;
 import sharedrmi.domain.valueobjects.InvoiceId;
 
 import java.rmi.RemoteException;
@@ -31,29 +32,34 @@ public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceSe
 
     @Transactional
     @Override
-    public Optional<InvoiceDTO> findInvoiceById(InvoiceId invoiceId) throws RemoteException {
+    public InvoiceDTO findInvoiceById(InvoiceId invoiceId) throws RemoteException, InvoiceNotFoundException {
 
         Optional<Invoice> result = invoiceRepository.findInvoiceById(invoiceId);
 
-        return result.map(invoice -> new InvoiceDTO(
-                invoice.getInvoiceId(),
-                invoice.getInvoiceLineItems()
+        if (result.isEmpty()) {
+            throw new InvoiceNotFoundException("invoice not found");
+        }
+
+        return new InvoiceDTO(
+                result.get().getInvoiceId(),
+                result.get().getInvoiceLineItems()
                         .stream().map(invoiceLineItem -> new InvoiceLineItemDTO(
                                 invoiceLineItem.getMediumType(),
                                 invoiceLineItem.getName(),
                                 invoiceLineItem.getQuantity(),
-                                invoiceLineItem.getPrice()))
+                                invoiceLineItem.getPrice(),
+                                invoiceLineItem.getReturnedQuantity()))
                         .collect(Collectors.toList()),
-                invoice.getPaymentMethod(),
-                invoice.getDate()
-        ));
+                result.get().getPaymentMethod(),
+                result.get().getDate()
+        );
     }
 
     @Transactional
     @Override
     public void createInvoice(InvoiceDTO invoiceDTO) throws RemoteException {
 
-        List <InvoiceLineItem> invoiceLineItems = new LinkedList<>();
+        List<InvoiceLineItem> invoiceLineItems = new LinkedList<>();
 
         for (InvoiceLineItemDTO invoiceLineItemDTO : invoiceDTO.getInvoiceLineItems()) {
             invoiceLineItems.add(new InvoiceLineItem(
@@ -72,6 +78,23 @@ public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceSe
         );
 
         this.invoiceRepository.createInvoice(invoice);
+    }
+
+    @Transactional
+    @Override
+    public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws RemoteException, InvoiceNotFoundException {
+        Optional<Invoice> result = invoiceRepository.findInvoiceById(invoiceId);
+
+        if (result.isEmpty()) {
+            throw new InvoiceNotFoundException("invoice not found");
+        }
+
+        for (InvoiceLineItem invoiceLineItem : result.get().getInvoiceLineItems()) {
+            if (invoiceLineItem.getName().equals(invoiceLineItemDTO.getName()) &&
+                    invoiceLineItem.getMediumType().equals(invoiceLineItemDTO.getMediumType())) {
+                invoiceLineItem.returnInvoiceLineItem(returnQuantity);
+            }
+        }
     }
 
 }
