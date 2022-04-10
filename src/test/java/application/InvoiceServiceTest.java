@@ -3,6 +3,7 @@ package application;
 import domain.Invoice;
 import domain.InvoiceLineItem;
 import domain.repositories.InvoiceRepository;
+import domain.repositories.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,6 +41,9 @@ public class InvoiceServiceTest {
     @Mock
     private static InvoiceRepository invoiceRepository;
 
+    @Mock
+    private static ProductRepository productRepository;
+
     @BeforeEach
     void initMockAndService() throws RemoteException {
         givenInvoice = new Invoice(
@@ -54,7 +58,7 @@ public class InvoiceServiceTest {
                 LocalDate.now()
         );
 
-        invoiceService = new InvoiceServiceImpl(invoiceRepository);
+        invoiceService = new InvoiceServiceImpl(invoiceRepository, productRepository);
     }
 
     @Test

@@ -30,4 +30,8 @@ public class Album extends Product {
         this.mediumType = mediumType;
         this.releaseDate = releaseDate;
     }
+
+    public void updateStock(int amount){
+        this.stock += amount;
+    }
 }
