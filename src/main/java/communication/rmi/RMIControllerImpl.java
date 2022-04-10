@@ -5,6 +5,7 @@ import application.LoginServiceImpl;
 import application.api.SessionFacade;
 
 import sharedrmi.application.dto.*;
+import sharedrmi.application.exceptions.InvoiceNotFoundException;
 import sharedrmi.communication.rmi.RMIController;
 import sharedrmi.domain.valueobjects.InvoiceId;
 import sharedrmi.domain.valueobjects.Role;
@@ -78,7 +79,7 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     }
 
     @Override
-    public InvoiceDTO findInvoiceById(InvoiceId invoiceId) throws RemoteException, Exception {
+    public InvoiceDTO findInvoiceById(InvoiceId invoiceId) throws RemoteException, InvoiceNotFoundException {
         return sessionFacade.findInvoiceById(invoiceId);
     }
 
@@ -88,7 +89,7 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     }
 
     @Override
-    public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws RemoteException, Exception {
+    public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws RemoteException, InvoiceNotFoundException {
         sessionFacade.returnInvoiceLineItem(invoiceId,invoiceLineItemDTO,returnQuantity);
     }
 }
