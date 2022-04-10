@@ -107,7 +107,7 @@ public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceSe
         List<Album> albums = productRepository.findAlbumsByAlbumTitle(invoiceLineItemDTO.getName());
         for (Album album: albums) {
             if (album.getMediumType().equals(invoiceLineItemDTO.getMediumType())){
-                album.updateStock(returnQuantity);
+                album.increaseStock(returnQuantity);
                 productRepository.updateAlbum(album);
             }
         }
