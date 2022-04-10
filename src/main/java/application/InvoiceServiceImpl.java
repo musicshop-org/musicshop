@@ -3,6 +3,7 @@ package application;
 import domain.Invoice;
 import domain.InvoiceLineItem;
 import domain.repositories.InvoiceRepository;
+import domain.repositories.ProductRepository;
 import infrastructure.InvoiceRepositoryImpl;
 import jakarta.transaction.Transactional;
 import sharedrmi.application.api.InvoiceService;
@@ -83,18 +84,19 @@ public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceSe
     @Transactional
     @Override
     public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws RemoteException, InvoiceNotFoundException {
-        Optional<Invoice> result = invoiceRepository.findInvoiceById(invoiceId);
+        Optional<Invoice> invoice = invoiceRepository.findInvoiceById(invoiceId);
 
-        if (result.isEmpty()) {
+        if (invoice.isEmpty()) {
             throw new InvoiceNotFoundException("invoice not found");
         }
 
-        for (InvoiceLineItem invoiceLineItem : result.get().getInvoiceLineItems()) {
+        for (InvoiceLineItem invoiceLineItem : invoice.get().getInvoiceLineItems()) {
             if (invoiceLineItem.getName().equals(invoiceLineItemDTO.getName()) &&
                     invoiceLineItem.getMediumType().equals(invoiceLineItemDTO.getMediumType())) {
                 invoiceLineItem.returnInvoiceLineItem(returnQuantity);
             }
         }
+        invoiceRepository.update(invoice.get());
     }
 
 }
