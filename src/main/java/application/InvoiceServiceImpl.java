@@ -8,7 +8,6 @@ import jakarta.transaction.Transactional;
 import sharedrmi.application.api.InvoiceService;
 import sharedrmi.application.dto.InvoiceDTO;
 import sharedrmi.application.dto.InvoiceLineItemDTO;
-import sharedrmi.application.exceptions.InvoiceNotFoundException;
 import sharedrmi.domain.valueobjects.InvoiceId;
 
 import java.rmi.RemoteException;
@@ -32,12 +31,12 @@ public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceSe
 
     @Transactional
     @Override
-    public InvoiceDTO findInvoiceById(InvoiceId invoiceId) throws RemoteException, InvoiceNotFoundException {
+    public InvoiceDTO findInvoiceById(InvoiceId invoiceId) throws RemoteException, Exception {
 
         Optional<Invoice> result = invoiceRepository.findInvoiceById(invoiceId);
 
         if (result.isEmpty()) {
-            throw new InvoiceNotFoundException("invoice not found");
+            throw new Exception("invoice not found");
         }
 
         return new InvoiceDTO(
@@ -82,11 +81,11 @@ public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceSe
 
     @Transactional
     @Override
-    public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws RemoteException, InvoiceNotFoundException {
+    public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws RemoteException, Exception {
         Optional<Invoice> result = invoiceRepository.findInvoiceById(invoiceId);
 
         if (result.isEmpty()) {
-            throw new InvoiceNotFoundException("invoice not found");
+            throw new Exception("invoice not found");
         }
 
         for (InvoiceLineItem invoiceLineItem: result.get().getInvoiceLineItems()) {
