@@ -6,6 +6,7 @@ import sharedrmi.application.api.InvoiceService;
 import sharedrmi.application.api.ProductService;
 import sharedrmi.application.api.ShoppingCartService;
 import sharedrmi.application.dto.*;
+import sharedrmi.application.exceptions.InvoiceNotFoundException;
 import sharedrmi.domain.valueobjects.InvoiceId;
 import sharedrmi.domain.valueobjects.Role;
 
@@ -13,7 +14,6 @@ import javax.naming.NoPermissionException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
-import java.util.Optional;
 
 public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFacade {
 
@@ -126,7 +126,7 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public InvoiceDTO findInvoiceById(InvoiceId invoiceId) throws RemoteException, Exception {
+    public InvoiceDTO findInvoiceById(InvoiceId invoiceId) throws RemoteException, InvoiceNotFoundException {
         return invoiceService.findInvoiceById(invoiceId);
     }
 
@@ -136,7 +136,7 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws RemoteException, Exception {
+    public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws RemoteException, InvoiceNotFoundException {
         invoiceService.returnInvoiceLineItem(invoiceId, invoiceLineItemDTO, returnQuantity);
     }
 }
