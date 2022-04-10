@@ -8,6 +8,7 @@ import sharedrmi.application.api.ShoppingCartService;
 import sharedrmi.application.dto.*;
 import sharedrmi.domain.valueobjects.Role;
 
+import javax.naming.NoPermissionException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -32,7 +33,7 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
         this.shoppingCartService = new ShoppingCartServiceImpl(username);
 
         try {
-            customerService = (CustomerService) Naming.lookup("rmi://localhost/CustomerService");
+            customerService = (CustomerService) Naming.lookup("rmi://10.0.40.163/CustomerService");
         } catch (NotBoundException | MalformedURLException e) {
             e.printStackTrace();
         }
@@ -55,23 +56,28 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public ShoppingCartDTO getCart() throws RemoteException {
+    public ShoppingCartDTO getCart() throws RemoteException, NoPermissionException {
         return this.shoppingCartService.getCart();
     }
 
     @Override
-    public void addProductToCart(AlbumDTO albumDTO, int i) throws RemoteException {
+    public void addProductToCart(AlbumDTO albumDTO, int i) throws RemoteException, NoPermissionException {
         this.shoppingCartService.addProductToCart(albumDTO, i);
     }
 
     @Override
-    public void changeQuantity(CartLineItemDTO lineItemDTO, int i) throws RemoteException {
+    public void changeQuantity(CartLineItemDTO lineItemDTO, int i) throws RemoteException, NoPermissionException {
         this.shoppingCartService.changeQuantity(lineItemDTO, i);
     }
 
     @Override
-    public void removeProductFromCart(CartLineItemDTO lineItemDTO) throws RemoteException {
+    public void removeProductFromCart(CartLineItemDTO lineItemDTO) throws RemoteException, NoPermissionException {
         this.shoppingCartService.removeProductFromCart(lineItemDTO);
+    }
+
+    @Override
+    public void clearCart() throws RemoteException, NoPermissionException {
+
     }
 
     @Override

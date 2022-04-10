@@ -10,6 +10,7 @@ import sharedrmi.application.dto.AlbumDTO;
 import sharedrmi.application.dto.CartLineItemDTO;
 import sharedrmi.application.dto.ShoppingCartDTO;
 
+import javax.naming.NoPermissionException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedList;
@@ -98,5 +99,10 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
         );
 
         this.shoppingCart.removeLineItem(lineItem);
+    }
+
+    @Override
+    public void clearCart() throws RemoteException, NoPermissionException {
+
     }
 }

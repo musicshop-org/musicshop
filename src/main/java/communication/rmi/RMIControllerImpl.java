@@ -5,9 +5,12 @@ import application.LoginServiceImpl;
 import application.api.SessionFacade;
 
 import sharedrmi.application.dto.*;
+import sharedrmi.application.exceptions.InvoiceNotFoundException;
 import sharedrmi.communication.rmi.RMIController;
+import sharedrmi.domain.valueobjects.InvoiceId;
 import sharedrmi.domain.valueobjects.Role;
 
+import javax.naming.NoPermissionException;
 import javax.security.auth.login.FailedLoginException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -40,23 +43,28 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     }
 
     @Override
-    public ShoppingCartDTO getCart() throws RemoteException {
+    public ShoppingCartDTO getCart() throws RemoteException, NoPermissionException {
         return sessionFacade.getCart();
     }
 
     @Override
-    public void addProductToCart(AlbumDTO albumDTO, int i) throws RemoteException {
+    public void addProductToCart(AlbumDTO albumDTO, int i) throws RemoteException, NoPermissionException {
         sessionFacade.addProductToCart(albumDTO, i);
     }
 
     @Override
-    public void changeQuantity(CartLineItemDTO lineItemDTO, int i) throws RemoteException {
+    public void changeQuantity(CartLineItemDTO lineItemDTO, int i) throws RemoteException, NoPermissionException {
         sessionFacade.changeQuantity(lineItemDTO, i);
     }
 
     @Override
-    public void removeProductFromCart(CartLineItemDTO lineItemDTO) throws RemoteException {
+    public void removeProductFromCart(CartLineItemDTO lineItemDTO) throws RemoteException, NoPermissionException {
         sessionFacade.removeProductFromCart(lineItemDTO);
+    }
+
+    @Override
+    public void clearCart() throws RemoteException, NoPermissionException {
+
     }
 
     @Override
@@ -67,5 +75,25 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     @Override
     public String getUsername() throws RemoteException {
         return sessionFacade.getUsername();
+    }
+
+    @Override
+    public List<CustomerDTO> findCustomersByName(String name) throws RemoteException {
+        return sessionFacade.findCustomersByName(name);
+    }
+
+    @Override
+    public InvoiceDTO findInvoiceById(InvoiceId invoiceId) throws RemoteException, NoPermissionException, InvoiceNotFoundException {
+        return null;
+    }
+
+    @Override
+    public void createInvoice(InvoiceDTO invoiceDTO) throws RemoteException, NoPermissionException {
+
+    }
+
+    @Override
+    public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int i) throws RemoteException, NoPermissionException, InvoiceNotFoundException {
+
     }
 }
