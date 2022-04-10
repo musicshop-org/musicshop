@@ -126,17 +126,42 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public InvoiceDTO findInvoiceById(InvoiceId invoiceId) throws RemoteException, InvoiceNotFoundException {
-        return invoiceService.findInvoiceById(invoiceId);
+    public InvoiceDTO findInvoiceById(InvoiceId invoiceId) throws RemoteException, NoPermissionException, InvoiceNotFoundException {
+        for (Role role : this.roles)
+        {
+            if (role.equals(Role.SALESPERSON)) {
+                return invoiceService.findInvoiceById(invoiceId);
+            }
+        }
+
+        throw new NoPermissionException("no permission to call this method!");
     }
 
     @Override
-    public void createInvoice(InvoiceDTO invoiceDTO) throws RemoteException {
-        invoiceService.createInvoice(invoiceDTO);
+    public void createInvoice(InvoiceDTO invoiceDTO) throws RemoteException, NoPermissionException {
+
+        for (Role role : this.roles)
+        {
+            if (role.equals(Role.SALESPERSON)) {
+                invoiceService.createInvoice(invoiceDTO);
+                return;
+            }
+        }
+
+        throw new NoPermissionException("no permission to call this method!");
     }
 
     @Override
-    public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws RemoteException, InvoiceNotFoundException {
-        invoiceService.returnInvoiceLineItem(invoiceId, invoiceLineItemDTO, returnQuantity);
+    public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws RemoteException, NoPermissionException, InvoiceNotFoundException {
+
+        for (Role role : this.roles)
+        {
+            if (role.equals(Role.SALESPERSON)) {
+                invoiceService.returnInvoiceLineItem(invoiceId, invoiceLineItemDTO, returnQuantity);
+                return;
+            }
+        }
+
+        throw new NoPermissionException("no permission to call this method!");
     }
 }
