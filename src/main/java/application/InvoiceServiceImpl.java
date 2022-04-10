@@ -59,7 +59,7 @@ public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceSe
     @Override
     public void createInvoice(InvoiceDTO invoiceDTO) throws RemoteException {
 
-        List <InvoiceLineItem> invoiceLineItems = new LinkedList<>();
+        List<InvoiceLineItem> invoiceLineItems = new LinkedList<>();
 
         for (InvoiceLineItemDTO invoiceLineItemDTO : invoiceDTO.getInvoiceLineItems()) {
             invoiceLineItems.add(new InvoiceLineItem(
@@ -89,9 +89,9 @@ public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceSe
             throw new InvoiceNotFoundException("invoice not found");
         }
 
-        for (InvoiceLineItem invoiceLineItem: result.get().getInvoiceLineItems()) {
+        for (InvoiceLineItem invoiceLineItem : result.get().getInvoiceLineItems()) {
             if (invoiceLineItem.getName().equals(invoiceLineItemDTO.getName()) &&
-                    invoiceLineItem.getMediumType().equals(invoiceLineItemDTO.getMediumType())){
+                    invoiceLineItem.getMediumType().equals(invoiceLineItemDTO.getMediumType())) {
                 invoiceLineItem.returnInvoiceLineItem(returnQuantity);
             }
         }
