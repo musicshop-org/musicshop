@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sharedrmi.application.api.InvoiceService;
 import sharedrmi.application.dto.InvoiceDTO;
 import sharedrmi.application.dto.InvoiceLineItemDTO;
+import sharedrmi.application.exceptions.InvoiceNotFoundException;
 import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.enums.PaymentMethod;
 import sharedrmi.domain.valueobjects.InvoiceId;
@@ -57,7 +58,7 @@ public class InvoiceServiceTest {
     }
 
     @Test
-    void given_invoiceId_when_findInvoiceById_then_returnInvoice() throws RemoteException, Exception {
+    void given_invoiceId_when_findInvoiceById_then_returnInvoice() throws RemoteException, InvoiceNotFoundException {
         // given
         InvoiceId invoiceId = new InvoiceId(111);
 
@@ -76,18 +77,18 @@ public class InvoiceServiceTest {
     }
 
     @Test
-    void given_notExistingInvoiceId_when_findInvoiceById_then_returnEmptyOptional() throws RemoteException, Exception {
+    void given_notExistingInvoiceId_when_findInvoiceById_then_returnEmptyOptional() throws RemoteException, InvoiceNotFoundException {
         // given
         InvoiceId invoiceId = new InvoiceId(-111);
 
         Mockito.when(invoiceRepository.findInvoiceById(invoiceId)).thenReturn(Optional.empty());
 
         //when...then
-        assertThrows(Exception.class, () ->invoiceService.findInvoiceById(invoiceId));
+        assertThrows(InvoiceNotFoundException.class, () -> invoiceService.findInvoiceById(invoiceId));
     }
 
     @Test
-    void given_InvoiceLineItemDTOandAmount_when_returnInvoiceLineItem_then_addReturnQuantity() throws RemoteException, Exception {
+    void given_InvoiceLineItemDTOandAmount_when_returnInvoiceLineItem_then_addReturnQuantity() throws RemoteException, InvoiceNotFoundException {
         //given
         InvoiceId invoiceId = new InvoiceId(111);
         Mockito.when(invoiceRepository.findInvoiceById(invoiceId)).thenReturn(Optional.of(givenInvoice));
