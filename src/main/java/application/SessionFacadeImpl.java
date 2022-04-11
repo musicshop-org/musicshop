@@ -151,17 +151,17 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public InvoiceDTO findInvoiceById(InvoiceId invoiceId) throws RemoteException, InvoiceNotFoundException {
+    public InvoiceDTO findInvoiceById(InvoiceId invoiceId) throws RemoteException, InvoiceNotFoundException, NoPermissionException {
         return invoiceService.findInvoiceById(invoiceId);
     }
 
     @Override
-    public void createInvoice(InvoiceDTO invoiceDTO) throws RemoteException {
+    public void createInvoice(InvoiceDTO invoiceDTO) throws RemoteException, NoPermissionException {
         invoiceService.createInvoice(invoiceDTO);
     }
 
     @Override
-    public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws RemoteException, InvoiceNotFoundException {
+    public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws RemoteException, InvoiceNotFoundException, NoPermissionException {
         invoiceService.returnInvoiceLineItem(invoiceId, invoiceLineItemDTO, returnQuantity);
     }
 }
