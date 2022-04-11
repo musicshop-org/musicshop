@@ -1,5 +1,6 @@
 package infrastructure;
 
+import application.InvoiceServiceImpl;
 import domain.Album;
 import domain.Artist;
 import domain.Song;
@@ -7,11 +8,14 @@ import domain.Song;
 import domain.repositories.ProductRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import sharedrmi.application.api.InvoiceService;
 
 import java.util.*;
 
 public class ProductRepositoryImpl implements ProductRepository {
+
     private final SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 
     @Override
@@ -49,5 +53,24 @@ public class ProductRepositoryImpl implements ProductRepository {
         List<Artist> artistResults = session.createQuery("from Artist where lower(name) LIKE lower(:name)", Artist.class).setParameter("name", name).list();
 
         return artistResults;
+    }
+
+    @Override
+    public List<Album> findAlbumsByAlbumTitle(String title) {
+        Session session = sessionFactory.openSession();
+        title = "%"+title+"%";
+        List<Album> albumResults = session.createQuery("from Album where lower(title) LIKE lower(:title)", Album.class).setParameter("title", title).list();
+
+        return albumResults;
+    }
+
+    @Override
+    public void updateAlbum(Album album) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+        session.merge(album);
+        transaction.commit();
+        session.close();
     }
 }

@@ -16,4 +16,7 @@ public interface ProductRepository {
 
     List<Artist> findArtistsByName(String name);
 
+    List<Album> findAlbumsByAlbumTitle(String title);
+
+    void updateAlbum(Album album);
 }

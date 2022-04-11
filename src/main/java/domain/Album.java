@@ -17,8 +17,7 @@ public class Album extends Product {
     private AlbumId albumId;
     private Set<Song> songs = new HashSet<>();
 
-    public Album() {
-
+    protected Album() {
     }
 
     public Album(String title, BigDecimal price, int stock, MediumType mediumType, LocalDate releaseDate, AlbumId albumId, String label, Set<Song> songs) {
@@ -30,5 +29,9 @@ public class Album extends Product {
         this.stock = stock;
         this.mediumType = mediumType;
         this.releaseDate = releaseDate;
+    }
+
+    public void increaseStock(int increaseAmount){
+        this.stock += increaseAmount;
     }
 }

@@ -1,6 +1,6 @@
 package application;
 
-import domain.LineItem;
+import domain.CartLineItem;
 import domain.ShoppingCart;
 import domain.repositories.ShoppingCartRepository;
 import infrastructure.ShoppingCartRepositoryImpl;
@@ -52,57 +52,57 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
 
     @Override
     public ShoppingCartDTO getCart() {
-        List<CartLineItemDTO> lineItemsDTO = new LinkedList<>();
+        List<CartLineItemDTO> cartLineItemsDTO = new LinkedList<>();
 
-        for (LineItem item : shoppingCart.getLineItems()) {
-            lineItemsDTO.add(new CartLineItemDTO(
-                    item.getMediumType(),
-                    item.getName(),
-                    item.getQuantity(),
-                    item.getPrice()
+        for (CartLineItem cartLineItem : shoppingCart.getCartLineItems()) {
+            cartLineItemsDTO.add(new CartLineItemDTO(
+                    cartLineItem.getMediumType(),
+                    cartLineItem.getName(),
+                    cartLineItem.getQuantity(),
+                    cartLineItem.getPrice()
             ));
         }
 
-        return new ShoppingCartDTO(shoppingCart.getOwnerId(), lineItemsDTO);
+        return new ShoppingCartDTO(shoppingCart.getOwnerId(), cartLineItemsDTO);
     }
 
     @Override
     public void addProductToCart(AlbumDTO album, int amount) {
-        LineItem item = new LineItem(
+        CartLineItem cartLineItem = new CartLineItem(
                 album.getMediumType(),
                 album.getTitle(), amount,
                 album.getPrice()
         );
 
-        this.shoppingCart.addLineItem(item);
+        this.shoppingCart.addLineItem(cartLineItem);
     }
 
     @Override
-    public void changeQuantity(CartLineItemDTO lineItemDTO, int quantity) {
-        LineItem lineItem = new LineItem(
-                lineItemDTO.getMediumType(),
-                lineItemDTO.getName(),
-                lineItemDTO.getQuantity(),
-                lineItemDTO.getPrice()
+    public void changeQuantity(CartLineItemDTO cartLineItemDTO, int quantity) {
+        CartLineItem cartLineItem = new CartLineItem(
+                cartLineItemDTO.getMediumType(),
+                cartLineItemDTO.getName(),
+                cartLineItemDTO.getQuantity(),
+                cartLineItemDTO.getPrice()
         );
 
-        this.shoppingCart.changeQuantity(lineItem, quantity);
+        this.shoppingCart.changeQuantity(cartLineItem, quantity);
     }
 
     @Override
-    public void removeProductFromCart(CartLineItemDTO lineItemDTO) {
-        LineItem lineItem = new LineItem(
-                lineItemDTO.getMediumType(),
-                lineItemDTO.getName(),
-                lineItemDTO.getQuantity(),
-                lineItemDTO.getPrice()
+    public void removeProductFromCart(CartLineItemDTO cartLineItemDTO) {
+        CartLineItem cartLineItem = new CartLineItem(
+                cartLineItemDTO.getMediumType(),
+                cartLineItemDTO.getName(),
+                cartLineItemDTO.getQuantity(),
+                cartLineItemDTO.getPrice()
         );
 
-        this.shoppingCart.removeLineItem(lineItem);
+        this.shoppingCart.removeLineItem(cartLineItem);
     }
 
     @Override
-    public void clearCart() throws RemoteException, NoPermissionException {
-
+    public void clearCart() throws RemoteException {
+        this.shoppingCart.clear();
     }
 }
