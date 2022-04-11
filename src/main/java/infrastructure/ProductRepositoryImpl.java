@@ -11,6 +11,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import sharedrmi.application.api.InvoiceService;
+import sharedrmi.domain.enums.MediumType;
 
 import java.util.*;
 
@@ -62,6 +63,17 @@ public class ProductRepositoryImpl implements ProductRepository {
         List<Album> albumResults = session.createQuery("from Album where lower(title) LIKE lower(:title)", Album.class).setParameter("title", title).list();
 
         return albumResults;
+    }
+
+    @Override
+    public Album findAlbumByAlbumTitleAndMedium(String title, MediumType mediumType) {
+        Session session = sessionFactory.openSession();
+        Album album = session.createQuery("from Album where lower(title) LIKE lower(:title) AND mediumType = :mediumType", Album.class)
+                .setParameter("title", title)
+                .setParameter("mediumType", mediumType)
+                .getSingleResultOrNull();
+
+        return album;
     }
 
     @Override
