@@ -54,7 +54,7 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) {
+    public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) throws RemoteException {
         this.productService.decreaseStockOfAlbum(title, mediumType, decreaseAmount);
     }
 
