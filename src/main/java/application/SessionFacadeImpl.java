@@ -6,6 +6,7 @@ import sharedrmi.application.api.InvoiceService;
 import sharedrmi.application.api.ProductService;
 import sharedrmi.application.api.ShoppingCartService;
 import sharedrmi.application.dto.*;
+import sharedrmi.application.exceptions.AlbumNotFoundException;
 import sharedrmi.application.exceptions.InvoiceNotFoundException;
 import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.valueobjects.InvoiceId;
@@ -38,7 +39,7 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public AlbumDTO findAlbumByAlbumTitleAndMedium(String title, MediumType mediumType) throws RemoteException {
+    public AlbumDTO findAlbumByAlbumTitleAndMedium(String title, MediumType mediumType) throws RemoteException, AlbumNotFoundException {
         return this.productService.findAlbumByAlbumTitleAndMedium(title, mediumType);
     }
 

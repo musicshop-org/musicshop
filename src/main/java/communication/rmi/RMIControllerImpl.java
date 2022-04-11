@@ -5,6 +5,7 @@ import application.LoginServiceImpl;
 import application.api.SessionFacade;
 
 import sharedrmi.application.dto.*;
+import sharedrmi.application.exceptions.AlbumNotFoundException;
 import sharedrmi.application.exceptions.InvoiceNotFoundException;
 import sharedrmi.communication.rmi.RMIController;
 import sharedrmi.domain.enums.MediumType;
@@ -35,7 +36,7 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     }
 
     @Override
-    public AlbumDTO findAlbumByAlbumTitleAndMedium(String s, MediumType mediumType) throws RemoteException {
+    public AlbumDTO findAlbumByAlbumTitleAndMedium(String s, MediumType mediumType) throws RemoteException, AlbumNotFoundException {
         return sessionFacade.findAlbumByAlbumTitleAndMedium(s, mediumType);
     }
 
