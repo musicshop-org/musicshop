@@ -54,6 +54,11 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
+    public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) {
+        this.productService.decreaseStockOfAlbum(title, mediumType, decreaseAmount);
+    }
+
+    @Override
     public ShoppingCartDTO getCart() throws RemoteException, NoPermissionException {
 
         for (Role role : this.roles)

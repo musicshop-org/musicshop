@@ -14,7 +14,6 @@ import domain.Song;
 import domain.repositories.ProductRepository;
 import infrastructure.ProductRepositoryImpl;
 import sharedrmi.application.exceptions.AlbumNotFoundException;
-import sharedrmi.application.exceptions.InvoiceNotFoundException;
 import sharedrmi.domain.enums.MediumType;
 
 import java.rmi.RemoteException;
@@ -136,6 +135,14 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
         }
 
         return artistDTOs;
+    }
+
+    @Transactional
+    @Override
+    public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) {
+        Album album = productRepository.findAlbumByAlbumTitleAndMedium(title, mediumType);
+        album.decreaseStock(decreaseAmount);
+        productRepository.updateAlbum(album);
     }
 
 }

@@ -51,6 +51,11 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     }
 
     @Override
+    public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) {
+        sessionFacade.decreaseStockOfAlbum(title, mediumType, decreaseAmount);
+    }
+
+    @Override
     public ShoppingCartDTO getCart() throws RemoteException, NoPermissionException {
         return sessionFacade.getCart();
     }
