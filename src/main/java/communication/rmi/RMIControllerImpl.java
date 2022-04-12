@@ -5,8 +5,10 @@ import application.LoginServiceImpl;
 import application.api.SessionFacade;
 
 import sharedrmi.application.dto.*;
+import sharedrmi.application.exceptions.AlbumNotFoundException;
 import sharedrmi.application.exceptions.InvoiceNotFoundException;
 import sharedrmi.communication.rmi.RMIController;
+import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.valueobjects.InvoiceId;
 import sharedrmi.domain.valueobjects.Role;
 
@@ -34,6 +36,11 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     }
 
     @Override
+    public AlbumDTO findAlbumByAlbumTitleAndMedium(String s, MediumType mediumType) throws RemoteException, AlbumNotFoundException {
+        return sessionFacade.findAlbumByAlbumTitleAndMedium(s, mediumType);
+    }
+
+    @Override
     public List<SongDTO> findSongsByTitle(String s) throws RemoteException {
         return sessionFacade.findSongsByTitle(s);
     }
@@ -41,6 +48,11 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     @Override
     public List<ArtistDTO> findArtistsByName(String s) throws RemoteException {
         return sessionFacade.findArtistsByName(s);
+    }
+
+    @Override
+    public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) throws RemoteException {
+        sessionFacade.decreaseStockOfAlbum(title, mediumType, decreaseAmount);
     }
 
     @Override
