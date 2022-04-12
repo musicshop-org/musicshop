@@ -14,6 +14,7 @@ import sharedrmi.application.api.ProductService;
 import sharedrmi.application.dto.AlbumDTO;
 import sharedrmi.application.dto.ArtistDTO;
 import sharedrmi.application.dto.SongDTO;
+import sharedrmi.application.exceptions.AlbumNotFoundException;
 import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.valueobjects.AlbumId;
 
@@ -22,8 +23,7 @@ import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ProductServiceTest {
@@ -242,4 +242,80 @@ public class ProductServiceTest {
         assertEquals(givenArtistDTOs.get(0).getName(), artistDTOs.get(0).getName());
     }
 
+    @Test
+    void given_album_when_decreasestockofalbum_then_decreasedstock() throws RemoteException {
+
+        // given
+        final String title = "title1";
+        final MediumType mediumType = MediumType.CD;
+        final int givenStock = 8;
+        final int decreaseQuantity = 5;
+        final int expectedQuantity = 3;
+
+        Album album = new Album(title,
+                BigDecimal.TEN,
+                givenStock,
+                mediumType,
+                LocalDate.now(),
+                new AlbumId(),
+                "label1",
+                new HashSet<>());
+
+        Mockito.when(productRepository.findAlbumByAlbumTitleAndMedium(title, mediumType)).thenReturn(album);
+
+        // when
+        productService.decreaseStockOfAlbum(title, mediumType, decreaseQuantity);
+
+        // then
+        assertEquals(expectedQuantity, album.getStock());
+    }
+
+    @Test
+    void given_album_when_findAlbumByTitleAndMedium_then_expectalbum () throws RemoteException, AlbumNotFoundException {
+
+        // given
+        final String title = "title1";
+        final MediumType mediumType = MediumType.CD;
+
+        Album album = new Album(title,
+                BigDecimal.TEN,
+                8,
+                mediumType,
+                LocalDate.now(),
+                new AlbumId(),
+                "label1",
+                new HashSet<>());
+
+        Mockito.when(productRepository.findAlbumByAlbumTitleAndMedium(title, mediumType)).thenReturn(album);
+
+        // when
+        AlbumDTO albumDTO = productService.findAlbumByAlbumTitleAndMedium(title, mediumType);
+
+        // then
+        assertEquals(albumDTO.getTitle(), album.getTitle());
+        assertEquals(albumDTO.getMediumType(), album.getMediumType());
+        assertEquals(albumDTO.getAlbumId(), album.getAlbumId());
+    }
+
+    @Test
+    void given_notexistingalbum_when_findAlbumByTitleAndMedium_then_albumnotfoundexception () {
+
+        // given
+        final String title = "title1";
+        final MediumType mediumType = MediumType.CD;
+
+        Album album = new Album(title,
+                BigDecimal.TEN,
+                8,
+                mediumType,
+                LocalDate.now(),
+                new AlbumId(),
+                "label1",
+                new HashSet<>());
+
+        Mockito.when(productRepository.findAlbumByAlbumTitleAndMedium(title, mediumType)).thenReturn(null);
+
+        // when ... then
+        assertThrows(AlbumNotFoundException.class, () -> productService.findAlbumByAlbumTitleAndMedium(title, mediumType));
+    }
 }

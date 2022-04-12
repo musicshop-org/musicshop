@@ -24,13 +24,13 @@ public class AlbumTest {
         final int increaseQuantity = 5;
         final int expectedQuantity = 13;
 
-        Album album = new Album("label1",
+        Album album = new Album("title1",
                             BigDecimal.TEN,
                             givenStock,
                             MediumType.CD,
                             LocalDate.now(),
                             new AlbumId(),
-                            "title1",
+                            "label1",
                             new HashSet<>());
 
         // when
@@ -48,13 +48,13 @@ public class AlbumTest {
         final int decreaseQuantity = 5;
         final int expectedQuantity = 3;
 
-        Album album = new Album("label1",
+        Album album = new Album("title1",
                 BigDecimal.TEN,
                 givenStock,
                 MediumType.CD,
                 LocalDate.now(),
                 new AlbumId(),
-                "title1",
+                "label1",
                 new HashSet<>());
 
         // when
