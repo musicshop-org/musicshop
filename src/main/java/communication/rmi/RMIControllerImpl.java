@@ -5,8 +5,10 @@ import application.LoginServiceImpl;
 import application.api.SessionFacade;
 
 import sharedrmi.application.dto.*;
+import sharedrmi.application.exceptions.AlbumNotFoundException;
 import sharedrmi.application.exceptions.InvoiceNotFoundException;
 import sharedrmi.communication.rmi.RMIController;
+import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.valueobjects.InvoiceId;
 import sharedrmi.domain.valueobjects.Role;
 
@@ -34,6 +36,11 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     }
 
     @Override
+    public AlbumDTO findAlbumByAlbumTitleAndMedium(String s, MediumType mediumType) throws RemoteException, AlbumNotFoundException {
+        return sessionFacade.findAlbumByAlbumTitleAndMedium(s, mediumType);
+    }
+
+    @Override
     public List<SongDTO> findSongsByTitle(String s) throws RemoteException {
         return sessionFacade.findSongsByTitle(s);
     }
@@ -41,6 +48,11 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     @Override
     public List<ArtistDTO> findArtistsByName(String s) throws RemoteException {
         return sessionFacade.findArtistsByName(s);
+    }
+
+    @Override
+    public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) throws RemoteException {
+        sessionFacade.decreaseStockOfAlbum(title, mediumType, decreaseAmount);
     }
 
     @Override
@@ -67,6 +79,7 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     public void clearCart() throws RemoteException, NoPermissionException {
         sessionFacade.clearCart();
     }
+
     @Override
     public List<Role> getRoles() throws RemoteException {
         return sessionFacade.getRoles();
@@ -78,7 +91,7 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     }
 
     @Override
-    public InvoiceDTO findInvoiceById(InvoiceId invoiceId) throws RemoteException, InvoiceNotFoundException, NoPermissionException {
+    public InvoiceDTO findInvoiceById(InvoiceId invoiceId) throws RemoteException, NoPermissionException, InvoiceNotFoundException {
         return sessionFacade.findInvoiceById(invoiceId);
     }
 
@@ -93,7 +106,7 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     }
 
     @Override
-    public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws RemoteException, InvoiceNotFoundException, NoPermissionException {
+    public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws RemoteException, NoPermissionException, InvoiceNotFoundException {
         sessionFacade.returnInvoiceLineItem(invoiceId,invoiceLineItemDTO,returnQuantity);
     }
 }
