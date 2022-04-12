@@ -129,15 +129,16 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public List<CustomerDTO> findCustomersByName(String name) {
+    public List<CustomerDTO> findCustomersByName(String name) throws NoPermissionException, RemoteException {
 
-        List<CustomerDTO> customers = new LinkedList<>();
-        try {
-            customers = customerService.findCustomersByName(name);
-        } catch (RemoteException e) {
-            e.printStackTrace();
+        for (Role role : this.roles)
+        {
+            if (role.equals(Role.SALESPERSON)) {
+                return customerService.findCustomersByName(name);
+            }
         }
-        return customers;
+        throw new NoPermissionException("no permission to call this method!");
+
     }
 
     @Override
