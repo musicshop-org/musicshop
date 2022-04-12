@@ -5,18 +5,23 @@ import domain.Album;
 import domain.Artist;
 import domain.Song;
 import org.junit.jupiter.api.Test;
+import sharedrmi.domain.enums.MediumType;
+import sharedrmi.domain.valueobjects.AlbumId;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.rmi.RemoteException;
+import java.math.BigDecimal;
 
+import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class ProductRepositoryTest {
 
     @Test
-    void given_songTitle_when_findAlbumsBySongTitle_then_returnAlbumsWithThisSongIn() throws RemoteException {
+    void given_songTitle_when_findAlbumsBySongTitle_then_returnAlbumsWithThisSongIn() {
+
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
         String songTitle = "Thriller";
@@ -32,11 +37,13 @@ public class ProductRepositoryTest {
             }
         }
 
+        // then
         assertEquals(foundSongs, albums.size());
     }
 
     @Test
-    void given_notExistingSongTitle_when_findAlbumsBySongTitle_then_returnEmptySet() throws RemoteException {
+    void given_notExistingSongTitle_when_findAlbumsBySongTitle_then_returnEmptySet() {
+
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
         String songTitle = "notExistingSongTitle";
@@ -49,7 +56,8 @@ public class ProductRepositoryTest {
     }
 
     @Test
-    void given_existingSongWithRandomCase_when_findAlbumsBySongTitle_then_expectSong() throws RemoteException {
+    void given_existingSongWithRandomCase_when_findAlbumsBySongTitle_then_expectSong() {
+
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
         String songTitle = "bEaUtiFul";
@@ -62,7 +70,8 @@ public class ProductRepositoryTest {
     }
 
     @Test
-    void given_existingSong_when_findSongsByTitle_then_expectSong() throws RemoteException {
+    void given_existingSong_when_findSongsByTitle_then_expectSong() {
+
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
         String songTitle = "Beautiful";
@@ -75,7 +84,8 @@ public class ProductRepositoryTest {
     }
 
     @Test
-    void given_notExistingSong_when_findSongsByTitle_then_expectEmptyList() throws RemoteException {
+    void given_notExistingSong_when_findSongsByTitle_then_expectEmptyList() {
+
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
         String songTitle = "notExistingSongName";
@@ -88,7 +98,8 @@ public class ProductRepositoryTest {
     }
 
     @Test
-    void given_existingSongWithRandomCase_when_findSongsByTitle_then_expectSong() throws RemoteException {
+    void given_existingSongWithRandomCase_when_findSongsByTitle_then_expectSong() {
+
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
         String songTitle = "beaUtiFul";
@@ -101,7 +112,8 @@ public class ProductRepositoryTest {
     }
 
     @Test
-    void given_artist_when_findArtistsByName_then_expectArtist() throws RemoteException {
+    void given_artist_when_findArtistsByName_then_expectArtist() {
+
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
         String artistName = "Seeed";
@@ -114,7 +126,8 @@ public class ProductRepositoryTest {
     }
 
     @Test
-    void given_notExistingArtist_when_findArtistsByName_then_expectEmptyList() throws RemoteException {
+    void given_notExistingArtist_when_findArtistsByName_then_expectEmptyList() {
+
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
         String artistName = "notExistingArtistName";
@@ -127,7 +140,8 @@ public class ProductRepositoryTest {
     }
 
     @Test
-    void given_existingArtistWithRandomCase_when_findArtistsByName_then_expectArtist() throws RemoteException {
+    void given_existingArtistWithRandomCase_when_findArtistsByName_then_expectArtist() {
+
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
         String artistName = "seEed";
@@ -140,7 +154,8 @@ public class ProductRepositoryTest {
     }
 
     @Test
-    void given_partialSongTitle_when_findSongsByTitle_then_relevantSongs() throws RemoteException {
+    void given_partialSongTitle_when_findSongsByTitle_then_relevantSongs() {
+
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
         String songTitle = "Beautiful";
@@ -153,7 +168,8 @@ public class ProductRepositoryTest {
     }
 
     @Test
-    void given_partialSongTitle_when_findAlbumsByTitle_then_relevantAlbums() throws RemoteException {
+    void given_partialSongTitle_when_findAlbumsByTitle_then_relevantAlbums() {
+
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
         String songTitle = "il";
@@ -166,7 +182,8 @@ public class ProductRepositoryTest {
     }
 
     @Test
-    void given_partialArtist_when_findArtistsByName_then_relevantArtists() throws RemoteException {
+    void given_partialArtist_when_findArtistsByName_then_relevantArtists() {
+
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
         String artistName = "ma";
@@ -179,7 +196,8 @@ public class ProductRepositoryTest {
     }
 
     @Test
-    void given_existingAlbum_when_findAlbumsByTitle_then_expectAlbums() throws RemoteException {
+    void given_existingAlbum_when_findAlbumsByTitle_then_expectAlbums() {
+
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
         String albumTitle = "Bad";
@@ -192,7 +210,8 @@ public class ProductRepositoryTest {
     }
 
     @Test
-    void given_notExistingAlbum_when_findAlbumsByTitle_then_empty() throws RemoteException {
+    void given_notExistingAlbum_when_findAlbumsByTitle_then_empty() {
+
         // given
         ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
         String albumTitle = "ERROR";
@@ -202,5 +221,31 @@ public class ProductRepositoryTest {
 
         // then
         assertEquals(0, albums.size());
+    }
+
+    @Test
+    void given_album_when_findalbumbytitleandmedium_then_expectalbum() {
+
+        // given
+        ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
+
+        final String title = "Bad";
+        final MediumType mediumType = MediumType.CD;
+
+        Album expectedAlbum = new Album(title,
+                BigDecimal.TEN,
+                8,
+                mediumType,
+                LocalDate.now(),
+                new AlbumId(),
+                "label1",
+                new HashSet<>());
+
+        // when
+        Album actualAlbum = productRepository.findAlbumByAlbumTitleAndMedium(title, mediumType);
+
+        // then
+        assertEquals(expectedAlbum.getTitle(), actualAlbum.getTitle());
+        assertEquals(expectedAlbum.getMediumType(), actualAlbum.getMediumType());
     }
 }
