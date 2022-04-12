@@ -2,6 +2,7 @@ package application;
 
 import application.api.SessionFacade;
 
+import sharedrmi.application.api.CustomerService;
 import sharedrmi.application.api.InvoiceService;
 import sharedrmi.application.api.ProductService;
 import sharedrmi.application.api.ShoppingCartService;
@@ -13,8 +14,12 @@ import sharedrmi.domain.valueobjects.InvoiceId;
 import sharedrmi.domain.valueobjects.Role;
 
 import javax.naming.NoPermissionException;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.LinkedList;
 import java.util.List;
 
 public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFacade {
@@ -22,6 +27,7 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     private final List<Role> roles;
     private final String username;
     private final ShoppingCartService shoppingCartService;
+    private CustomerService customerService;
 
     private final ProductService productService = new ProductServiceImpl();
     private final InvoiceService invoiceService = new InvoiceServiceImpl();
@@ -31,6 +37,13 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
         this.username = username;
 
         this.shoppingCartService = new ShoppingCartServiceImpl(username);
+
+        try {
+            customerService = (CustomerService) Naming.lookup("rmi://10.0.40.163/CustomerService");
+        } catch (NotBoundException | MalformedURLException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -125,6 +138,19 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
         }
 
         throw new NoPermissionException("no permission to call this method!");
+    }
+
+    @Override
+    public List<CustomerDTO> findCustomersByName(String name) throws NoPermissionException, RemoteException {
+
+        for (Role role : this.roles)
+        {
+            if (role.equals(Role.SALESPERSON)) {
+                return customerService.findCustomersByName(name);
+            }
+        }
+        throw new NoPermissionException("no permission to call this method!");
+
     }
 
     @Override

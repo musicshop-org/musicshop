@@ -105,5 +105,4 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
     public void clearCart() throws RemoteException {
         this.shoppingCart.clear();
     }
-
 }

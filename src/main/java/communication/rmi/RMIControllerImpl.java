@@ -96,6 +96,11 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     }
 
     @Override
+    public List<CustomerDTO> findCustomersByName(String name) throws RemoteException, NoPermissionException {
+        return sessionFacade.findCustomersByName(name);
+    }
+
+    @Override
     public void createInvoice(InvoiceDTO invoiceDTO) throws RemoteException, NoPermissionException {
         sessionFacade.createInvoice(invoiceDTO);
     }
