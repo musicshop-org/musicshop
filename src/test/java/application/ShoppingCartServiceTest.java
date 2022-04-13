@@ -1,21 +1,23 @@
 package application;
 
-import domain.LineItem;
+import domain.CartLineItem;
 import domain.ShoppingCart;
-import infrastructure.ShoppingCartRepository;
+import domain.repositories.ShoppingCartRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import sharedrmi.application.api.ShoppingCartService;
 import sharedrmi.application.dto.AlbumDTO;
-import sharedrmi.application.dto.LineItemDTO;
+import sharedrmi.application.dto.CartLineItemDTO;
 import sharedrmi.application.dto.ShoppingCartDTO;
 import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.valueobjects.AlbumId;
 
+import javax.naming.NoPermissionException;
 import java.math.BigDecimal;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
@@ -38,11 +40,11 @@ public class ShoppingCartServiceTest {
 
     @BeforeEach
     void initMockAndService() throws RemoteException {
-        UUID ownerId = UUID.randomUUID();
+        String ownerId = UUID.randomUUID().toString();
 
-        List<LineItem> lineItems = new LinkedList<>();
-        lineItems.add(new LineItem(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18)));
-        lineItems.add(new LineItem(MediumType.CD,"BAM BAM", 20, BigDecimal.valueOf(36)));
+        List<CartLineItem> lineItems = new LinkedList<>();
+        lineItems.add(new CartLineItem(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18)));
+        lineItems.add(new CartLineItem(MediumType.CD, "BAM BAM", 20, BigDecimal.valueOf(36)));
 
         givenCart = new ShoppingCart(ownerId, lineItems);
 
@@ -51,70 +53,82 @@ public class ShoppingCartServiceTest {
     }
 
     @Test
-    void when_displayCart_return_correct_dto() throws RemoteException {
+    void when_displayCart_return_correct_dto() throws RemoteException, NoPermissionException {
         //when
         ShoppingCartDTO cartDTO = shoppingCartService.getCart();
 
         //then
-        assertEquals(givenCart.getOwnerId(),cartDTO.getOwnerId());
+        assertEquals(givenCart.getOwnerId(), cartDTO.getOwnerId());
         assertAll("LineItem 1",
-                () -> assertEquals(givenCart.getLineItems().get(0).getName(),cartDTO.getLineItems().get(0).getName()),
-                () -> assertEquals(givenCart.getLineItems().get(0).getQuantity(),cartDTO.getLineItems().get(0).getQuantity()),
-                () -> assertEquals(givenCart.getLineItems().get(0).getPrice(),cartDTO.getLineItems().get(0).getPrice()),
-                () -> assertEquals(givenCart.getLineItems().get(0).getMediumType(),cartDTO.getLineItems().get(0).getMediumType())
+                () -> assertEquals(givenCart.getCartLineItems().get(0).getName(), cartDTO.getCartLineItems().get(0).getName()),
+                () -> assertEquals(givenCart.getCartLineItems().get(0).getQuantity(), cartDTO.getCartLineItems().get(0).getQuantity()),
+                () -> assertEquals(givenCart.getCartLineItems().get(0).getPrice(), cartDTO.getCartLineItems().get(0).getPrice()),
+                () -> assertEquals(givenCart.getCartLineItems().get(0).getMediumType(), cartDTO.getCartLineItems().get(0).getMediumType())
         );
         assertAll("LineItem 2",
-                () -> assertEquals(givenCart.getLineItems().get(1).getName(),cartDTO.getLineItems().get(1).getName()),
-                () -> assertEquals(givenCart.getLineItems().get(1).getQuantity(),cartDTO.getLineItems().get(1).getQuantity()),
-                () -> assertEquals(givenCart.getLineItems().get(1).getPrice(),cartDTO.getLineItems().get(1).getPrice()),
-                () -> assertEquals(givenCart.getLineItems().get(1).getMediumType(),cartDTO.getLineItems().get(1).getMediumType())
+                () -> assertEquals(givenCart.getCartLineItems().get(1).getName(), cartDTO.getCartLineItems().get(1).getName()),
+                () -> assertEquals(givenCart.getCartLineItems().get(1).getQuantity(), cartDTO.getCartLineItems().get(1).getQuantity()),
+                () -> assertEquals(givenCart.getCartLineItems().get(1).getPrice(), cartDTO.getCartLineItems().get(1).getPrice()),
+                () -> assertEquals(givenCart.getCartLineItems().get(1).getMediumType(), cartDTO.getCartLineItems().get(1).getMediumType())
         );
     }
 
     @Test
-    void given_album_when_addProduct_return_new_entry() throws RemoteException {
+    void given_album_when_addProduct_return_new_entry() throws RemoteException, NoPermissionException {
         //given
         int quantity = 2;
-        AlbumDTO album = new AlbumDTO("TestAlbum",BigDecimal.TEN,10,MediumType.CD, LocalDate.now(),new AlbumId(),"TestLabel",null);
+        AlbumDTO album = new AlbumDTO("TestAlbum", BigDecimal.TEN, 10, MediumType.CD, LocalDate.now(), new AlbumId(), "TestLabel", null);
 
         //when
-        shoppingCartService.addProductToCart(album,quantity);
+        shoppingCartService.addProductToCart(album, quantity);
 
         //then
         ShoppingCartDTO cartDTO = shoppingCartService.getCart();
-        assertEquals(givenCart.getOwnerId(),cartDTO.getOwnerId());
+        assertEquals(givenCart.getOwnerId(), cartDTO.getOwnerId());
         assertAll("LineItem 3",
-                () -> assertEquals(album.getTitle(), cartDTO.getLineItems().get(2).getName()),
-                () -> assertEquals(quantity, cartDTO.getLineItems().get(2).getQuantity()),
-                () -> assertEquals(album.getPrice(), cartDTO.getLineItems().get(2).getPrice()),
-                () -> assertEquals(album.getMediumType(), cartDTO.getLineItems().get(2).getMediumType())
+                () -> assertEquals(album.getTitle(), cartDTO.getCartLineItems().get(2).getName()),
+                () -> assertEquals(quantity, cartDTO.getCartLineItems().get(2).getQuantity()),
+                () -> assertEquals(album.getPrice(), cartDTO.getCartLineItems().get(2).getPrice()),
+                () -> assertEquals(album.getMediumType(), cartDTO.getCartLineItems().get(2).getMediumType())
         );
     }
 
     @Test
-    void given_newquantity_when_changeQuantity_return_new_quantity() throws RemoteException{
+    void given_newquantity_when_changeQuantity_return_new_quantity() throws RemoteException, NoPermissionException {
         //given
         int newQuantity = 10;
 
-        LineItemDTO lineItemDTO = new LineItemDTO(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18));
+        CartLineItemDTO lineItemDTO = new CartLineItemDTO(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18));
 
         //when
-        shoppingCartService.changeQuantity(lineItemDTO,newQuantity);
+        shoppingCartService.changeQuantity(lineItemDTO, newQuantity);
 
         //then
-        assertEquals(newQuantity, shoppingCartService.getCart().getLineItems().get(0).getQuantity());
+        assertEquals(newQuantity, shoppingCartService.getCart().getCartLineItems().get(0).getQuantity());
     }
 
     @Test
-    void given_cart_when_removeProductFromCart_return_new_size() throws RemoteException {
+    void given_cart_when_removeProductFromCart_return_new_size() throws RemoteException, NoPermissionException {
         //given
         int expected = 1;
-        LineItemDTO lineItemDTO = new LineItemDTO(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18));
+        CartLineItemDTO lineItemDTO = new CartLineItemDTO(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18));
 
         //when
         shoppingCartService.removeProductFromCart(lineItemDTO);
 
         //then
-        assertEquals(expected,shoppingCartService.getCart().getLineItems().size());
+        assertEquals(expected, shoppingCartService.getCart().getCartLineItems().size());
+    }
+
+    @Test
+    void given_cart_when_clearCart_return_empty_cart() throws RemoteException, NoPermissionException {
+        //given
+        int expected = 0;
+
+        //when
+        shoppingCartService.clearCart();
+
+        //then
+        assertEquals(expected, shoppingCartService.getCart().getCartLineItems().size());
     }
 }

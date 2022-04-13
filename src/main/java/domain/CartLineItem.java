@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.math.BigDecimal;
 
 @Getter
-public class LineItem {
+public class CartLineItem {
 
     private long id;
     private MediumType mediumType;
@@ -14,10 +14,10 @@ public class LineItem {
     private int quantity;
     private BigDecimal price;
 
-    protected LineItem() {
+    protected CartLineItem() {
     }
 
-    public LineItem(MediumType mediumType, String name, int quantity, BigDecimal price) {
+    public CartLineItem(MediumType mediumType, String name, int quantity, BigDecimal price) {
         this.mediumType = mediumType;
         this.name = name;
         this.quantity = quantity;
@@ -32,8 +32,8 @@ public class LineItem {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        LineItem lineItem = (LineItem) o;
-        return mediumType == lineItem.mediumType && name.equals(lineItem.name) && price.equals(lineItem.price);
+        CartLineItem cartLineItem = (CartLineItem) o;
+        return mediumType == cartLineItem.mediumType && name.equals(cartLineItem.name) && price.equals(cartLineItem.price);
     }
 
 }

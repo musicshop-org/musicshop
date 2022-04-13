@@ -9,16 +9,34 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ShoppingCartTest {
+
     @Test
-    void when_lineItem_added_return_equal (){
+    void when_lineItem_added_return_equal() {
         //given
-        ShoppingCart cart = new ShoppingCart(UUID.randomUUID());
-        LineItem expectedItem = new LineItem(MediumType.CD,"24K Magic", 12, BigDecimal.valueOf(18));
+        ShoppingCart cart = new ShoppingCart(UUID.randomUUID().toString());
+        CartLineItem expectedItem = new CartLineItem(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18));
 
         //when
         cart.addLineItem(expectedItem);
 
         //then
-        assertEquals(expectedItem, cart.getLineItems().get(0));
+        assertEquals(expectedItem, cart.getCartLineItems().get(0));
     }
+
+    @Test
+    void when_clearCart_return_empty() {
+        //given
+        ShoppingCart cart = new ShoppingCart(UUID.randomUUID().toString());
+        CartLineItem expectedItem = new CartLineItem(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18));
+        cart.addLineItem(expectedItem);
+
+        int expected = 0;
+
+        //when
+        cart.clear();
+
+        //then
+        assertEquals(expected, cart.getCartLineItems().size());
+    }
+
 }
