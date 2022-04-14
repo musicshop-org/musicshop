@@ -12,6 +12,7 @@ import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.valueobjects.InvoiceId;
 import sharedrmi.domain.valueobjects.Role;
 
+import javax.jms.JMSException;
 import javax.naming.NoPermissionException;
 import javax.security.auth.login.FailedLoginException;
 import java.nio.file.AccessDeniedException;
@@ -108,5 +109,10 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     @Override
     public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws RemoteException, NoPermissionException, InvoiceNotFoundException {
         sessionFacade.returnInvoiceLineItem(invoiceId,invoiceLineItemDTO,returnQuantity);
+    }
+
+    @Override
+    public void publish(List<String> topics, String messageTitle, String messageText) throws RemoteException, JMSException, NoPermissionException {
+        sessionFacade.publish(topics, messageTitle, messageText);
     }
 }

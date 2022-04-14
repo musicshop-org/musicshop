@@ -2,10 +2,7 @@ package application;
 
 import application.api.SessionFacade;
 
-import sharedrmi.application.api.CustomerService;
-import sharedrmi.application.api.InvoiceService;
-import sharedrmi.application.api.ProductService;
-import sharedrmi.application.api.ShoppingCartService;
+import sharedrmi.application.api.*;
 import sharedrmi.application.dto.*;
 import sharedrmi.application.exceptions.AlbumNotFoundException;
 import sharedrmi.application.exceptions.InvoiceNotFoundException;
@@ -13,6 +10,7 @@ import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.valueobjects.InvoiceId;
 import sharedrmi.domain.valueobjects.Role;
 
+import javax.jms.JMSException;
 import javax.naming.NoPermissionException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -31,6 +29,7 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
 
     private final ProductService productService = new ProductServiceImpl();
     private final InvoiceService invoiceService = new InvoiceServiceImpl();
+    private final MessageProducerService messageProducerService = new MessageProducerServiceImpl();
 
     public SessionFacadeImpl(List<Role> roles, String username) throws RemoteException {
         this.roles = roles;
@@ -196,6 +195,20 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
         {
             if (role.equals(Role.SALESPERSON)) {
                 invoiceService.returnInvoiceLineItem(invoiceId, invoiceLineItemDTO, returnQuantity);
+                return;
+            }
+        }
+
+        throw new NoPermissionException("no permission to call this method!");
+    }
+
+    @Override
+    public void publish(List<String> topics, String messageTitle, String messageText) throws RemoteException, JMSException, NoPermissionException {
+
+        for (Role role : this.roles)
+        {
+            if (role.equals(Role.OPERATOR)) {
+                messageProducerService.publish(topics, messageTitle, messageText);
                 return;
             }
         }
