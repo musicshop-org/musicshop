@@ -6,13 +6,14 @@ import sharedrmi.application.api.MessageProducerService;
 import javax.jms.*;
 import java.rmi.RemoteException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class MessageProducerServiceImpl implements MessageProducerService {
 
     private final String DEFAULT_BROKER_BIND_URL = "tcp://10.0.40.162:61616";
 
     @Override
-    public void publish(List<String> topics, String messageTitle, String messageText) throws RemoteException {
+    public void publish(List<String> topics, String messageTitle, String messageText, long expirationDays) throws RemoteException {
 
         try {
             ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(DEFAULT_BROKER_BIND_URL);
@@ -33,6 +34,7 @@ public class MessageProducerServiceImpl implements MessageProducerService {
 
                 TextMessage textMessage = session.createTextMessage(messageText);
                 textMessage.setJMSCorrelationID(messageTitle);
+                textMessage.setJMSExpiration(TimeUnit.DAYS.toMillis(expirationDays));
                 messageProducer.send(textMessage);
             }
 
