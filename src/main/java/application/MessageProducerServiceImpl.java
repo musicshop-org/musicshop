@@ -9,29 +9,38 @@ import java.util.List;
 
 public class MessageProducerServiceImpl implements MessageProducerService {
 
+    private final String DEFAULT_BROKER_BIND_URL = "tcp://10.0.40.162:61616";
+
     @Override
-    public void publish(List<String> topics, String messageTitle, String messageText) throws RemoteException, JMSException {
+    public void publish(List<String> topics, String messageTitle, String messageText) throws RemoteException {
 
-        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(ActiveMQConnectionFactory.DEFAULT_BROKER_BIND_URL);
+        try {
+            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(DEFAULT_BROKER_BIND_URL);
 
-        Connection connection = connectionFactory.createConnection();
-        connection.start();
+            Connection connection = null;
+            connection = connectionFactory.createConnection();
 
-        Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
+            connection.start();
 
-        for (String topicName : topics) {
+            Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
 
-            Topic topic = session.createTopic(topicName);
+            for (String topicName : topics) {
 
-            MessageProducer messageProducer = session.createProducer(topic);
-            messageProducer.setDeliveryMode(DeliveryMode.PERSISTENT);
+                Topic topic = session.createTopic(topicName);
 
-            TextMessage textMessage = session.createTextMessage(messageText);
-            textMessage.setJMSCorrelationID(messageTitle);
-            messageProducer.send(textMessage);
+                MessageProducer messageProducer = session.createProducer(topic);
+                messageProducer.setDeliveryMode(DeliveryMode.PERSISTENT);
+
+                TextMessage textMessage = session.createTextMessage(messageText);
+                textMessage.setJMSCorrelationID(messageTitle);
+                messageProducer.send(textMessage);
+            }
+
+            session.close();
+            connection.close();
+
+        } catch (JMSException e) {
+            e.printStackTrace();
         }
-
-        session.close();
-        connection.close();
     }
 }

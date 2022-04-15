@@ -203,7 +203,7 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public void publish(List<String> topics, String messageTitle, String messageText) throws RemoteException, JMSException, NoPermissionException {
+    public void publish(List<String> topics, String messageTitle, String messageText) throws RemoteException, NoPermissionException {
 
         for (Role role : this.roles)
         {
