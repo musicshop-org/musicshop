@@ -52,7 +52,7 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     }
 
     @Override
-    public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) throws RemoteException {
+    public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) throws RemoteException, NoPermissionException {
         sessionFacade.decreaseStockOfAlbum(title, mediumType, decreaseAmount);
     }
 

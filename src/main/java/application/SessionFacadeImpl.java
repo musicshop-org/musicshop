@@ -66,8 +66,15 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) throws RemoteException {
-        this.productService.decreaseStockOfAlbum(title, mediumType, decreaseAmount);
+    public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) throws RemoteException, NoPermissionException {
+        for (Role role : this.roles)
+        {
+            if (role.equals(Role.SALESPERSON)) {
+                this.productService.decreaseStockOfAlbum(title, mediumType, decreaseAmount);
+            }
+        }
+
+        throw new NoPermissionException("no permission to call this method!");
     }
 
     @Override
