@@ -2,6 +2,8 @@
 import communication.rmi.RMIControllerFactoryImpl;
 import domain.Topic;
 import domain.User;
+import domain.repositories.UserRepository;
+import infrastructure.UserRepositoryImpl;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -13,6 +15,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.List;
+import java.util.Optional;
 
 public class Main {
     public static void main(String[] args) {
@@ -28,15 +31,19 @@ public class Main {
 //            e.printStackTrace();
 //        }
 
-        User user = new User("admin", List.of(new Topic("system"), new Topic("order")));
+//        User user = new User("admin", List.of(new Topic("system"), new Topic("order")));
+//
+//        final SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+//        Session session = sessionFactory.openSession();
+//        Transaction transaction = session.beginTransaction();
+//
+//        session.persist(user);
+//        transaction.commit();
+//        session.close();
 
-        final SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-
-        session.persist(user);
-        transaction.commit();
-        session.close();
+        UserRepository userRepository = new UserRepositoryImpl();
+        Optional<User> user = userRepository.findUserByUsername("admin");
+        System.out.println(user.get());
 
     }
 }
