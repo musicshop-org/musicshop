@@ -1,20 +1,7 @@
 
-import communication.rmi.RMIControllerFactoryImpl;
-import domain.Topic;
 import domain.User;
 import domain.repositories.UserRepository;
-import infrastructure.UserRepositoryImpl;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
-import sharedrmi.communication.rmi.RMIControllerFactory;
-import java.net.MalformedURLException;
-import java.rmi.Naming;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.util.List;
+
 import java.util.Optional;
 
 public class Main {
