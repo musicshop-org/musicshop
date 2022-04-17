@@ -45,4 +45,9 @@ public class MessageProducerServiceImpl implements MessageProducerService {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public List<String> getAllTopics() throws RemoteException {
+        return null;
+    }
 }
