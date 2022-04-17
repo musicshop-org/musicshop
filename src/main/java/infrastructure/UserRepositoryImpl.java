@@ -16,7 +16,7 @@ public class UserRepositoryImpl implements UserRepository {
     public Optional<User> findUserByUsername(String username) {
         Session session = sessionFactory.openSession();
 
-        User user = session.createQuery().
+        User user = session.createQuery()
                 .setParameter("username", username)
                 .getsingelResultOrNull();
 
