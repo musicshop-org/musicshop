@@ -1,9 +1,7 @@
 package application;
 
-import domain.Album;
 import domain.Topic;
 import domain.User;
-import domain.repositories.ProductRepository;
 import domain.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,14 +12,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import sharedrmi.application.api.UserService;
-import sharedrmi.application.exceptions.AlbumNotFoundException;
-import sharedrmi.domain.enums.MediumType;
-import sharedrmi.domain.valueobjects.AlbumId;
 
-import java.math.BigDecimal;
 import java.rmi.RemoteException;
-import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,8 +37,8 @@ public class UserServiceTest {
     void given_adminuser_when_getalltopics_then_expectalltopics() throws RemoteException {
 
         // given
-        List<Topic> expectedTopics = List.of(new Topic("system"), new Topic("order"));
         String username = "admin";
+        List<Topic> expectedTopics = List.of(new Topic("system"), new Topic("order"));
         User user = new User(username, expectedTopics);
 
         Mockito.when(userRepository.findUserByUsername(username)).thenReturn(Optional.of(user));
