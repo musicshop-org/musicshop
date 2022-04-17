@@ -15,8 +15,12 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Optional<User> findUserByUsername(String username) {
         Session session = sessionFactory.openSession();
-        User user = session.createQuery();
-        return Optional.empty();
+
+        User user = session.createQuery().
+                .setParameter("username", username)
+                .getsingelResultOrNull();
+
+        return Optional.ofNullable(user);
     }
     //teet
 }
