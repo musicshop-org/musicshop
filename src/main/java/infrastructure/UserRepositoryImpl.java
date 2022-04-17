@@ -18,7 +18,7 @@ public class UserRepositoryImpl implements UserRepository {
 
         User user = session.createQuery()
                 .setParameter("username", username)
-                .getsingelResultOrNull();
+                .getSingleResultOrNull();
 
         return Optional.ofNullable(user);
     }
