@@ -1,6 +1,7 @@
 
 import domain.User;
 import domain.repositories.UserRepository;
+import infrastructure.UserRepositoryImpl;
 
 import java.util.Optional;
 
