@@ -30,8 +30,7 @@ public class UserServiceImpl extends UnicastRemoteObject implements UserService 
             return Collections.emptyList();
         }
 
-        User user = userOpt.get();
-        List<Topic> topics = user.getTopics();
+        List<Topic> topics = userOpt.get().getTopics();
 
         List<String> topicNames = new ArrayList<>();
 
