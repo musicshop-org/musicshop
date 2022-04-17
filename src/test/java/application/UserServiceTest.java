@@ -42,13 +42,11 @@ public class UserServiceTest {
     }
 
     @Test
-    void given_adminUser_when_getAllTopics_then_expectAllTopics() throws RemoteException {
+    void given_adminuser_when_getalltopics_then_expectalltopics() throws RemoteException {
 
-        UserService userService = new UserServiceImpl();
         // given
         List<Topic> expectedTopics = List.of(new Topic("system"), new Topic("order"));
         String username = "admin";
-
         User user = new User(username, expectedTopics);
 
         Mockito.when(userRepository.findUserByUsername(username)).thenReturn(Optional.of(user));
