@@ -8,7 +8,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
-public interface SessionFacade extends ProductService, ShoppingCartService, CustomerService, InvoiceService, MessageProducerService, Remote {
+public interface SessionFacade extends ProductService, ShoppingCartService, CustomerService, InvoiceService, MessageProducerService, UserService, Remote {
 
      List<Role> getRoles() throws RemoteException;
      String getUsername() throws RemoteException;

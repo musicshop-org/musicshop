@@ -1,23 +1,30 @@
 
+import communication.rmi.RMIControllerFactoryImpl;
 import domain.User;
 import domain.repositories.UserRepository;
 import infrastructure.UserRepositoryImpl;
+import sharedrmi.communication.rmi.RMIControllerFactory;
 
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.Optional;
 
 public class Main {
     public static void main(String[] args) {
 
-//        try {
-//            RMIControllerFactory rmiControllerFactory = RMIControllerFactoryImpl.getInstance();
-//            LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
-//            Naming.rebind("rmi://localhost/RMIControllerFactory", rmiControllerFactory);
-//
-//            System.out.println("Listening on port " + Registry.REGISTRY_PORT);
-//
-//        } catch (RemoteException | MalformedURLException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            RMIControllerFactory rmiControllerFactory = RMIControllerFactoryImpl.getInstance();
+            LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
+            Naming.rebind("rmi://localhost/RMIControllerFactory", rmiControllerFactory);
+
+            System.out.println("Listening on port " + Registry.REGISTRY_PORT);
+
+        } catch (RemoteException | MalformedURLException e) {
+            e.printStackTrace();
+        }
 
 //        User user = new User("admin", List.of(new Topic("system"), new Topic("order")));
 //
@@ -29,9 +36,8 @@ public class Main {
 //        transaction.commit();
 //        session.close();
 
-        UserRepository userRepository = new UserRepositoryImpl();
-        Optional<User> user = userRepository.findUserByUsername("admin");
-        System.out.println(user.get());
-
+//        UserRepository userRepository = new UserRepositoryImpl();
+//        Optional<User> user = userRepository.findUserByUsername("admin");
+//        System.out.println(user.get());
     }
 }

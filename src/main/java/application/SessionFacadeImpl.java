@@ -30,6 +30,7 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     private final ProductService productService = new ProductServiceImpl();
     private final InvoiceService invoiceService = new InvoiceServiceImpl();
     private final MessageProducerService messageProducerService = new MessageProducerServiceImpl();
+    private final UserService userService = new UserServiceImpl();
 
     public SessionFacadeImpl(List<Role> roles, String username) throws RemoteException {
         this.roles = roles;
@@ -221,5 +222,10 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
         }
 
         throw new NoPermissionException("no permission to call this method!");
+    }
+
+    @Override
+    public List<String> getAllTopics() throws RemoteException {
+        return userService.getAllTopics();
     }
 }
