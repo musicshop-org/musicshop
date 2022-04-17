@@ -16,7 +16,7 @@ public class UserRepositoryImpl implements UserRepository {
     public Optional<User> findUserByUsername(String username) {
         Session session = sessionFactory.openSession();
 
-        User user = session.createQuery("from User")
+        User user = session.createQuery("from User where username = lower(:username)", User.class)
                 .setParameter("username", username)
                 .getSingleResultOrNull();
 
