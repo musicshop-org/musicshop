@@ -22,5 +22,4 @@ public class UserRepositoryImpl implements UserRepository {
 
         return Optional.ofNullable(user);
     }
-    //teet
 }
