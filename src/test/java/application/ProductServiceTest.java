@@ -18,6 +18,7 @@ import sharedrmi.application.exceptions.AlbumNotFoundException;
 import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.valueobjects.AlbumId;
 
+import javax.naming.NoPermissionException;
 import java.math.BigDecimal;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
@@ -243,7 +244,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    void given_album_when_decreasestockofalbum_then_decreasedstock() throws RemoteException {
+    void given_album_when_decreasestockofalbum_then_decreasedstock() throws RemoteException, NoPermissionException {
 
         // given
         final String title = "title1";

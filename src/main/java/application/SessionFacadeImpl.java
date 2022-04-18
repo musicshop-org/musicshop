@@ -2,10 +2,7 @@ package application;
 
 import application.api.SessionFacade;
 
-import sharedrmi.application.api.CustomerService;
-import sharedrmi.application.api.InvoiceService;
-import sharedrmi.application.api.ProductService;
-import sharedrmi.application.api.ShoppingCartService;
+import sharedrmi.application.api.*;
 import sharedrmi.application.dto.*;
 import sharedrmi.application.exceptions.AlbumNotFoundException;
 import sharedrmi.application.exceptions.InvoiceNotFoundException;
@@ -13,6 +10,7 @@ import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.valueobjects.InvoiceId;
 import sharedrmi.domain.valueobjects.Role;
 
+import javax.jms.JMSException;
 import javax.naming.NoPermissionException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -31,6 +29,8 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
 
     private final ProductService productService = new ProductServiceImpl();
     private final InvoiceService invoiceService = new InvoiceServiceImpl();
+    private final MessageProducerService messageProducerService = new MessageProducerServiceImpl();
+    private final UserService userService = new UserServiceImpl();
 
     public SessionFacadeImpl(List<Role> roles, String username) throws RemoteException {
         this.roles = roles;
@@ -67,8 +67,15 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) throws RemoteException {
-        this.productService.decreaseStockOfAlbum(title, mediumType, decreaseAmount);
+    public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) throws RemoteException, NoPermissionException {
+        for (Role role : this.roles)
+        {
+            if (role.equals(Role.SALESPERSON)) {
+                this.productService.decreaseStockOfAlbum(title, mediumType, decreaseAmount);
+            }
+        }
+
+        throw new NoPermissionException("no permission to call this method!");
     }
 
     @Override
@@ -206,5 +213,29 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
         }
 
         throw new NoPermissionException("no permission to call this method!");
+    }
+
+    @Override
+    public void publish(List<String> topics, String messageTitle, String messageText, long expirationDays) throws RemoteException, NoPermissionException {
+
+        for (Role role : this.roles)
+        {
+            if (role.equals(Role.OPERATOR)) {
+                messageProducerService.publish(topics, messageTitle, messageText, expirationDays);
+                return;
+            }
+        }
+
+        throw new NoPermissionException("no permission to call this method!");
+    }
+
+    @Override
+    public List<String> getAllTopics() throws RemoteException {
+        return userService.getAllTopics();
+    }
+
+    @Override
+    public List<String> getSubscribedTopicsForUser(String username) throws RemoteException {
+        return userService.getSubscribedTopicsForUser(username);
     }
 }
