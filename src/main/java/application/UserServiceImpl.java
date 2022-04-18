@@ -40,4 +40,23 @@ public class UserServiceImpl extends UnicastRemoteObject implements UserService 
 
         return topicNames;
     }
+
+    @Override
+    public List<String> getSubscribedTopicsForUser(String username) throws RemoteException {
+        Optional<User> userOpt = userRepository.findUserByUsername(username);
+
+        if (userOpt.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<Topic> topics = userOpt.get().getTopics();
+
+        List<String> topicNames = new ArrayList<>();
+
+        for (Topic topic : topics) {
+            topicNames.add(topic.getName());
+        }
+
+        return topicNames;
+    }
 }
