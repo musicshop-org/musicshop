@@ -55,7 +55,10 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
                         song.getMediumType(),
                         song.getReleaseDate(),
                         song.getGenre(),
-                        song.getArtists().stream().map(artist -> new ArtistDTO(artist.getName())).collect(Collectors.toList()),
+                        song.getArtists()
+                                .stream()
+                                .map(artist -> new ArtistDTO(artist.getName()))
+                                .collect(Collectors.toList()),
                         Collections.emptySet()
                 ));
             }
@@ -84,7 +87,7 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
             throw new AlbumNotFoundException("album not found");
         }
 
-        AlbumDTO albumDTO = AlbumDTO.builder()
+        return AlbumDTO.builder()
                 .title(album.getTitle())
                 .price(album.getPrice())
                 .stock(album.getStock())
@@ -92,10 +95,26 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
                 .releaseDate(album.getReleaseDate())
                 .albumId(album.getAlbumId())
                 .label(album.getLabel())
-                .songs(album.getSongs().stream().map(song -> SongDTO.builder().title(song.getTitle()).build()).collect(Collectors.toSet()))
+                .songs(album.getSongs()
+                        .stream()
+                        .map(song -> SongDTO.builder()
+                                .title(song.getTitle())
+                                .artists(song.getArtists()
+                                        .stream()
+                                        .map(artist -> new ArtistDTO(artist.getName()))
+                                        .collect(Collectors.toList())
+                                )
+                                .mediumType(song.getMediumType())
+                                .price(song.getPrice())
+                                .releaseDate(song.getReleaseDate())
+                                .genre(song.getGenre())
+                                .stock(song.getStock())
+                                .inAlbum(Collections.emptySet())
+                                .build()
+                        )
+                        .collect(Collectors.toSet())
+                )
                 .build();
-
-        return albumDTO;
     }
 
     @Transactional
