@@ -30,17 +30,4 @@ public class UserRepositoryTest {
         // then
         assertEquals(username, actualUser.get().getUsername());
     }
-
-    @Test
-    void given_useregartnerf_when_getsubscribedtopicsforuser_then_expectsubscribedtopics() {
-
-        // given
-        String username = "egartnerf";
-
-        // when
-        Optional<User> actualUser = userRepository.findUserByUsername(username);
-
-        // then
-        assertEquals(username, actualUser.get().getUsername());
-    }
 }

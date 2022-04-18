@@ -51,4 +51,57 @@ public class UserServiceTest {
             assertEquals(actualTopics.get(i), expectedTopics.get(i).getName());
         }
     }
+
+
+    @Test
+    void given_useregartnerf_when_getsubscribedtopicsforuser_then_expectsubscribedtopicsforuseregartnerf() throws RemoteException {
+
+        // given
+        String username = "egartnerf";
+        List<Topic> expectedTopics = List.of(new Topic("system"), new Topic("order"));
+        User user = new User(username, expectedTopics);
+
+        Mockito.when(userRepository.findUserByUsername(username)).thenReturn(Optional.of(user));
+
+        // when
+        List<String> actualTopics = userService.getSubscribedTopicsForUser(username);
+
+        // then
+        for (int i = 0; i < expectedTopics.size(); i++) {
+            assertEquals(actualTopics.get(i), expectedTopics.get(i).getName());
+        }
+    }
+
+    @Test
+    void given_userprescherm_when_getsubscribedtopicsforuser_then_expectsubscribedtopicsforuserprescherm() throws RemoteException {
+
+        // given
+        String username = "prescherm";
+        List<Topic> expectedTopics = List.of(new Topic("system"));
+        User user = new User(username, expectedTopics);
+
+        Mockito.when(userRepository.findUserByUsername(username)).thenReturn(Optional.of(user));
+
+        // when
+        List<String> actualTopics = userService.getSubscribedTopicsForUser(username);
+
+        // then
+        for (int i = 0; i < expectedTopics.size(); i++) {
+            assertEquals(actualTopics.get(i), expectedTopics.get(i).getName());
+        }
+    }
+
+    @Test
+    void given_notexistinguser_when_getsubscribedtopicsforuser_then_expectsubscribedtopicsforuserprescherm() throws RemoteException {
+
+        // given
+        String username = "notexistinguser";
+        Mockito.when(userRepository.findUserByUsername(username)).thenReturn(Optional.ofNullable(null));
+
+        // when
+        List<String> actualTopics = userService.getSubscribedTopicsForUser(username);
+
+        // then
+        assertTrue(actualTopics.isEmpty());
+    }
 }
