@@ -72,6 +72,20 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
         {
             if (role.equals(Role.SALESPERSON)) {
                 this.productService.decreaseStockOfAlbum(title, mediumType, decreaseAmount);
+                return;
+            }
+        }
+
+        throw new NoPermissionException("no permission to call this method!");
+    }
+
+    @Override
+    public void increaseStockOfAlbum(String title, MediumType mediumType, int increaseAmount) throws RemoteException, NoPermissionException {
+        for (Role role : this.roles)
+        {
+            if (role.equals(Role.SALESPERSON)) {
+                this.productService.increaseStockOfAlbum(title, mediumType, increaseAmount);
+                return;
             }
         }
 
