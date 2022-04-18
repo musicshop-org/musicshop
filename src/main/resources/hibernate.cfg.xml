@@ -14,7 +14,7 @@
         <property name="hbm2ddl.auto">update</property>
         <mapping resource="HibernateArtist.hbm.xml"/>
         <mapping resource="HibernateProduct.hbm.xml"/>
-        <mapping resource="HibernateEmployee.hbm.xml"/>
+        <mapping resource="HibernateUser.hbm.xml"/>
         <mapping resource="HibernateCartLineItem.hbm.xml"/>
         <mapping resource="HibernateInvoice.hbm.xml"/>
     </session-factory>

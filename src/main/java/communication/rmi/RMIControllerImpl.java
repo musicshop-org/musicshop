@@ -12,6 +12,7 @@ import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.valueobjects.InvoiceId;
 import sharedrmi.domain.valueobjects.Role;
 
+import javax.jms.JMSException;
 import javax.naming.NoPermissionException;
 import javax.security.auth.login.FailedLoginException;
 import java.nio.file.AccessDeniedException;
@@ -51,7 +52,7 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     }
 
     @Override
-    public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) throws RemoteException {
+    public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) throws RemoteException, NoPermissionException {
         sessionFacade.decreaseStockOfAlbum(title, mediumType, decreaseAmount);
     }
 
@@ -108,5 +109,20 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     @Override
     public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws RemoteException, NoPermissionException, InvoiceNotFoundException {
         sessionFacade.returnInvoiceLineItem(invoiceId,invoiceLineItemDTO,returnQuantity);
+    }
+
+    @Override
+    public void publish(List<String> topics, String messageTitle, String messageText, long expirationDays) throws RemoteException, NoPermissionException {
+        sessionFacade.publish(topics, messageTitle, messageText, expirationDays);
+    }
+
+    @Override
+    public List<String> getAllTopics() throws RemoteException {
+        return sessionFacade.getAllTopics();
+    }
+
+    @Override
+    public List<String> getSubscribedTopicsForUser(String username) throws RemoteException {
+        return sessionFacade.getSubscribedTopicsForUser(username);
     }
 }
