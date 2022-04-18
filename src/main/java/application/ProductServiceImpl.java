@@ -38,7 +38,7 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
 
     @Transactional
     @Override
-    public List<AlbumDTO> findAlbumsBySongTitle(String title){
+    public List<AlbumDTO> findAlbumsBySongTitle(String title) {
 
         List<AlbumDTO> albumDTOs = new LinkedList<>();
 
@@ -142,6 +142,14 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
     public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) {
         Album album = productRepository.findAlbumByAlbumTitleAndMedium(title, mediumType);
         album.decreaseStock(decreaseAmount);
+        productRepository.updateAlbum(album);
+    }
+
+    @Transactional
+    @Override
+    public void increaseStockOfAlbum(String title, MediumType mediumType, int increaseAmount) throws RemoteException {
+        Album album = productRepository.findAlbumByAlbumTitleAndMedium(title, mediumType);
+        album.increaseStock(increaseAmount);
         productRepository.updateAlbum(album);
     }
 
