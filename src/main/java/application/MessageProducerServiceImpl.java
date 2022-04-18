@@ -24,8 +24,7 @@ public class MessageProducerServiceImpl extends UnicastRemoteObject implements M
         try {
             ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(DEFAULT_BROKER_BIND_URL);
 
-            Connection connection = null;
-            connection = connectionFactory.createConnection();
+            Connection connection = connectionFactory.createConnection();
 
             connection.start();
 
