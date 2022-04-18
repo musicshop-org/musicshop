@@ -26,7 +26,7 @@ public class UserServiceTest {
     private UserService userService;
 
     @Mock
-    private static UserRepository userRepository;
+    UserRepository userRepository;
 
     @BeforeEach
     void initService() throws RemoteException {
@@ -51,7 +51,6 @@ public class UserServiceTest {
             assertEquals(actualTopics.get(i), expectedTopics.get(i).getName());
         }
     }
-
 
     @Test
     void given_useregartnerf_when_getsubscribedtopicsforuser_then_expectsubscribedtopicsforuseregartnerf() throws RemoteException {
@@ -92,7 +91,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void given_notexistinguser_when_getsubscribedtopicsforuser_then_expectsubscribedtopicsforuserprescherm() throws RemoteException {
+    void given_notexistinguser_when_getsubscribedtopicsforuser_then_expectemptylist() throws RemoteException {
 
         // given
         String username = "notexistinguser";
