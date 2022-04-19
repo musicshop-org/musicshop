@@ -49,7 +49,7 @@ public class LoginServiceImpl implements LoginService {
         Properties env = new Properties();
         env.put(Context.SECURITY_AUTHENTICATION, "none");
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-        env.put(Context.PROVIDER_URL, "ldap://10.0.40.162:389");
+        env.put(Context.PROVIDER_URL, "ldap://localhost:389");
 
         try {
             InitialDirContext ctx = new InitialDirContext(env);
@@ -92,7 +92,7 @@ public class LoginServiceImpl implements LoginService {
         Properties env = new Properties();
         env.put(Context.SECURITY_AUTHENTICATION, "none");
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-        env.put(Context.PROVIDER_URL, "ldap://10.0.40.162:389");
+        env.put(Context.PROVIDER_URL, "ldap://localhost:389");
 
         try {
             InitialDirContext ctx = new InitialDirContext(env);

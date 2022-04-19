@@ -25,7 +25,7 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     private final SessionFacade sessionFacade;
 
     protected RMIControllerImpl(String username, String password) throws FailedLoginException, RemoteException, AccessDeniedException {
-        super();
+        super(1099);
 
         LoginService loginService = new LoginServiceImpl();
         this.sessionFacade = loginService.login(username, password);
