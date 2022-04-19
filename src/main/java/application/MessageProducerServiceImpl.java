@@ -3,8 +3,10 @@ package application;
 import infrastructure.ProductRepositoryImpl;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import sharedrmi.application.api.MessageProducerService;
+import sharedrmi.application.dto.MessageDTO;
 
 import javax.jms.*;
+import javax.naming.NoPermissionException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
@@ -17,9 +19,9 @@ public class MessageProducerServiceImpl extends UnicastRemoteObject implements M
     public MessageProducerServiceImpl() throws RemoteException {
         super();
     }
-//ac
+
     @Override
-    public void publish(List<String> topics, String messageTitle, String messageText, long expirationDays) throws RemoteException {
+    public void publish(List<String> topics, MessageDTO messageDTO) throws RemoteException {
 
         try {
             ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(DEFAULT_BROKER_BIND_URL);
@@ -37,9 +39,9 @@ public class MessageProducerServiceImpl extends UnicastRemoteObject implements M
                 MessageProducer messageProducer = session.createProducer(topic);
                 messageProducer.setDeliveryMode(DeliveryMode.PERSISTENT);
 
-                TextMessage textMessage = session.createTextMessage(messageText);
-                textMessage.setJMSCorrelationID(messageTitle);
-                textMessage.setJMSExpiration(TimeUnit.DAYS.toMillis(expirationDays));
+                TextMessage textMessage = session.createTextMessage(messageDTO.getMessageText());
+                textMessage.setJMSCorrelationID(messageDTO.getMessageTitle());
+                textMessage.setJMSExpiration(TimeUnit.DAYS.toMillis(messageDTO.getExpirationDays()));
                 messageProducer.send(textMessage);
             }
 

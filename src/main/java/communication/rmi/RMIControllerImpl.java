@@ -117,8 +117,8 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     }
 
     @Override
-    public void publish(List<String> topics, String messageTitle, String messageText, long expirationDays) throws RemoteException, NoPermissionException {
-        sessionFacade.publish(topics, messageTitle, messageText, expirationDays);
+    public void publish(List<String> topics, MessageDTO messageDTO) throws RemoteException, NoPermissionException {
+        sessionFacade.publish(topics, messageDTO);
     }
 
     @Override
