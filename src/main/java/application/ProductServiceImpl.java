@@ -14,6 +14,7 @@ import domain.Song;
 import domain.repositories.ProductRepository;
 import infrastructure.ProductRepositoryImpl;
 import sharedrmi.application.exceptions.AlbumNotFoundException;
+import sharedrmi.application.exceptions.NotEnoughStockException;
 import sharedrmi.domain.enums.MediumType;
 
 import java.rmi.RemoteException;
@@ -158,8 +159,11 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
 
     @Transactional
     @Override
-    public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) {
+    public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) throws NotEnoughStockException {
         Album album = productRepository.findAlbumByAlbumTitleAndMedium(title, mediumType);
+        if (decreaseAmount > album.getStock()){
+            throw new NotEnoughStockException("not enough " + album.getTitle() + " available ... in stock: " + album.getStock() + ", in cart: " + decreaseAmount);
+        }
         album.decreaseStock(decreaseAmount);
         productRepository.updateAlbum(album);
     }
