@@ -25,8 +25,8 @@ public class Main {
         productRepository.findAlbumsBySongTitle("bad").forEach(album -> System.out.println(album.getTitle()));
 
         try {
-            System.setProperty("java.rmi.server.hostname", "10.0.40.162");
-            System.setSecurityManager(new SecurityManager());
+            System.setProperty("java.rmi.server.hostname", "localhost");
+            //System.setSecurityManager(new SecurityManager());
 
             
             RMIControllerFactory rmiControllerFactory = RMIControllerFactoryImpl.getInstance();

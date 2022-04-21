@@ -15,6 +15,7 @@ import sharedrmi.application.dto.AlbumDTO;
 import sharedrmi.application.dto.ArtistDTO;
 import sharedrmi.application.dto.SongDTO;
 import sharedrmi.application.exceptions.AlbumNotFoundException;
+import sharedrmi.application.exceptions.NotEnoughStockException;
 import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.valueobjects.AlbumId;
 
@@ -244,7 +245,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    void given_album_when_decreasestockofalbum_then_decreasedstock() throws RemoteException, NoPermissionException {
+    void given_album_when_decreasestockofalbum_then_decreasedstock() throws RemoteException, NoPermissionException, NotEnoughStockException {
 
         // given
         final String title = "title1";
