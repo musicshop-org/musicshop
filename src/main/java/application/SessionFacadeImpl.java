@@ -226,12 +226,12 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public void publish(List<String> topics, String messageTitle, String messageText, long expirationDays) throws RemoteException, NoPermissionException {
+    public void publish(List<String> topics, MessageDTO messageDTO) throws RemoteException, NoPermissionException {
 
         for (Role role : this.roles)
         {
             if (role.equals(Role.OPERATOR)) {
-                messageProducerService.publish(topics, messageTitle, messageText, expirationDays);
+                messageProducerService.publish(topics, messageDTO);
                 return;
             }
         }
