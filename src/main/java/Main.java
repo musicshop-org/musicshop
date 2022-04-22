@@ -20,15 +20,11 @@ public class Main {
 
     public static void main(String[] args) {
 
-        ProductRepository productRepository = new ProductRepositoryImpl();
-
-        productRepository.findAlbumsBySongTitle("bad").forEach(album -> System.out.println(album.getTitle()));
-
         try {
             System.setProperty("java.rmi.server.hostname", "localhost");
             //System.setSecurityManager(new SecurityManager());
 
-            
+
             RMIControllerFactory rmiControllerFactory = RMIControllerFactoryImpl.getInstance();
             LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
             Naming.rebind("rmi://localhost/RMIControllerFactory", rmiControllerFactory);
@@ -38,19 +34,5 @@ public class Main {
         } catch (RemoteException | MalformedURLException e) {
             e.printStackTrace();
         }
-
-//        User user = new User("admin", List.of(new Topic("system"), new Topic("order")));
-//
-//        final SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-//        Session session = sessionFactory.openSession();
-//        Transaction transaction = session.beginTransaction();
-//
-//        session.persist(user);
-//        transaction.commit();
-//        session.close();
-
-//        UserRepository userRepository = new UserRepositoryImpl();
-//        Optional<User> user = userRepository.findUserByUsername("admin");
-//        System.out.println(user.get());
     }
 }
