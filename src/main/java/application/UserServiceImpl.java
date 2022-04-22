@@ -77,7 +77,18 @@ public class UserServiceImpl extends UnicastRemoteObject implements UserService 
         User user = optUser.get();
 
         List<Topic> topics = user.getTopics();
-        topics.remove(topic);
+
+        int indexToRemove = -1;
+
+        for (int i = 0; i < topics.size(); i++) {
+
+            if (topics.get(i).getName().equals(topic)) {
+                indexToRemove = i;
+                break;
+            }
+        }
+
+        topics.remove(indexToRemove);
 
         userRepository.updateUser(user);
     }
