@@ -22,6 +22,11 @@ public class UserServiceImpl extends UnicastRemoteObject implements UserService 
         this.userRepository = new UserRepositoryImpl();
     }
 
+    protected UserServiceImpl(UserRepository userRepository) throws RemoteException {
+        super();
+        this.userRepository = userRepository;
+    }
+
     @Override
     public List<String> getAllTopics() throws RemoteException {
         Optional<User> userOpt = userRepository.findUserByUsername("admin");
@@ -61,23 +66,31 @@ public class UserServiceImpl extends UnicastRemoteObject implements UserService 
     }
 
     @Override
-    public void subscribe(String topic, String username) throws RemoteException {
+    public boolean subscribe(String topic, String username) throws RemoteException {
         Optional<User> optUser = userRepository.findUserByUsername(username);
-        User user = optUser.get();
 
+        if (optUser.isEmpty())
+            return false;
+
+        User user = optUser.get();
         List<Topic> topics = user.getTopics();
         topics.add(new Topic(topic));
 
         userRepository.updateUser(user);
+
+        return true;
     }
 
     @Override
-    public void unsubscribe(String topic, String username) throws RemoteException {
+    public boolean unsubscribe(String topic, String username) throws RemoteException {
         Optional<User> optUser = userRepository.findUserByUsername(username);
+
+        if (optUser.isEmpty())
+            return false;
+
         User user = optUser.get();
 
         List<Topic> topics = user.getTopics();
-
         int indexToRemove = -1;
 
         for (int i = 0; i < topics.size(); i++) {
@@ -88,8 +101,13 @@ public class UserServiceImpl extends UnicastRemoteObject implements UserService 
             }
         }
 
+        if (indexToRemove == -1)
+            return false;
+
         topics.remove(indexToRemove);
 
         userRepository.updateUser(user);
+
+        return true;
     }
 }
