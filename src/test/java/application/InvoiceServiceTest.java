@@ -1,5 +1,6 @@
 package application;
 
+import domain.Album;
 import domain.Invoice;
 import domain.InvoiceLineItem;
 import domain.repositories.InvoiceRepository;
@@ -15,9 +16,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sharedrmi.application.api.InvoiceService;
 import sharedrmi.application.dto.InvoiceDTO;
 import sharedrmi.application.dto.InvoiceLineItemDTO;
+import sharedrmi.application.exceptions.AlbumNotFoundException;
 import sharedrmi.application.exceptions.InvoiceNotFoundException;
+import sharedrmi.application.exceptions.NotEnoughStockException;
 import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.enums.PaymentMethod;
+import sharedrmi.domain.valueobjects.AlbumId;
 import sharedrmi.domain.valueobjects.InvoiceId;
 
 import javax.naming.NoPermissionException;
@@ -26,6 +30,7 @@ import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class InvoiceServiceTest {
 
     private Invoice givenInvoice;
-
+    private Album givenAlbum;
     private InvoiceService invoiceService;
 
     @Captor
@@ -47,11 +52,20 @@ public class InvoiceServiceTest {
 
     @BeforeEach
     void initMockAndService() throws RemoteException {
+        givenAlbum = new Album("Test Album",
+                new BigDecimal("5.00"),
+                99,
+                MediumType.CD,
+                LocalDate.now(),
+                new AlbumId(),
+                "Test Label",
+                Set.of());
+
         givenInvoice = new Invoice(
                 new InvoiceId(111),
                 List.of(new InvoiceLineItem(
-                        MediumType.DIGITAL,
-                        "Song",
+                        MediumType.CD,
+                        "Test Album",
                         4,
                         new BigDecimal("5.00")
                 )),
@@ -66,8 +80,8 @@ public class InvoiceServiceTest {
     void given_invoiceId_when_findInvoiceById_then_returnInvoice() throws RemoteException, NoPermissionException, InvoiceNotFoundException {
         // given
         InvoiceId invoiceId = new InvoiceId(111);
-
         Mockito.when(invoiceRepository.findInvoiceById(invoiceId)).thenReturn(Optional.of(givenInvoice));
+
 
         // when
         InvoiceDTO invoiceDTO = invoiceService.findInvoiceById(invoiceId);
@@ -98,7 +112,9 @@ public class InvoiceServiceTest {
         InvoiceId invoiceId = new InvoiceId(111);
         Mockito.when(invoiceRepository.findInvoiceById(invoiceId)).thenReturn(Optional.of(givenInvoice));
 
-        InvoiceLineItemDTO invoiceLineItemDTO = new InvoiceLineItemDTO(MediumType.DIGITAL, "Song", 4, new BigDecimal("5.00"),0);
+
+
+        InvoiceLineItemDTO invoiceLineItemDTO = new InvoiceLineItemDTO(MediumType.CD, "Test Album", 4, new BigDecimal("5.00"),0);
         int returnQuantity = 2;
 
         //when
@@ -108,34 +124,108 @@ public class InvoiceServiceTest {
         assertEquals(returnQuantity,givenInvoice.getInvoiceLineItems().get(0).getReturnedQuantity());
     }
 
-//    @Test
-//    void given_invoiceDTO_when_createInvoice_then_validInvoice() throws RemoteException {
-//        // given
-//        InvoiceDTO invoiceDTO = new InvoiceDTO(
-//                givenInvoice.getInvoiceId(),
-//                List.of(new InvoiceLineItemDTO(
-//                        givenInvoice.getInvoiceLineItems().get(0).getMediumType(),
-//                        givenInvoice.getInvoiceLineItems().get(0).getName(),
-//                        givenInvoice.getInvoiceLineItems().get(0).getQuantity(),
-//                        givenInvoice.getInvoiceLineItems().get(0).getPrice()
-//                )),
-//                givenInvoice.getPaymentMethod(),
-//                givenInvoice.getDate()
-//        );
-//
-//        // when
-//        invoiceService.createInvoice(invoiceDTO);
-//
-//        Mockito.verify(invoiceRepository).createInvoice(invoiceCaptor.capture());
-//        Invoice invoice = invoiceCaptor.getValue();
-//
-//        // then
-//        assertAll(
-//                () -> assertEquals(givenInvoice.getInvoiceId().getInvoiceId(), invoice.getInvoiceId().getInvoiceId()),
-//                () -> assertEquals(givenInvoice.getInvoiceLineItems().size(), invoice.getInvoiceLineItems().size()),
-//                () -> assertEquals(givenInvoice.getPaymentMethod(), invoice.getPaymentMethod()),
-//                () -> assertEquals(givenInvoice.getDate(), invoice.getDate())
-//        );
-//    }
+    @Test
+    void given_invoiceDTO_when_createInvoice_then_validInvoice() throws RemoteException, AlbumNotFoundException, NoPermissionException, NotEnoughStockException {
+        // given
+        InvoiceDTO invoiceDTO = new InvoiceDTO(
+                givenInvoice.getInvoiceId(),
+                List.of(new InvoiceLineItemDTO(
+                        givenInvoice.getInvoiceLineItems().get(0).getMediumType(),
+                        givenInvoice.getInvoiceLineItems().get(0).getName(),
+                        givenInvoice.getInvoiceLineItems().get(0).getQuantity(),
+                        givenInvoice.getInvoiceLineItems().get(0).getPrice(),
+                        givenInvoice.getInvoiceLineItems().get(0).getReturnedQuantity()
+                )),
+                givenInvoice.getPaymentMethod(),
+                givenInvoice.getDate()
+        );
+
+        Mockito.when(productRepository.findAlbumByAlbumTitleAndMedium(
+                        givenInvoice.getInvoiceLineItems().get(0).getName(),
+                        givenInvoice.getInvoiceLineItems().get(0).getMediumType()))
+                .thenReturn(givenAlbum);
+
+        // when
+        invoiceService.createInvoice(invoiceDTO);
+        Mockito.verify(invoiceRepository).createInvoice(invoiceCaptor.capture());
+        Invoice invoice = invoiceCaptor.getValue();
+        // then
+        assertAll(
+                () -> assertEquals(givenInvoice.getInvoiceId().getInvoiceId(), invoice.getInvoiceId().getInvoiceId()),
+                () -> assertEquals(givenInvoice.getInvoiceLineItems().size(), invoice.getInvoiceLineItems().size()),
+                () -> assertEquals(givenInvoice.getPaymentMethod(), invoice.getPaymentMethod()),
+                () -> assertEquals(givenInvoice.getDate(), invoice.getDate())
+        );
+    }
+
+    @Test
+    void given_invalidStockInvoiceDTO_when_createInvoice_then_throws() throws RemoteException, AlbumNotFoundException, NoPermissionException {
+        Boolean failed = false;
+        // given
+        InvoiceDTO invoiceDTO = new InvoiceDTO(
+                givenInvoice.getInvoiceId(),
+                List.of(new InvoiceLineItemDTO(
+                        givenInvoice.getInvoiceLineItems().get(0).getMediumType(),
+                        givenInvoice.getInvoiceLineItems().get(0).getName(),
+                        100,
+                        givenInvoice.getInvoiceLineItems().get(0).getPrice(),
+                        givenInvoice.getInvoiceLineItems().get(0).getReturnedQuantity()
+                )),
+                givenInvoice.getPaymentMethod(),
+                givenInvoice.getDate()
+        );
+
+        Mockito.when(productRepository.findAlbumByAlbumTitleAndMedium(
+                        givenInvoice.getInvoiceLineItems().get(0).getName(),
+                        givenInvoice.getInvoiceLineItems().get(0).getMediumType()))
+                .thenReturn(givenAlbum);
+
+        //when
+        try{
+            invoiceService.createInvoice(invoiceDTO);
+            Mockito.verify(invoiceRepository).createInvoice(invoiceCaptor.capture());
+        } catch (NotEnoughStockException e) {
+            failed = true;
+        }
+
+        //then
+        assertTrue(failed);
+    }
+
+    @Test
+    void given_invalidNameInvoiceDTO_when_createInvoice_then_throws() throws RemoteException, NoPermissionException, NotEnoughStockException {
+        Boolean failed = false;
+        // given
+        InvoiceDTO invoiceDTO = new InvoiceDTO(
+                givenInvoice.getInvoiceId(),
+                List.of(new InvoiceLineItemDTO(
+                        givenInvoice.getInvoiceLineItems().get(0).getMediumType(),
+                        "invalidName",
+                        givenInvoice.getInvoiceLineItems().get(0).getQuantity(),
+                        givenInvoice.getInvoiceLineItems().get(0).getPrice(),
+                        givenInvoice.getInvoiceLineItems().get(0).getReturnedQuantity()
+                )),
+                givenInvoice.getPaymentMethod(),
+                givenInvoice.getDate()
+        );
+
+        Mockito.when(productRepository.findAlbumByAlbumTitleAndMedium(
+                        invoiceDTO.getInvoiceLineItems().get(0).getName(),
+                        givenInvoice.getInvoiceLineItems().get(0).getMediumType()))
+                .thenReturn(null);
+
+        //when
+        try{
+            invoiceService.createInvoice(invoiceDTO);
+            Mockito.verify(invoiceRepository).createInvoice(invoiceCaptor.capture());
+        } catch (AlbumNotFoundException e) {
+            failed = true;
+        }
+
+        //then
+        assertTrue(failed);
+    }
+
+
 
 }

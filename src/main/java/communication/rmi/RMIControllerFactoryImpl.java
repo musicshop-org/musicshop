@@ -21,6 +21,7 @@ public class RMIControllerFactoryImpl extends UnicastRemoteObject implements RMI
     }
 
     private RMIControllerFactoryImpl() throws RemoteException {
+        super(1099);
         RMIControllerFactoryImpl.instance = this;
     }
 
