@@ -14,6 +14,7 @@ import org.mockito.quality.Strictness;
 import sharedrmi.application.api.UserService;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,11 +27,11 @@ public class UserServiceTest {
     private UserService userService;
 
     @Mock
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @BeforeEach
-    void initService() throws RemoteException {
-        userService = new UserServiceImpl();
+    void initMockAndService() throws RemoteException {
+        userService = new UserServiceImpl(userRepository);
     }
 
     @Test
@@ -102,5 +103,96 @@ public class UserServiceTest {
 
         // then
         assertTrue(actualTopics.isEmpty());
+    }
+
+    @Test
+    void given_existinguser_when_subscribe_then_expecttrue() throws RemoteException {
+
+        // given
+        ArrayList<Topic> topics = new ArrayList<>();
+        topics.addAll(List.of(new Topic("system"), new Topic("order")));
+        User user = new User("admin", topics);
+
+        Mockito.when(userRepository.findUserByUsername(user.getUsername())).thenReturn(Optional.ofNullable(user));
+
+        // when
+        boolean success = userService.subscribe("someTopic", user.getUsername());
+
+        // then
+        assertTrue(success);
+        assertEquals(3, topics.size());
+        assertEquals("someTopic", topics.get(2).getName());
+    }
+
+    @Test
+    void given_notexistinguser_when_subscribe_then_expectfalse() throws RemoteException {
+
+        // given
+        ArrayList<Topic> topics = new ArrayList<>();
+        topics.addAll(List.of(new Topic("system"), new Topic("order")));
+        User user = new User("notExisting", topics);
+
+        Mockito.when(userRepository.findUserByUsername(user.getUsername())).thenReturn(Optional.ofNullable(null));
+
+        // when
+        boolean success = userService.subscribe("someTopic", user.getUsername());
+
+        // then
+        assertFalse(success);
+        assertEquals(2, topics.size());
+    }
+
+    @Test
+    void given_existinguser_when_unsubscribe_then_expecttrue() throws RemoteException {
+
+        // given
+        ArrayList<Topic> topics = new ArrayList<>();
+        topics.addAll(List.of(new Topic("system"), new Topic("order"), new Topic("someTopic")));
+        User user = new User("admin", topics);
+
+        Mockito.when(userRepository.findUserByUsername(user.getUsername())).thenReturn(Optional.ofNullable(user));
+
+        // when
+        boolean success = userService.unsubscribe("someTopic", user.getUsername());
+
+        // then
+        assertTrue(success);
+        assertEquals(2, topics.size());
+    }
+
+    @Test
+    void given_notexistinguser_when_unsubscribe_then_expectfalse() throws RemoteException {
+
+        // given
+        ArrayList<Topic> topics = new ArrayList<>();
+        topics.addAll(List.of(new Topic("system"), new Topic("order"), new Topic("someTopic")));
+        User user = new User("notExisting", topics);
+
+        Mockito.when(userRepository.findUserByUsername(user.getUsername())).thenReturn(Optional.ofNullable(null));
+
+        // when
+        boolean success = userService.unsubscribe("someTopic", user.getUsername());
+
+        // then
+        assertFalse(success);
+        assertEquals(3, topics.size());
+    }
+
+    @Test
+    void given_notexistingtopic_when_unsubscribe_then_expectfalse() throws RemoteException {
+
+        // given
+        ArrayList<Topic> topics = new ArrayList<>();
+        topics.addAll(List.of(new Topic("system"), new Topic("order"), new Topic("someTopic")));
+        User user = new User("admin", topics);
+
+        Mockito.when(userRepository.findUserByUsername(user.getUsername())).thenReturn(Optional.ofNullable(null));
+
+        // when
+        boolean success = userService.unsubscribe("notExistingTopic", user.getUsername());
+
+        // then
+        assertFalse(success);
+        assertEquals(3, topics.size());
     }
 }
