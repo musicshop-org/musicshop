@@ -248,4 +248,14 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     public List<String> getSubscribedTopicsForUser(String username) throws RemoteException {
         return userService.getSubscribedTopicsForUser(username);
     }
+
+    @Override
+    public void subscribe(String topic, String username) throws RemoteException {
+        userService.subscribe(topic, username);
+    }
+
+    @Override
+    public void unsubscribe(String topic, String username) throws RemoteException {
+        userService.unsubscribe(topic, username);
+    }
 }

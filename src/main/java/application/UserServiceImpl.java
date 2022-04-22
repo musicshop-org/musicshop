@@ -59,4 +59,26 @@ public class UserServiceImpl extends UnicastRemoteObject implements UserService 
 
         return topicNames;
     }
+
+    @Override
+    public void subscribe(String topic, String username) throws RemoteException {
+        Optional<User> optUser = userRepository.findUserByUsername(username);
+        User user = optUser.get();
+
+        List<Topic> topics = user.getTopics();
+        topics.add(new Topic(topic));
+
+        userRepository.updateUser(user);
+    }
+
+    @Override
+    public void unsubscribe(String topic, String username) throws RemoteException {
+        Optional<User> optUser = userRepository.findUserByUsername(username);
+        User user = optUser.get();
+
+        List<Topic> topics = user.getTopics();
+        topics.remove(topic);
+
+        userRepository.updateUser(user);
+    }
 }

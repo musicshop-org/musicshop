@@ -131,4 +131,14 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     public List<String> getSubscribedTopicsForUser(String username) throws RemoteException {
         return sessionFacade.getSubscribedTopicsForUser(username);
     }
+
+    @Override
+    public void subscribe(String topic, String username) throws RemoteException {
+        sessionFacade.subscribe(topic, username);
+    }
+
+    @Override
+    public void unsubscribe(String topic, String username) throws RemoteException {
+        sessionFacade.unsubscribe(topic, username);
+    }
 }
