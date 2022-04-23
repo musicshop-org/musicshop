@@ -5,6 +5,10 @@ import domain.repositories.ProductRepository;
 import domain.repositories.UserRepository;
 import infrastructure.ProductRepositoryImpl;
 import infrastructure.UserRepositoryImpl;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import sharedrmi.communication.rmi.RMIControllerFactory;
 
