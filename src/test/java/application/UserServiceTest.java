@@ -109,8 +109,7 @@ public class UserServiceTest {
     void given_existinguser_when_subscribe_then_expecttrue() throws RemoteException {
 
         // given
-        ArrayList<Topic> topics = new ArrayList<>();
-        topics.addAll(List.of(new Topic("system"), new Topic("order")));
+        ArrayList<Topic> topics = new ArrayList<>(List.of(new Topic("system"), new Topic("order")));
         User user = new User("admin", topics);
 
         Mockito.when(userRepository.findUserByUsername(user.getUsername())).thenReturn(Optional.ofNullable(user));
@@ -128,8 +127,7 @@ public class UserServiceTest {
     void given_notexistinguser_when_subscribe_then_expectfalse() throws RemoteException {
 
         // given
-        ArrayList<Topic> topics = new ArrayList<>();
-        topics.addAll(List.of(new Topic("system"), new Topic("order")));
+        ArrayList<Topic> topics = new ArrayList<>(List.of(new Topic("system"), new Topic("order")));
         User user = new User("notExisting", topics);
 
         Mockito.when(userRepository.findUserByUsername(user.getUsername())).thenReturn(Optional.ofNullable(null));
