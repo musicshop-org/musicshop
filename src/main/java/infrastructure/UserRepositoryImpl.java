@@ -34,4 +34,13 @@ public class UserRepositoryImpl implements UserRepository {
         transaction.commit();
         session.close();
     }
+
+    @Override
+    public void deleteTopic(Topic topic) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.remove(topic);
+        transaction.commit();
+        session.close();
+    }
 }
