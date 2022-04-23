@@ -104,9 +104,10 @@ public class UserServiceImpl extends UnicastRemoteObject implements UserService 
         if (indexToRemove == -1)
             return false;
 
-        topics.remove(indexToRemove);
+        Topic topicToDelete = topics.remove(indexToRemove);
 
         userRepository.updateUser(user);
+        userRepository.deleteTopic(topicToDelete);
 
         return true;
     }
