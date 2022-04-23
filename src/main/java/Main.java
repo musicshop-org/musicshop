@@ -20,10 +20,6 @@ public class Main {
 
     public static void main(String[] args) {
 
-        ProductRepository productRepository = new ProductRepositoryImpl();
-
-        productRepository.findAlbumsBySongTitle("bad").forEach(album -> System.out.println(album.getTitle()));
-
         try {
             System.setProperty("java.rmi.server.hostname", "localhost");
             //System.setSecurityManager(new SecurityManager());
