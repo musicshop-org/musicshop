@@ -230,7 +230,7 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
 
         for (Role role : this.roles)
         {
-            if (role.equals(Role.OPERATOR)) {
+            if (role.equals(Role.OPERATOR) || role.equals(Role.SALESPERSON)) {
                 messageProducerService.publish(topics, messageDTO);
                 return;
             }
