@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UserRepositoryTest {
 
@@ -29,5 +30,18 @@ public class UserRepositoryTest {
 
         // then
         assertEquals(username, actualUser.get().getUsername());
+    }
+
+    @Test
+    void given_notexistinguser_when_finduserbyusername_then_emptyoptional() {
+
+        // given
+        String username = "notexisting";
+
+        // when
+        Optional<User> actualUser = userRepository.findUserByUsername(username);
+
+        // then
+        assertTrue(actualUser.isEmpty());
     }
 }

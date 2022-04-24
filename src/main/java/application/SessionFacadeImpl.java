@@ -230,7 +230,7 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
 
         for (Role role : this.roles)
         {
-            if (role.equals(Role.OPERATOR)) {
+            if (role.equals(Role.OPERATOR) || role.equals(Role.SALESPERSON)) {
                 messageProducerService.publish(topics, messageDTO);
                 return;
             }
@@ -247,5 +247,15 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     @Override
     public List<String> getSubscribedTopicsForUser(String username) throws RemoteException {
         return userService.getSubscribedTopicsForUser(username);
+    }
+
+    @Override
+    public boolean subscribe(String topic, String username) throws RemoteException {
+        return userService.subscribe(topic, username);
+    }
+
+    @Override
+    public boolean unsubscribe(String topic, String username) throws RemoteException {
+        return userService.unsubscribe(topic, username);
     }
 }
