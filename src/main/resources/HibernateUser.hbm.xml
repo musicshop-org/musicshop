@@ -11,6 +11,7 @@
         </id>
 
         <property name="username" column="username" type="java.lang.String"/>
+        <property name="lastViewed" column="lastViewed" type="java.time.LocalDateTime"/>
 
         <list name="topics" cascade="all">
             <key column="user_id"/>
@@ -27,4 +28,5 @@
         <property name="name" column="name" type="java.lang.String"/>
 
     </class>
+
 </hibernate-mapping>

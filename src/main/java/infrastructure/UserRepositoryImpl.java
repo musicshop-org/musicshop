@@ -4,6 +4,7 @@ import domain.User;
 import domain.repositories.UserRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 import java.util.Optional;
@@ -21,5 +22,15 @@ public class UserRepositoryImpl implements UserRepository {
                 .getSingleResultOrNull();
 
         return Optional.ofNullable(user);
+    }
+
+    @Override
+    public void updateUser(User user){
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+        session.merge(user);
+        transaction.commit();
+        session.close();
     }
 }

@@ -5,6 +5,7 @@ import domain.ShoppingCart;
 import domain.repositories.ShoppingCartRepository;
 import infrastructure.ShoppingCartRepositoryImpl;
 
+import jakarta.transaction.Transactional;
 import sharedrmi.application.api.ShoppingCartService;
 import sharedrmi.application.dto.AlbumDTO;
 import sharedrmi.application.dto.CartLineItemDTO;
@@ -50,6 +51,7 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
         this.shoppingCart = shoppingCartRepository.findShoppingCartByOwnerId(ownerId).get();
     }
 
+    @Transactional
     @Override
     public ShoppingCartDTO getCart() {
         List<CartLineItemDTO> cartLineItemsDTO = new LinkedList<>();
@@ -66,6 +68,7 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
         return new ShoppingCartDTO(shoppingCart.getOwnerId(), cartLineItemsDTO);
     }
 
+    @Transactional
     @Override
     public void addProductToCart(AlbumDTO album, int amount) {
         CartLineItem cartLineItem = new CartLineItem(
@@ -77,6 +80,7 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
         this.shoppingCart.addLineItem(cartLineItem);
     }
 
+    @Transactional
     @Override
     public void changeQuantity(CartLineItemDTO cartLineItemDTO, int quantity) {
         CartLineItem cartLineItem = new CartLineItem(
@@ -89,6 +93,7 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
         this.shoppingCart.changeQuantity(cartLineItem, quantity);
     }
 
+    @Transactional
     @Override
     public void removeProductFromCart(CartLineItemDTO cartLineItemDTO) {
         CartLineItem cartLineItem = new CartLineItem(
@@ -101,6 +106,7 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
         this.shoppingCart.removeLineItem(cartLineItem);
     }
 
+    @Transactional
     @Override
     public void clearCart() throws RemoteException {
         this.shoppingCart.clear();

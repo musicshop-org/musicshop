@@ -4,10 +4,14 @@ import domain.Topic;
 import domain.User;
 import domain.repositories.UserRepository;
 import infrastructure.UserRepositoryImpl;
+import jakarta.transaction.Transactional;
 import sharedrmi.application.api.UserService;
+import sharedrmi.application.exceptions.UserNotFoundException;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.security.InvalidParameterException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,6 +26,7 @@ public class UserServiceImpl extends UnicastRemoteObject implements UserService 
         this.userRepository = new UserRepositoryImpl();
     }
 
+    @Transactional
     @Override
     public List<String> getAllTopics() throws RemoteException {
         Optional<User> userOpt = userRepository.findUserByUsername("admin");
@@ -41,6 +46,7 @@ public class UserServiceImpl extends UnicastRemoteObject implements UserService 
         return topicNames;
     }
 
+    @Transactional
     @Override
     public List<String> getSubscribedTopicsForUser(String username) throws RemoteException {
         Optional<User> userOpt = userRepository.findUserByUsername(username);
@@ -58,5 +64,18 @@ public class UserServiceImpl extends UnicastRemoteObject implements UserService 
         }
 
         return topicNames;
+    }
+
+    @Transactional
+    @Override
+    public void changeLastViewed(String username, LocalDateTime lastViewed) throws UserNotFoundException {
+        Optional<User> userOpt = userRepository.findUserByUsername(username);
+        if(userOpt.isPresent()){
+            User user = userOpt.get();
+            user.setLastViewed(lastViewed);
+            userRepository.updateUser(user);
+        } else {
+            throw new UserNotFoundException("User with "+ username + " not found");
+        }
     }
 }
