@@ -144,4 +144,14 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
         return sessionFacade.getLastViewedForUser(username);
 
     }
+
+    @Override
+    public boolean subscribe(String topic, String username) throws RemoteException {
+        return sessionFacade.subscribe(topic, username);
+    }
+
+    @Override
+    public boolean unsubscribe(String topic, String username) throws RemoteException {
+        return sessionFacade.unsubscribe(topic, username);
+    }
 }

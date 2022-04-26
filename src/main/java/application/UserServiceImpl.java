@@ -26,6 +26,11 @@ public class UserServiceImpl extends UnicastRemoteObject implements UserService 
         this.userRepository = new UserRepositoryImpl();
     }
 
+    protected UserServiceImpl(UserRepository userRepository) throws RemoteException {
+        super();
+        this.userRepository = userRepository;
+    }
+
     @Transactional
     @Override
     public List<String> getAllTopics() throws RemoteException {
@@ -89,5 +94,52 @@ public class UserServiceImpl extends UnicastRemoteObject implements UserService 
         } else {
             throw new UserNotFoundException("User with "+ username + " not found");
         }
+    }
+
+    @Override
+    public boolean subscribe(String topic, String username) throws RemoteException {
+        Optional<User> optUser = userRepository.findUserByUsername(username);
+
+        if (optUser.isEmpty())
+            return false;
+
+        User user = optUser.get();
+        List<Topic> topics = user.getTopics();
+        topics.add(new Topic(topic));
+
+        userRepository.updateUser(user);
+
+        return true;
+    }
+
+    @Override
+    public boolean unsubscribe(String topic, String username) throws RemoteException {
+        Optional<User> optUser = userRepository.findUserByUsername(username);
+
+        if (optUser.isEmpty())
+            return false;
+
+        User user = optUser.get();
+
+        List<Topic> topics = user.getTopics();
+        int indexToRemove = -1;
+
+        for (int i = 0; i < topics.size(); i++) {
+
+            if (topics.get(i).getName().equals(topic)) {
+                indexToRemove = i;
+                break;
+            }
+        }
+
+        if (indexToRemove == -1)
+            return false;
+
+        Topic topicToDelete = topics.remove(indexToRemove);
+
+        userRepository.updateUser(user);
+        userRepository.deleteTopic(topicToDelete);
+
+        return true;
     }
 }

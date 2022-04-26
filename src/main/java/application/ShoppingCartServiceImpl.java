@@ -61,7 +61,8 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
                     cartLineItem.getMediumType(),
                     cartLineItem.getName(),
                     cartLineItem.getQuantity(),
-                    cartLineItem.getPrice()
+                    cartLineItem.getPrice(),
+                    cartLineItem.getStock()
             ));
         }
 
@@ -74,7 +75,8 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
         CartLineItem cartLineItem = new CartLineItem(
                 album.getMediumType(),
                 album.getTitle(), amount,
-                album.getPrice()
+                album.getPrice(),
+                album.getStock()
         );
 
         this.shoppingCart.addLineItem(cartLineItem);
@@ -87,7 +89,8 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
                 cartLineItemDTO.getMediumType(),
                 cartLineItemDTO.getName(),
                 cartLineItemDTO.getQuantity(),
-                cartLineItemDTO.getPrice()
+                cartLineItemDTO.getPrice(),
+                cartLineItemDTO.getStock()
         );
 
         this.shoppingCart.changeQuantity(cartLineItem, quantity);
@@ -100,7 +103,8 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
                 cartLineItemDTO.getMediumType(),
                 cartLineItemDTO.getName(),
                 cartLineItemDTO.getQuantity(),
-                cartLineItemDTO.getPrice()
+                cartLineItemDTO.getPrice(),
+                cartLineItemDTO.getStock()
         );
 
         this.shoppingCart.removeLineItem(cartLineItem);
