@@ -78,4 +78,16 @@ public class UserServiceImpl extends UnicastRemoteObject implements UserService 
             throw new UserNotFoundException("User with "+ username + " not found");
         }
     }
+
+    @Transactional
+    @Override
+    public LocalDateTime getLastViewedForUser(String username) throws UserNotFoundException {
+        Optional<User> userOpt = userRepository.findUserByUsername(username);
+        if(userOpt.isPresent()){
+            User user = userOpt.get();
+            return user.getLastViewed();
+        } else {
+            throw new UserNotFoundException("User with "+ username + " not found");
+        }
+    }
 }

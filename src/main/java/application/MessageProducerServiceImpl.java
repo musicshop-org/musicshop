@@ -38,10 +38,13 @@ public class MessageProducerServiceImpl extends UnicastRemoteObject implements M
 
                 MessageProducer messageProducer = session.createProducer(topic);
                 messageProducer.setDeliveryMode(DeliveryMode.PERSISTENT);
+                long ttl = TimeUnit.DAYS.toMillis(messageDTO.getExpirationDays());
+                messageProducer.setTimeToLive(ttl);
 
                 TextMessage textMessage = session.createTextMessage(messageDTO.getMessageText());
                 textMessage.setJMSCorrelationID(messageDTO.getMessageTitle());
-                textMessage.setJMSExpiration(TimeUnit.DAYS.toMillis(messageDTO.getExpirationDays()));
+
+               // textMessage.setJMSExpiration(TimeUnit.DAYS.toMillis(messageDTO.getExpirationDays()));
                 messageProducer.send(textMessage);
             }
 

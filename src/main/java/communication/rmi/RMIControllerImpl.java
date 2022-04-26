@@ -138,4 +138,10 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     public void changeLastViewed(String username, LocalDateTime lastViewed) throws UserNotFoundException, RemoteException {
         sessionFacade.changeLastViewed(username, lastViewed);
     }
+
+    @Override
+    public LocalDateTime getLastViewedForUser(String username) throws UserNotFoundException, RemoteException {
+        return sessionFacade.getLastViewedForUser(username);
+
+    }
 }

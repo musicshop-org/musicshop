@@ -18,6 +18,7 @@ public class User {
     public User(String username, List<Topic> topics) {
         this.username = username;
         this.topics = topics;
+        this.lastViewed = LocalDateTime.MIN;
     }
 
     public void setLastViewed(LocalDateTime lastViewed){

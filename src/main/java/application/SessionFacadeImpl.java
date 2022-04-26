@@ -255,4 +255,9 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     public void changeLastViewed(String username, LocalDateTime lastViewed) throws UserNotFoundException, RemoteException {
         userService.changeLastViewed(username, lastViewed);
     }
+
+    @Override
+    public LocalDateTime getLastViewedForUser(String username) throws UserNotFoundException, RemoteException {
+        return userService.getLastViewedForUser(username);
+    }
 }
