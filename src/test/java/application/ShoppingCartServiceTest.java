@@ -43,8 +43,8 @@ public class ShoppingCartServiceTest {
         String ownerId = UUID.randomUUID().toString();
 
         List<CartLineItem> lineItems = new LinkedList<>();
-        lineItems.add(new CartLineItem(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18)));
-        lineItems.add(new CartLineItem(MediumType.CD, "BAM BAM", 20, BigDecimal.valueOf(36)));
+        lineItems.add(new CartLineItem(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18), 5));
+        lineItems.add(new CartLineItem(MediumType.CD, "BAM BAM", 20, BigDecimal.valueOf(36), 5));
 
         givenCart = new ShoppingCart(ownerId, lineItems);
 
@@ -98,7 +98,7 @@ public class ShoppingCartServiceTest {
         //given
         int newQuantity = 10;
 
-        CartLineItemDTO lineItemDTO = new CartLineItemDTO(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18));
+        CartLineItemDTO lineItemDTO = new CartLineItemDTO(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18), 5);
 
         //when
         shoppingCartService.changeQuantity(lineItemDTO, newQuantity);
@@ -111,7 +111,7 @@ public class ShoppingCartServiceTest {
     void given_cart_when_removeProductFromCart_return_new_size() throws RemoteException, NoPermissionException {
         //given
         int expected = 1;
-        CartLineItemDTO lineItemDTO = new CartLineItemDTO(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18));
+        CartLineItemDTO lineItemDTO = new CartLineItemDTO(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18), 5);
 
         //when
         shoppingCartService.removeProductFromCart(lineItemDTO);

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping default-access="field" default-cascade="all">
+
+    <class name="domain.User" table="tbl_user" lazy="true">
+        <id name="id" type="long" column="user_id">
+            <generator class="native"/>
+        </id>
+
+        <property name="username" column="username" type="java.lang.String"/>
+        <property name="lastViewed" column="lastViewed" type="java.time.LocalDateTime"/>
+
+        <list name="topics" cascade="all">
+            <key column="user_id"/>
+            <index column="idx"/>
+            <one-to-many class="domain.Topic"/>
+        </list>
+    </class>
+
+    <class name="domain.Topic" table="tbl_topic">
+        <id name="id" type="long" column="topic_id">
+            <generator class="native"/>
+        </id>
+
+        <property name="name" column="name" type="java.lang.String"/>
+
+    </class>
+
+</hibernate-mapping>

@@ -11,7 +11,9 @@ import jakarta.transaction.Transactional;
 import sharedrmi.application.api.InvoiceService;
 import sharedrmi.application.dto.InvoiceDTO;
 import sharedrmi.application.dto.InvoiceLineItemDTO;
+import sharedrmi.application.exceptions.AlbumNotFoundException;
 import sharedrmi.application.exceptions.InvoiceNotFoundException;
+import sharedrmi.application.exceptions.NotEnoughStockException;
 import sharedrmi.domain.valueobjects.InvoiceId;
 
 import java.rmi.RemoteException;
@@ -64,7 +66,18 @@ public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceSe
 
     @Transactional
     @Override
-    public void createInvoice(InvoiceDTO invoiceDTO) throws RemoteException {
+    public void createInvoice(InvoiceDTO invoiceDTO) throws RemoteException, NotEnoughStockException, AlbumNotFoundException {
+        List<Album> albums = new LinkedList<>();
+        for (InvoiceLineItemDTO invoiceLineItem: invoiceDTO.getInvoiceLineItems()) {
+            Album album  = productRepository.findAlbumByAlbumTitleAndMedium(invoiceLineItem.getName(), invoiceLineItem.getMediumType());
+            if (album == null){
+                throw new AlbumNotFoundException("Album "+invoiceLineItem.getName()+" does not exist");
+            }
+            if (album.getStock() < invoiceLineItem.getQuantity()){
+                throw new NotEnoughStockException("not enough " + album.getTitle() + " available ... in stock: " + album.getStock() + ", in cart: " + invoiceLineItem.getQuantity());
+            }
+            albums.add(album);
+        }
 
         List<InvoiceLineItem> invoiceLineItems = new LinkedList<>();
 
@@ -83,6 +96,11 @@ public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceSe
                 invoiceDTO.getPaymentMethod(),
                 invoiceDTO.getDate()
         );
+
+        for (int i = 0; i < albums.size(); i++) {
+            albums.get(i).decreaseStock(invoiceDTO.getInvoiceLineItems().get(i).getQuantity());
+            productRepository.updateAlbum(albums.get(i));
+        }
 
         this.invoiceRepository.createInvoice(invoice);
     }
@@ -104,13 +122,13 @@ public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceSe
         }
         invoiceRepository.update(invoice.get());
 
-        List<Album> albums = productRepository.findAlbumsByAlbumTitle(invoiceLineItemDTO.getName());
-        for (Album album: albums) {
-            if (album.getMediumType().equals(invoiceLineItemDTO.getMediumType())){
-                album.increaseStock(returnQuantity);
-                productRepository.updateAlbum(album);
-            }
+        Album album = productRepository.findAlbumByAlbumTitleAndMedium(invoiceLineItemDTO.getName(),invoiceLineItemDTO.getMediumType());
+
+        if (album != null){
+            album.increaseStock(returnQuantity);
+            productRepository.updateAlbum(album);
         }
+
 
     }
 

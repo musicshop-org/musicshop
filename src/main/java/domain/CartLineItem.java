@@ -13,15 +13,17 @@ public class CartLineItem {
     private String name;
     private int quantity;
     private BigDecimal price;
+    private int stock;
 
     protected CartLineItem() {
     }
 
-    public CartLineItem(MediumType mediumType, String name, int quantity, BigDecimal price) {
+    public CartLineItem(MediumType mediumType, String name, int quantity, BigDecimal price, int stock) {
         this.mediumType = mediumType;
         this.name = name;
         this.quantity = quantity;
         this.price = price;
+        this.stock = stock;
     }
 
     public void changeQuantity(int newQuantity) {

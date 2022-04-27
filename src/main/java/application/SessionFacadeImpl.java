@@ -2,23 +2,24 @@ package application;
 
 import application.api.SessionFacade;
 
-import sharedrmi.application.api.CustomerService;
-import sharedrmi.application.api.InvoiceService;
-import sharedrmi.application.api.ProductService;
-import sharedrmi.application.api.ShoppingCartService;
+import sharedrmi.application.api.*;
 import sharedrmi.application.dto.*;
 import sharedrmi.application.exceptions.AlbumNotFoundException;
 import sharedrmi.application.exceptions.InvoiceNotFoundException;
+import sharedrmi.application.exceptions.NotEnoughStockException;
+import sharedrmi.application.exceptions.UserNotFoundException;
 import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.valueobjects.InvoiceId;
 import sharedrmi.domain.valueobjects.Role;
 
+import javax.jms.JMSException;
 import javax.naming.NoPermissionException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,6 +32,8 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
 
     private final ProductService productService = new ProductServiceImpl();
     private final InvoiceService invoiceService = new InvoiceServiceImpl();
+    private final MessageProducerService messageProducerService = new MessageProducerServiceImpl();
+    private final UserService userService = new UserServiceImpl();
 
     public SessionFacadeImpl(List<Role> roles, String username) throws RemoteException {
         this.roles = roles;
@@ -67,8 +70,29 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) throws RemoteException {
-        this.productService.decreaseStockOfAlbum(title, mediumType, decreaseAmount);
+    public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) throws RemoteException, NoPermissionException, NotEnoughStockException {
+        for (Role role : this.roles)
+        {
+            if (role.equals(Role.SALESPERSON)) {
+                this.productService.decreaseStockOfAlbum(title, mediumType, decreaseAmount);
+                return;
+            }
+        }
+
+        throw new NoPermissionException("no permission to call this method!");
+    }
+
+    @Override
+    public void increaseStockOfAlbum(String title, MediumType mediumType, int increaseAmount) throws RemoteException, NoPermissionException {
+        for (Role role : this.roles)
+        {
+            if (role.equals(Role.SALESPERSON)) {
+                this.productService.increaseStockOfAlbum(title, mediumType, increaseAmount);
+                return;
+            }
+        }
+
+        throw new NoPermissionException("no permission to call this method!");
     }
 
     @Override
@@ -176,7 +200,7 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public void createInvoice(InvoiceDTO invoiceDTO) throws RemoteException, NoPermissionException {
+    public void createInvoice(InvoiceDTO invoiceDTO) throws RemoteException, NoPermissionException, AlbumNotFoundException, NotEnoughStockException {
 
         for (Role role : this.roles)
         {
@@ -201,5 +225,49 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
         }
 
         throw new NoPermissionException("no permission to call this method!");
+    }
+
+    @Override
+    public void publish(List<String> topics, MessageDTO messageDTO) throws RemoteException, NoPermissionException {
+
+        for (Role role : this.roles)
+        {
+            if (role.equals(Role.OPERATOR) || role.equals(Role.SALESPERSON)) {
+                messageProducerService.publish(topics, messageDTO);
+                return;
+            }
+        }
+
+        throw new NoPermissionException("no permission to call this method!");
+    }
+
+    @Override
+    public List<String> getAllTopics() throws RemoteException {
+        return userService.getAllTopics();
+    }
+
+    @Override
+    public List<String> getSubscribedTopicsForUser(String username) throws RemoteException {
+        return userService.getSubscribedTopicsForUser(username);
+    }
+
+    @Override
+    public void changeLastViewed(String username, LocalDateTime lastViewed) throws UserNotFoundException, RemoteException {
+        userService.changeLastViewed(username, lastViewed);
+    }
+
+    @Override
+    public LocalDateTime getLastViewedForUser(String username) throws UserNotFoundException, RemoteException {
+        return userService.getLastViewedForUser(username);
+    }
+
+    @Override
+    public boolean subscribe(String topic, String username) throws RemoteException {
+        return userService.subscribe(topic, username);
+    }
+
+    @Override
+    public boolean unsubscribe(String topic, String username) throws RemoteException {
+        return userService.unsubscribe(topic, username);
     }
 }

@@ -7,16 +7,20 @@ import application.api.SessionFacade;
 import sharedrmi.application.dto.*;
 import sharedrmi.application.exceptions.AlbumNotFoundException;
 import sharedrmi.application.exceptions.InvoiceNotFoundException;
+import sharedrmi.application.exceptions.NotEnoughStockException;
+import sharedrmi.application.exceptions.UserNotFoundException;
 import sharedrmi.communication.rmi.RMIController;
 import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.valueobjects.InvoiceId;
 import sharedrmi.domain.valueobjects.Role;
 
+import javax.jms.JMSException;
 import javax.naming.NoPermissionException;
 import javax.security.auth.login.FailedLoginException;
 import java.nio.file.AccessDeniedException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class RMIControllerImpl extends UnicastRemoteObject implements RMIController {
@@ -24,7 +28,7 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     private final SessionFacade sessionFacade;
 
     protected RMIControllerImpl(String username, String password) throws FailedLoginException, RemoteException, AccessDeniedException {
-        super();
+        super(1099);
 
         LoginService loginService = new LoginServiceImpl();
         this.sessionFacade = loginService.login(username, password);
@@ -51,8 +55,13 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     }
 
     @Override
-    public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) throws RemoteException {
+    public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) throws RemoteException, NoPermissionException, NotEnoughStockException {
         sessionFacade.decreaseStockOfAlbum(title, mediumType, decreaseAmount);
+    }
+
+    @Override
+    public void increaseStockOfAlbum(String title, MediumType mediumType, int increaseAmount) throws RemoteException, NoPermissionException {
+        sessionFacade.increaseStockOfAlbum(title, mediumType, increaseAmount);
     }
 
     @Override
@@ -101,12 +110,48 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     }
 
     @Override
-    public void createInvoice(InvoiceDTO invoiceDTO) throws RemoteException, NoPermissionException {
+    public void createInvoice(InvoiceDTO invoiceDTO) throws RemoteException, NoPermissionException, AlbumNotFoundException, NotEnoughStockException {
         sessionFacade.createInvoice(invoiceDTO);
     }
 
     @Override
     public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws RemoteException, NoPermissionException, InvoiceNotFoundException {
         sessionFacade.returnInvoiceLineItem(invoiceId,invoiceLineItemDTO,returnQuantity);
+    }
+
+    @Override
+    public void publish(List<String> topics, MessageDTO messageDTO) throws RemoteException, NoPermissionException {
+        sessionFacade.publish(topics, messageDTO);
+    }
+
+    @Override
+    public List<String> getAllTopics() throws RemoteException {
+        return sessionFacade.getAllTopics();
+    }
+
+    @Override
+    public List<String> getSubscribedTopicsForUser(String username) throws RemoteException {
+        return sessionFacade.getSubscribedTopicsForUser(username);
+    }
+
+    @Override
+    public void changeLastViewed(String username, LocalDateTime lastViewed) throws UserNotFoundException, RemoteException {
+        sessionFacade.changeLastViewed(username, lastViewed);
+    }
+
+    @Override
+    public LocalDateTime getLastViewedForUser(String username) throws UserNotFoundException, RemoteException {
+        return sessionFacade.getLastViewedForUser(username);
+
+    }
+
+    @Override
+    public boolean subscribe(String topic, String username) throws RemoteException {
+        return sessionFacade.subscribe(topic, username);
+    }
+
+    @Override
+    public boolean unsubscribe(String topic, String username) throws RemoteException {
+        return sessionFacade.unsubscribe(topic, username);
     }
 }
