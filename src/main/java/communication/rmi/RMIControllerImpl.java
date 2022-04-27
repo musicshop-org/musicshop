@@ -8,6 +8,7 @@ import sharedrmi.application.dto.*;
 import sharedrmi.application.exceptions.AlbumNotFoundException;
 import sharedrmi.application.exceptions.InvoiceNotFoundException;
 import sharedrmi.application.exceptions.NotEnoughStockException;
+import sharedrmi.application.exceptions.UserNotFoundException;
 import sharedrmi.communication.rmi.RMIController;
 import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.valueobjects.InvoiceId;
@@ -19,6 +20,7 @@ import javax.security.auth.login.FailedLoginException;
 import java.nio.file.AccessDeniedException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class RMIControllerImpl extends UnicastRemoteObject implements RMIController {
@@ -130,6 +132,17 @@ public class RMIControllerImpl extends UnicastRemoteObject implements RMIControl
     @Override
     public List<String> getSubscribedTopicsForUser(String username) throws RemoteException {
         return sessionFacade.getSubscribedTopicsForUser(username);
+    }
+
+    @Override
+    public void changeLastViewed(String username, LocalDateTime lastViewed) throws UserNotFoundException, RemoteException {
+        sessionFacade.changeLastViewed(username, lastViewed);
+    }
+
+    @Override
+    public LocalDateTime getLastViewedForUser(String username) throws UserNotFoundException, RemoteException {
+        return sessionFacade.getLastViewedForUser(username);
+
     }
 
     @Override
