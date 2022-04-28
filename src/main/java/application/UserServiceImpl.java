@@ -8,32 +8,31 @@ import jakarta.transaction.Transactional;
 import sharedrmi.application.api.UserService;
 import sharedrmi.application.exceptions.UserNotFoundException;
 
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
-import java.security.InvalidParameterException;
+import javax.ejb.Remote;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class UserServiceImpl extends UnicastRemoteObject implements UserService {
+@Remote(UserService.class)
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    protected UserServiceImpl() throws RemoteException {
+    protected UserServiceImpl() {
         super();
         this.userRepository = new UserRepositoryImpl();
     }
 
-    protected UserServiceImpl(UserRepository userRepository) throws RemoteException {
+    protected UserServiceImpl(UserRepository userRepository) {
         super();
         this.userRepository = userRepository;
     }
 
     @Transactional
     @Override
-    public List<String> getAllTopics() throws RemoteException {
+    public List<String> getAllTopics() {
         Optional<User> userOpt = userRepository.findUserByUsername("admin");
 
         if (userOpt.isEmpty()) {
@@ -53,7 +52,7 @@ public class UserServiceImpl extends UnicastRemoteObject implements UserService 
 
     @Transactional
     @Override
-    public List<String> getSubscribedTopicsForUser(String username) throws RemoteException {
+    public List<String> getSubscribedTopicsForUser(String username) {
         Optional<User> userOpt = userRepository.findUserByUsername(username);
 
         if (userOpt.isEmpty()) {
@@ -97,7 +96,7 @@ public class UserServiceImpl extends UnicastRemoteObject implements UserService 
     }
 
     @Override
-    public boolean subscribe(String topic, String username) throws RemoteException {
+    public boolean subscribe(String topic, String username) {
         Optional<User> optUser = userRepository.findUserByUsername(username);
 
         if (optUser.isEmpty())
@@ -113,7 +112,7 @@ public class UserServiceImpl extends UnicastRemoteObject implements UserService 
     }
 
     @Override
-    public boolean unsubscribe(String topic, String username) throws RemoteException {
+    public boolean unsubscribe(String topic, String username) {
         Optional<User> optUser = userRepository.findUserByUsername(username);
 
         if (optUser.isEmpty())

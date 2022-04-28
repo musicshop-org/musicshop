@@ -14,6 +14,8 @@ import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.valueobjects.InvoiceId;
 import sharedrmi.domain.valueobjects.Role;
 
+import javax.ejb.Remote;
+import javax.ejb.Stateful;
 import javax.jms.JMSException;
 import javax.naming.NoPermissionException;
 import javax.security.auth.login.FailedLoginException;
@@ -23,135 +25,139 @@ import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class RMIControllerImpl extends UnicastRemoteObject implements RMIController {
+@Remote(RMIController.class)
+@Stateful
+public class RMIControllerImpl implements RMIController {
 
-    private final SessionFacade sessionFacade;
+    private SessionFacade sessionFacade;
+
+    public RMIControllerImpl() {
+    }
 
     protected RMIControllerImpl(String username, String password) throws FailedLoginException, RemoteException, AccessDeniedException {
-        super(1099);
 
         LoginService loginService = new LoginServiceImpl();
         this.sessionFacade = loginService.login(username, password);
     }
 
     @Override
-    public List<AlbumDTO> findAlbumsBySongTitle(String s) throws RemoteException {
+    public List<AlbumDTO> findAlbumsBySongTitle(String s) {
         return sessionFacade.findAlbumsBySongTitle(s);
     }
 
     @Override
-    public AlbumDTO findAlbumByAlbumTitleAndMedium(String s, MediumType mediumType) throws RemoteException, AlbumNotFoundException {
+    public AlbumDTO findAlbumByAlbumTitleAndMedium(String s, MediumType mediumType) throws AlbumNotFoundException {
         return sessionFacade.findAlbumByAlbumTitleAndMedium(s, mediumType);
     }
 
     @Override
-    public List<SongDTO> findSongsByTitle(String s) throws RemoteException {
+    public List<SongDTO> findSongsByTitle(String s) {
         return sessionFacade.findSongsByTitle(s);
     }
 
     @Override
-    public List<ArtistDTO> findArtistsByName(String s) throws RemoteException {
+    public List<ArtistDTO> findArtistsByName(String s) {
         return sessionFacade.findArtistsByName(s);
     }
 
     @Override
-    public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) throws RemoteException, NoPermissionException, NotEnoughStockException {
+    public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) throws NoPermissionException, NotEnoughStockException {
         sessionFacade.decreaseStockOfAlbum(title, mediumType, decreaseAmount);
     }
 
     @Override
-    public void increaseStockOfAlbum(String title, MediumType mediumType, int increaseAmount) throws RemoteException, NoPermissionException {
+    public void increaseStockOfAlbum(String title, MediumType mediumType, int increaseAmount) throws NoPermissionException {
         sessionFacade.increaseStockOfAlbum(title, mediumType, increaseAmount);
     }
 
     @Override
-    public ShoppingCartDTO getCart() throws RemoteException, NoPermissionException {
+    public ShoppingCartDTO getCart() throws NoPermissionException {
         return sessionFacade.getCart();
     }
 
     @Override
-    public void addProductToCart(AlbumDTO albumDTO, int i) throws RemoteException, NoPermissionException {
+    public void addProductToCart(AlbumDTO albumDTO, int i) throws NoPermissionException {
         sessionFacade.addProductToCart(albumDTO, i);
     }
 
     @Override
-    public void changeQuantity(CartLineItemDTO cartLineItemDTO, int i) throws RemoteException, NoPermissionException {
+    public void changeQuantity(CartLineItemDTO cartLineItemDTO, int i) throws NoPermissionException {
         sessionFacade.changeQuantity(cartLineItemDTO, i);
     }
 
     @Override
-    public void removeProductFromCart(CartLineItemDTO cartLineItemDTO) throws RemoteException, NoPermissionException {
+    public void removeProductFromCart(CartLineItemDTO cartLineItemDTO) throws NoPermissionException {
         sessionFacade.removeProductFromCart(cartLineItemDTO);
     }
 
     @Override
-    public void clearCart() throws RemoteException, NoPermissionException {
+    public void clearCart() throws NoPermissionException {
         sessionFacade.clearCart();
     }
 
     @Override
-    public List<Role> getRoles() throws RemoteException {
+    public List<Role> getRoles() {
         return sessionFacade.getRoles();
     }
 
     @Override
-    public String getUsername() throws RemoteException {
+    public String getUsername() {
         return sessionFacade.getUsername();
     }
 
     @Override
-    public InvoiceDTO findInvoiceById(InvoiceId invoiceId) throws RemoteException, NoPermissionException, InvoiceNotFoundException {
+    public InvoiceDTO findInvoiceById(InvoiceId invoiceId) throws NoPermissionException, InvoiceNotFoundException {
         return sessionFacade.findInvoiceById(invoiceId);
     }
 
     @Override
-    public List<CustomerDTO> findCustomersByName(String name) throws RemoteException, NoPermissionException {
+    public List<CustomerDTO> findCustomersByName(String name) throws NoPermissionException {
         return sessionFacade.findCustomersByName(name);
     }
 
     @Override
-    public void createInvoice(InvoiceDTO invoiceDTO) throws RemoteException, NoPermissionException, AlbumNotFoundException, NotEnoughStockException {
+    public void createInvoice(InvoiceDTO invoiceDTO) throws NoPermissionException, AlbumNotFoundException, NotEnoughStockException {
         sessionFacade.createInvoice(invoiceDTO);
     }
 
     @Override
-    public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws RemoteException, NoPermissionException, InvoiceNotFoundException {
+    public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws NoPermissionException, InvoiceNotFoundException {
         sessionFacade.returnInvoiceLineItem(invoiceId,invoiceLineItemDTO,returnQuantity);
     }
 
     @Override
-    public void publish(List<String> topics, MessageDTO messageDTO) throws RemoteException, NoPermissionException {
+    public void publish(List<String> topics, MessageDTO messageDTO) throws NoPermissionException {
         sessionFacade.publish(topics, messageDTO);
     }
 
     @Override
-    public List<String> getAllTopics() throws RemoteException {
+    public List<String> getAllTopics() {
         return sessionFacade.getAllTopics();
     }
 
     @Override
-    public List<String> getSubscribedTopicsForUser(String username) throws RemoteException {
+    public List<String> getSubscribedTopicsForUser(String username) {
         return sessionFacade.getSubscribedTopicsForUser(username);
     }
 
     @Override
-    public void changeLastViewed(String username, LocalDateTime lastViewed) throws UserNotFoundException, RemoteException {
+    public void changeLastViewed(String username, LocalDateTime lastViewed) throws UserNotFoundException {
         sessionFacade.changeLastViewed(username, lastViewed);
     }
 
     @Override
-    public LocalDateTime getLastViewedForUser(String username) throws UserNotFoundException, RemoteException {
+    public LocalDateTime getLastViewedForUser(String username) throws UserNotFoundException {
         return sessionFacade.getLastViewedForUser(username);
 
     }
 
     @Override
-    public boolean subscribe(String topic, String username) throws RemoteException {
+    public boolean subscribe(String topic, String username) {
         return sessionFacade.subscribe(topic, username);
     }
 
     @Override
-    public boolean unsubscribe(String topic, String username) throws RemoteException {
+    public boolean unsubscribe(String topic, String username) {
         return sessionFacade.unsubscribe(topic, username);
     }
 }

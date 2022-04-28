@@ -10,8 +10,8 @@ import java.util.Optional;
 
 public interface InvoiceRepository {
 
-    Optional<Invoice> findInvoiceById(InvoiceId invoiceId) throws RemoteException;
+    Optional<Invoice> findInvoiceById(InvoiceId invoiceId);
 
-    void createInvoice(Invoice invoice) throws RemoteException;
+    void createInvoice(Invoice invoice);
     void update(Invoice invoice);
 }
