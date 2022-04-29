@@ -83,7 +83,7 @@ public class UserServiceImpl extends UnicastRemoteObject implements UserService 
             throw new UserNotFoundException("User with "+ username + " not found");
         }
     }
-
+// t
     @Transactional
     @Override
     public LocalDateTime getLastViewedForUser(String username) throws UserNotFoundException {
