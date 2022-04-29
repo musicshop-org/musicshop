@@ -54,7 +54,7 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
                         song.getPrice(),
                         song.getStock(),
                         song.getMediumType(),
-                        song.getReleaseDate(),
+                        song.getReleaseDate().toString(),
                         song.getGenre(),
                         song.getArtists()
                                 .stream()
@@ -69,7 +69,7 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
                     album.getPrice(),
                     album.getStock(),
                     album.getMediumType(),
-                    album.getReleaseDate(),
+                    album.getReleaseDate().toString(),
                     album.getAlbumId(),
                     album.getLabel(),
                     songDTOs
@@ -93,7 +93,7 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
                 .price(album.getPrice())
                 .stock(album.getStock())
                 .mediumType(album.getMediumType())
-                .releaseDate(album.getReleaseDate())
+                .releaseDate(album.getReleaseDate().toString())
                 .albumId(album.getAlbumId())
                 .label(album.getLabel())
                 .songs(album.getSongs()
@@ -107,7 +107,7 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
                                 )
                                 .mediumType(song.getMediumType())
                                 .price(song.getPrice())
-                                .releaseDate(song.getReleaseDate())
+                                .releaseDate(song.getReleaseDate().toString())
                                 .genre(song.getGenre())
                                 .stock(song.getStock())
                                 .inAlbum(Collections.emptySet())
@@ -131,7 +131,7 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
                     song.getPrice(),
                     song.getStock(),
                     song.getMediumType(),
-                    song.getReleaseDate(),
+                    song.getReleaseDate().toString(),
                     song.getGenre(),
                     song.getArtists().stream().map(artist -> new ArtistDTO(artist.getName())).collect(Collectors.toList()),
                     Collections.emptySet()
