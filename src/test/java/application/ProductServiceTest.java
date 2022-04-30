@@ -59,7 +59,7 @@ public class ProductServiceTest {
         Set<Album> albums = new HashSet<>();
         albums.add(new Album("Thriller", new BigDecimal(12), 4, MediumType.CD, LocalDate.of(1983, 6, 6), new AlbumId(), "Epic", songs));
 
-        givenAlbumDTOs.add(new AlbumDTO("Thriller", new BigDecimal(12), 4, MediumType.CD, LocalDate.of(1983, 6, 6).toString(), new AlbumId(), "Epic", songDTOs));
+        givenAlbumDTOs.add(new AlbumDTO("Thriller", new BigDecimal(12), 4, MediumType.CD, LocalDate.of(1983, 6, 6).toString(), new AlbumId(), "Epic", songDTOs, 0));
 
         Mockito.when(productRepository.findAlbumsBySongTitle(songTitle)).thenReturn(albums);
 
@@ -107,7 +107,7 @@ public class ProductServiceTest {
         Set<Album> albums = new HashSet<>();
         albums.add(new Album("Thriller", new BigDecimal(12), 4, MediumType.CD, LocalDate.of(1983, 6, 6), new AlbumId(), "Epic", songs));
 
-        givenAlbumDTOs.add(new AlbumDTO("Thriller", new BigDecimal(12), 4, MediumType.CD, LocalDate.of(1983, 6, 6).toString(), new AlbumId(), "Epic", songDTOs));
+        givenAlbumDTOs.add(new AlbumDTO("Thriller", new BigDecimal(12), 4, MediumType.CD, LocalDate.of(1983, 6, 6).toString(), new AlbumId(), "Epic", songDTOs, 0));
 
         Mockito.when(productRepository.findAlbumsBySongTitle(songTitle)).thenReturn(albums);
 

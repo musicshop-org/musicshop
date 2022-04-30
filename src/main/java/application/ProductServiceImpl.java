@@ -72,7 +72,8 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
                     album.getReleaseDate().toString(),
                     album.getAlbumId(),
                     album.getLabel(),
-                    songDTOs
+                    songDTOs,
+                    0
             ));
         }
 
