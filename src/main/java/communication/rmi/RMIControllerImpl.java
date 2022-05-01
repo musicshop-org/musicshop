@@ -10,6 +10,7 @@ import sharedrmi.application.exceptions.InvoiceNotFoundException;
 import sharedrmi.application.exceptions.NotEnoughStockException;
 import sharedrmi.application.exceptions.UserNotFoundException;
 import sharedrmi.communication.rmi.RMIController;
+import sharedrmi.communication.rmi.RMIControllerFactory;
 import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.valueobjects.InvoiceId;
 import sharedrmi.domain.valueobjects.Role;
@@ -26,6 +27,8 @@ import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Remote(RMIController.class)
+@Stateful
 public class RMIControllerImpl implements RMIController {
 
     private SessionFacade sessionFacade;
@@ -34,7 +37,8 @@ public class RMIControllerImpl implements RMIController {
     public RMIControllerImpl() {
     }
 
-    protected RMIControllerImpl(String username, String password) throws FailedLoginException, RemoteException, AccessDeniedException {
+    @Override
+    public void login(String username, String password) throws FailedLoginException, RemoteException, AccessDeniedException {
         LoginService loginService = new LoginServiceImpl();
         this.sessionFacade = loginService.login(username, password);
     }
