@@ -53,13 +53,13 @@ public class ProductServiceTest {
         songs.add(new Song("Thriller", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(1982, 11, 30), "pop, disco, pop-soul", Collections.emptyList()));
 
         Set<SongDTO> songDTOs = new HashSet<>();
-        songDTOs.add(new SongDTO("Thriller", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(1982, 11, 30), "pop, disco, pop-soul", Collections.emptyList(), Collections.emptySet()));
+        songDTOs.add(new SongDTO("Thriller", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(1982, 11, 30).toString(), "pop, disco, pop-soul", Collections.emptyList(), Collections.emptySet()));
 
 
         Set<Album> albums = new HashSet<>();
         albums.add(new Album("Thriller", new BigDecimal(12), 4, MediumType.CD, LocalDate.of(1983, 6, 6), new AlbumId(), "Epic", songs));
 
-        givenAlbumDTOs.add(new AlbumDTO("Thriller", new BigDecimal(12), 4, MediumType.CD, LocalDate.of(1983, 6, 6), new AlbumId(), "Epic", songDTOs));
+        givenAlbumDTOs.add(new AlbumDTO("Thriller", new BigDecimal(12), 4, MediumType.CD, LocalDate.of(1983, 6, 6).toString(), new AlbumId(), "Epic", songDTOs));
 
         Mockito.when(productRepository.findAlbumsBySongTitle(songTitle)).thenReturn(albums);
 
@@ -101,13 +101,13 @@ public class ProductServiceTest {
         songs.add(new Song("Thriller", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(1982, 11, 30), "pop, disco, pop-soul", Collections.emptyList()));
 
         Set<SongDTO> songDTOs = new HashSet<>();
-        songDTOs.add(new SongDTO("Thriller", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(1982, 11, 30), "pop, disco, pop-soul", Collections.emptyList(), Collections.emptySet()));
+        songDTOs.add(new SongDTO("Thriller", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(1982, 11, 30).toString(), "pop, disco, pop-soul", Collections.emptyList(), Collections.emptySet()));
 
 
         Set<Album> albums = new HashSet<>();
         albums.add(new Album("Thriller", new BigDecimal(12), 4, MediumType.CD, LocalDate.of(1983, 6, 6), new AlbumId(), "Epic", songs));
 
-        givenAlbumDTOs.add(new AlbumDTO("Thriller", new BigDecimal(12), 4, MediumType.CD, LocalDate.of(1983, 6, 6), new AlbumId(), "Epic", songDTOs));
+        givenAlbumDTOs.add(new AlbumDTO("Thriller", new BigDecimal(12), 4, MediumType.CD, LocalDate.of(1983, 6, 6).toString(), new AlbumId(), "Epic", songDTOs));
 
         Mockito.when(productRepository.findAlbumsBySongTitle(songTitle)).thenReturn(albums);
 
@@ -134,7 +134,7 @@ public class ProductServiceTest {
         List<Song> songs = new LinkedList<>();
         songs.add(new Song(songTitle, new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(2012, 9, 28), "dancehall, reggae", Collections.emptyList()));
 
-        givenSongDTOs.add(new SongDTO(songTitle, new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(2012, 9, 28), "dancehall, reggae", Collections.emptyList(), Collections.emptySet()));
+        givenSongDTOs.add(new SongDTO(songTitle, new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(2012, 9, 28).toString(), "dancehall, reggae", Collections.emptyList(), Collections.emptySet()));
 
         Mockito.when(productRepository.findSongsByTitle(songTitle)).thenReturn(songs);
 
@@ -174,7 +174,7 @@ public class ProductServiceTest {
         List<Song> songs = new LinkedList<>();
         songs.add(new Song("Beautiful", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(2012, 9, 28), "dancehall, reggae", Collections.emptyList()));
 
-        givenSongDTOs.add(new SongDTO("Beautiful", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(2012, 9, 28), "dancehall, reggae", Collections.emptyList(), Collections.emptySet()));
+        givenSongDTOs.add(new SongDTO("Beautiful", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(2012, 9, 28).toString(), "dancehall, reggae", Collections.emptyList(), Collections.emptySet()));
 
         Mockito.when(productRepository.findSongsByTitle(songTitle)).thenReturn(songs);
 
