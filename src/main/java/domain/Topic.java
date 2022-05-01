@@ -2,8 +2,10 @@ package domain;
 
 import lombok.Getter;
 
+import java.io.Serializable;
+
 @Getter
-public class Topic {
+public class Topic  implements Serializable {
 
     private long id;
     private String name;

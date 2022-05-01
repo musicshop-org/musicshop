@@ -2,11 +2,12 @@ package domain;
 
 import lombok.Getter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class ShoppingCart {
+public class ShoppingCart implements Serializable {
 
     private String ownerId;
     private final List<CartLineItem> cartLineItems;

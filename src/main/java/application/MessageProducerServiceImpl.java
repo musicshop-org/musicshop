@@ -6,22 +6,19 @@ import sharedrmi.application.api.MessageProducerService;
 import sharedrmi.application.dto.MessageDTO;
 
 import javax.jms.*;
-import javax.naming.NoPermissionException;
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class MessageProducerServiceImpl extends UnicastRemoteObject implements MessageProducerService {
+public class MessageProducerServiceImpl implements MessageProducerService {
 
     private final String DEFAULT_BROKER_BIND_URL = "tcp://10.0.40.162:61616";
 
-    public MessageProducerServiceImpl() throws RemoteException {
+    public MessageProducerServiceImpl() {
         super();
     }
 
     @Override
-    public void publish(List<String> topics, MessageDTO messageDTO) throws RemoteException {
+    public void publish(List<String> topics, MessageDTO messageDTO) {
 
         try {
             ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(DEFAULT_BROKER_BIND_URL);

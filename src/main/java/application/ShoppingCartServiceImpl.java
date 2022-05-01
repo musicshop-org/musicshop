@@ -18,19 +18,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-public class ShoppingCartServiceImpl extends UnicastRemoteObject implements ShoppingCartService {
+public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     private final ShoppingCartRepository shoppingCartRepository;
     private final ShoppingCart shoppingCart;
 
-    public ShoppingCartServiceImpl() throws RemoteException {
+    public ShoppingCartServiceImpl() {
         super();
 
         this.shoppingCartRepository = new ShoppingCartRepositoryImpl();
         this.shoppingCart = new ShoppingCart();
     }
 
-    public ShoppingCartServiceImpl(String ownerId) throws RemoteException {
+    public ShoppingCartServiceImpl(String ownerId) {
         super();
 
         this.shoppingCartRepository = new ShoppingCartRepositoryImpl();
@@ -44,7 +44,7 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
         }
     }
 
-    public ShoppingCartServiceImpl(String ownerId, ShoppingCartRepository repo) throws RemoteException {
+    public ShoppingCartServiceImpl(String ownerId, ShoppingCartRepository repo) {
         super();
 
         this.shoppingCartRepository = repo;
@@ -112,7 +112,7 @@ public class ShoppingCartServiceImpl extends UnicastRemoteObject implements Shop
 
     @Transactional
     @Override
-    public void clearCart() throws RemoteException {
+    public void clearCart() {
         this.shoppingCart.clear();
     }
 }
