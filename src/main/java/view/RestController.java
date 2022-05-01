@@ -1,13 +1,10 @@
 package view;
 
-import application.Person;
 import application.ProductServiceImpl;
 import sharedrmi.application.api.ProductService;
 import sharedrmi.application.dto.AlbumDTO;
-import sharedrmi.application.dto.AlbumDTOString;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import java.rmi.RemoteException;
 import java.util.List;
 
@@ -21,7 +18,7 @@ public class RestController {
     @GET
     @Produces("text/html")
     public String welcome() {
-        return "<h1> welcome to our musicshop :) </h1>";
+        return "<h1> welcome to our music shop :) </h1>";
     }
 
     @GET
@@ -29,15 +26,5 @@ public class RestController {
     @Produces("application/json")
     public List<AlbumDTO> findAlbumsBySongTitle (@PathParam("songTitle") String songTitle) throws RemoteException {
         return productService.findAlbumsBySongTitle(songTitle);
-    }
-
-    // only for testing -> will be removed later
-    @POST
-    @Path("/abc")
-    @Consumes("application/json")
-    @Produces("application/json")
-    public String jsonTest (Person person) {
-        System.out.println("Person: " +  person.getFirst());
-        return "F: " + person.getFirst() + ", L: " + person.getLast() + ", A: " + person.getAge();
     }
 }
