@@ -5,10 +5,11 @@ import sharedrmi.application.dto.InvoiceLineItemDTO;
 import sharedrmi.application.exceptions.InvoiceNotFoundException;
 import sharedrmi.domain.valueobjects.InvoiceId;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.Optional;
 
-public interface InvoiceRepository {
+public interface InvoiceRepository extends Serializable {
 
     Optional<Invoice> findInvoiceById(InvoiceId invoiceId);
 

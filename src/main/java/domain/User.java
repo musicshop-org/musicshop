@@ -2,11 +2,12 @@ package domain;
 
 import lombok.Getter;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-public class User {
+public class User  implements Serializable {
 
     private long id;
     private String username;
