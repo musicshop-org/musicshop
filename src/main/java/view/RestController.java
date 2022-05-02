@@ -1,16 +1,13 @@
 package view;
 
-import application.Person;
 import application.ProductServiceImpl;
 import application.ShoppingCartServiceImpl;
 import sharedrmi.application.api.ProductService;
 import sharedrmi.application.api.ShoppingCartService;
 import sharedrmi.application.dto.AlbumDTO;
-import sharedrmi.application.dto.AlbumDTOString;
 
 import javax.naming.NoPermissionException;
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import java.rmi.RemoteException;
 import java.util.List;
 
@@ -49,15 +46,5 @@ public class RestController {
         }
 
         return true;
-    }
-
-    // only for testing -> will be removed later
-    @POST
-    @Path("/abc")
-    @Consumes("application/json")
-    @Produces("application/json")
-    public String jsonTest (Person person) {
-        System.out.println("Person: " +  person.getFirst());
-        return "F: " + person.getFirst() + ", L: " + person.getLast() + ", A: " + person.getAge();
     }
 }
