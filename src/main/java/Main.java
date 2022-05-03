@@ -42,11 +42,15 @@ public class Main {
 //            e.printStackTrace();
 //        }
 
+        // create JWT
         UUID id = UUID.randomUUID();
         String issuer = "Musicshop";
         String subject = "Test_Customer";
         String jwtToken = JWTManager.createJWT(id, issuer, subject, TimeUnit.SECONDS.toMillis(900));
 
         System.out.println("Generated_Token:" + jwtToken);
+
+        // decode JWT
+        System.out.println(JWTManager.decodeJWT(jwtToken));
     }
 }
