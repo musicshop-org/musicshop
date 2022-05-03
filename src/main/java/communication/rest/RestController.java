@@ -1,4 +1,4 @@
-package view;
+package communication.rest;
 
 import application.ProductServiceImpl;
 import application.ShoppingCartServiceImpl;
@@ -38,7 +38,7 @@ public class RestController {
     @Consumes("application/json")
     @Produces("text/plain")
     public boolean addToCart(AlbumDTO album) {
-        // needed: title of album, medium type, price, stock, quantity
+
         try {
             shoppingCartService.addProductToCart(album, album.getQuantityToAddToCart());
         } catch (RemoteException | NoPermissionException e) {
@@ -60,12 +60,11 @@ public class RestController {
             e.printStackTrace();
             return null;
         }
-
     }
 
     @GET
     @Path("/shoppingCart/clear")
-    @Produces("application/json")
+    @Produces("text/plain")
     public boolean clearShoppingCart() {
 
         try {
