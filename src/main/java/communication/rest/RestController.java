@@ -10,7 +10,6 @@ import sharedrmi.application.dto.UserDataDTO;
 
 import javax.naming.NoPermissionException;
 import javax.ws.rs.*;
-import java.rmi.RemoteException;
 import java.util.List;
 
 @Path("")
@@ -18,9 +17,11 @@ public class RestController {
 
     private final ProductService productService = new ProductServiceImpl();
     private final ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl("PythonTestClient");
-    private final long JWT_TIME_TO_LIVE = 900000;
+    private final RestLoginServiceImpl restLoginServiceImpl = new RestLoginServiceImpl();
+
 
     public RestController() {}
+
 
     @GET
     @Produces("text/html")
@@ -28,18 +29,23 @@ public class RestController {
         return "<h1> welcome to our music shop :) </h1>";
     }
 
+
     @POST
     @Path("/login")
     @Consumes("application/json")
     @Produces("text/plain")
     public String login(UserDataDTO userData) {
 
-        // verify in LDAP
         String username = userData.getUsername();
         String password = userData.getPassword();
 
-        return JwtManager.createJWT(username, JWT_TIME_TO_LIVE);
+        // TODO: validate over LDAP
+        if (restLoginServiceImpl.checkCredentials(username, password))
+            return JwtManager.createJWT(username, 900000);
+
+        return "";
     }
+
 
     @GET
     @Path("/albums/{songTitle}")
@@ -47,6 +53,7 @@ public class RestController {
     public List<AlbumDTO> findAlbumsBySongTitle (@PathParam("songTitle") String songTitle) {
         return productService.findAlbumsBySongTitle(songTitle);
     }
+
 
     @POST
     @Path("/albums/addToCart")
@@ -64,6 +71,7 @@ public class RestController {
         return true;
     }
 
+
     @GET
     @Path("/shoppingCart/display")
     @Produces("application/json")
@@ -76,6 +84,7 @@ public class RestController {
             return null;
         }
     }
+
 
     @GET
     @Path("/shoppingCart/clear")
