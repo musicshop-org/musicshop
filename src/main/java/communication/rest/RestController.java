@@ -6,6 +6,7 @@ import sharedrmi.application.api.ProductService;
 import sharedrmi.application.api.ShoppingCartService;
 import sharedrmi.application.dto.AlbumDTO;
 import sharedrmi.application.dto.ShoppingCartDTO;
+import sharedrmi.application.dto.UserDataDTO;
 
 import javax.naming.NoPermissionException;
 import javax.ws.rs.*;
@@ -17,6 +18,7 @@ public class RestController {
 
     private final ProductService productService = new ProductServiceImpl();
     private final ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl("PythonTestClient");
+    private final long JWT_TIME_TO_LIVE = 900000;
 
     public RestController() {}
 
@@ -24,6 +26,19 @@ public class RestController {
     @Produces("text/html")
     public String welcome() {
         return "<h1> welcome to our music shop :) </h1>";
+    }
+
+    @POST
+    @Path("/login")
+    @Consumes("application/json")
+    @Produces("text/plain")
+    public String login(UserDataDTO userData) {
+
+        // verify in LDAP
+        String username = userData.getUsername();
+        String password = userData.getPassword();
+
+        return JwtManager.createJWT(username, JWT_TIME_TO_LIVE);
     }
 
     @GET
