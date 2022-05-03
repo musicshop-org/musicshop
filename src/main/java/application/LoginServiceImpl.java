@@ -21,7 +21,7 @@ import java.util.*;
 public class LoginServiceImpl implements LoginService {
 
     @Override
-    public SessionFacade login(String username, String password) throws FailedLoginException, RemoteException, AccessDeniedException {
+    public SessionFacade login(String username, String password) throws FailedLoginException, AccessDeniedException {
 
         if (password.equals("PssWrd")) {
             return new SessionFacadeImpl(List.of(Role.SALESPERSON, Role.OPERATOR), username);
