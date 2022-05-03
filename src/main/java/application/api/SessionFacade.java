@@ -4,12 +4,14 @@ import sharedrmi.application.api.*;
 import sharedrmi.application.dto.CustomerDTO;
 import sharedrmi.domain.valueobjects.Role;
 
-import java.rmi.Remote;
+import javax.ejb.Remote;
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.List;
 
-public interface SessionFacade extends ProductService, ShoppingCartService, CustomerService, InvoiceService, MessageProducerService, UserService, Remote {
+@Remote
+public interface SessionFacade extends Serializable, ProductService, ShoppingCartService, CustomerService, InvoiceService, MessageProducerService, UserService {
 
-     List<Role> getRoles() throws RemoteException;
-     String getUsername() throws RemoteException;
+     List<Role> getRoles();
+     String getUsername();
 }

@@ -2,9 +2,11 @@ package domain.repositories;
 
 import domain.Topic;
 import domain.User;
+
+import java.io.Serializable;
 import java.util.Optional;
 
-public interface UserRepository {
+public interface UserRepository extends Serializable {
 
     Optional<User> findUserByUsername(String username);
 

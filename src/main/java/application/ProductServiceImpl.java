@@ -23,16 +23,16 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-public class ProductServiceImpl extends UnicastRemoteObject implements ProductService {
+public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
 
-    public ProductServiceImpl() throws RemoteException {
+    public ProductServiceImpl() {
         super();
         this.productRepository = new ProductRepositoryImpl();
     }
 
-    public ProductServiceImpl(ProductRepository productRepository) throws RemoteException {
+    public ProductServiceImpl(ProductRepository productRepository) {
         super();
         this.productRepository = productRepository;
     }
@@ -82,7 +82,7 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
 
     @Transactional
     @Override
-    public AlbumDTO findAlbumByAlbumTitleAndMedium(String title, MediumType mediumType) throws RemoteException, AlbumNotFoundException {
+    public AlbumDTO findAlbumByAlbumTitleAndMedium(String title, MediumType mediumType) throws AlbumNotFoundException {
         Album album = productRepository.findAlbumByAlbumTitleAndMedium(title, mediumType);
 
         if (null == album) {
@@ -171,7 +171,7 @@ public class ProductServiceImpl extends UnicastRemoteObject implements ProductSe
 
     @Transactional
     @Override
-    public void increaseStockOfAlbum(String title, MediumType mediumType, int increaseAmount) throws RemoteException {
+    public void increaseStockOfAlbum(String title, MediumType mediumType, int increaseAmount) {
         Album album = productRepository.findAlbumByAlbumTitleAndMedium(title, mediumType);
         album.increaseStock(increaseAmount);
         productRepository.updateAlbum(album);

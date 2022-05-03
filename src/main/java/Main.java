@@ -52,5 +52,7 @@ public class Main {
 
         // decode JWT
         System.out.println(JWTManager.decodeJWT(jwtToken));
+        System.out.println("Listening on port " + Registry.REGISTRY_PORT);
+
     }
 }

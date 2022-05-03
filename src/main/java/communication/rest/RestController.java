@@ -18,7 +18,7 @@ public class RestController {
     private final ProductService productService = new ProductServiceImpl();
     private final ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl("PythonTestClient");
 
-    public RestController() throws RemoteException {}
+    public RestController() {}
 
     @GET
     @Produces("text/html")
@@ -29,7 +29,7 @@ public class RestController {
     @GET
     @Path("/albums/{songTitle}")
     @Produces("application/json")
-    public List<AlbumDTO> findAlbumsBySongTitle (@PathParam("songTitle") String songTitle) throws RemoteException {
+    public List<AlbumDTO> findAlbumsBySongTitle (@PathParam("songTitle") String songTitle) {
         return productService.findAlbumsBySongTitle(songTitle);
     }
 
@@ -41,7 +41,7 @@ public class RestController {
 
         try {
             shoppingCartService.addProductToCart(album, album.getQuantityToAddToCart());
-        } catch (RemoteException | NoPermissionException e) {
+        } catch (NoPermissionException e) {
             e.printStackTrace();
             return false;
         }
@@ -56,7 +56,7 @@ public class RestController {
 
         try {
             return shoppingCartService.getCart();
-        } catch (RemoteException | NoPermissionException e) {
+        } catch (NoPermissionException e) {
             e.printStackTrace();
             return null;
         }
@@ -69,7 +69,7 @@ public class RestController {
 
         try {
             shoppingCartService.clearCart();
-        } catch (RemoteException | NoPermissionException e) {
+        } catch (NoPermissionException e) {
             e.printStackTrace();
             return false;
         }

@@ -4,11 +4,12 @@ import lombok.Getter;
 import sharedrmi.domain.enums.PaymentMethod;
 import sharedrmi.domain.valueobjects.InvoiceId;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
 @Getter
-public class Invoice {
+public class Invoice implements Serializable {
 
     private long id;
     private InvoiceId invoiceId;
