@@ -1,6 +1,7 @@
 package communication.rest;
 
 import communication.rest.api.RestLoginService;
+import sharedrmi.domain.valueobjects.Role;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
@@ -12,6 +13,8 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 
 public class RestLoginServiceImpl implements RestLoginService {
@@ -56,6 +59,42 @@ public class RestLoginServiceImpl implements RestLoginService {
         }
 
         return matchingPassword;
+    }
+
+    @Override
+    public List<Role> getRole(String username) {
+        List<Role> roles = new LinkedList<>();
+
+        Properties env = new Properties();
+        env.put(Context.SECURITY_AUTHENTICATION, "none");
+        env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+        env.put(Context.PROVIDER_URL, "ldap://10.0.40.162:389");
+
+        try {
+            InitialDirContext ctx = new InitialDirContext(env);
+
+            String filter = "(&(objectClass=organizationalrole)(roleoccupant=uid=" + username + ",ou=employees,dc=openmicroscopy,dc=org))";
+
+            String[] attrIDs = {"*"};
+
+            SearchControls searchControls = new SearchControls();
+            searchControls.setReturningAttributes(attrIDs);
+            searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+
+            String base = "ou=roles,dc=openmicroscopy,dc=org";
+            NamingEnumeration<SearchResult> resultList = ctx.search(base, filter, searchControls);
+
+            while (resultList.hasMore()) {
+                SearchResult result = resultList.next();
+                String ldapRole = (String) result.getAttributes().get("cn").get();
+                roles.add(Role.valueOf(ldapRole.toUpperCase()));
+            }
+
+            ctx.close();
+        } catch (NamingException ex) {
+            ex.printStackTrace();
+        }
+        return roles;
     }
 
     private String encryptSHA512(String input) {
