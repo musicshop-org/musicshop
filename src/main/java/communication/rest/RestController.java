@@ -49,7 +49,9 @@ public class RestController {
     @GET
     @Path("/albums/{songTitle}")
     @Produces("application/json")
-    public List<AlbumDTO> findAlbumsBySongTitle (@PathParam("songTitle") String songTitle) {
+    public List<AlbumDTO> findAlbumsBySongTitle (@PathParam("songTitle") String songTitle, @HeaderParam("Authorization") String jwt_Token) {
+        System.out.println(jwt_Token);
+        System.out.println(JwtManager.decodeJWT(jwt_Token));
         return productService.findAlbumsBySongTitle(songTitle);
     }
 
@@ -58,7 +60,10 @@ public class RestController {
     @Path("/albums/addToCart")
     @Consumes("application/json")
     @Produces("text/plain")
-    public boolean addToCart(AlbumDTO album) {
+    public boolean addToCart(AlbumDTO album, @HeaderParam("Authorization") String jwt_Token) {
+
+        System.out.println(jwt_Token);
+        System.out.println(JwtManager.decodeJWT(jwt_Token));
 
         try {
             shoppingCartService.addProductToCart(album, album.getQuantityToAddToCart());
