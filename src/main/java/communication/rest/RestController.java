@@ -36,14 +36,14 @@ public class RestController {
     @Produces("text/plain")
     public String login(UserDataDTO userData) {
 
-        String username = userData.getUsername();
+        String emailAddress = userData.getEmailAddress();
         String password = userData.getPassword();
 
         // TODO: validate over LDAP
-        if (restLoginServiceImpl.checkCredentials(username, password))
-            return JwtManager.createJWT(username, 900000);
+//        if (restLoginServiceImpl.checkCredentials(username, password))
+            return JwtManager.createJWT(emailAddress, 900000);
 
-        return "";
+//        return "";
     }
 
 

@@ -12,15 +12,12 @@ import javax.naming.directory.SearchResult;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 public class RestLoginServiceImpl implements RestLoginService {
 
     @Override
-    public boolean checkCredentials(String username, String password) {
+    public boolean checkCredentials(String emailAddress, String password) {
         boolean matchingPassword = false;
 
         Properties env = new Properties();
@@ -28,10 +25,15 @@ public class RestLoginServiceImpl implements RestLoginService {
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         env.put(Context.PROVIDER_URL, "ldap://10.0.40.162:389");
 
+        String userType = getUserType(emailAddress, env);
+
+        if (userType.isBlank())
+            return false;
+
         try {
             InitialDirContext ctx = new InitialDirContext(env);
 
-            String filter = "(&(objectClass=inetOrgPerson)(uid=" + username + "))";
+            String filter = "(&(objectClass=inetOrgPerson)(uid=" + emailAddress + "))";
 
             String[] attrIDs = {"userpassword"};
 
@@ -39,7 +41,7 @@ public class RestLoginServiceImpl implements RestLoginService {
             searchControls.setReturningAttributes(attrIDs);
             searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
-            String base = "ou=customer,dc=openmicroscopy,dc=org";
+            String base = "ou=" + userType + ",dc=openmicroscopy,dc=org";
             NamingEnumeration<SearchResult> resultList = ctx.search(base, filter, searchControls);
 
             while (resultList.hasMore()) {
@@ -62,7 +64,7 @@ public class RestLoginServiceImpl implements RestLoginService {
     }
 
     @Override
-    public List<Role> getRole(String username) {
+    public List<Role> getRole(String emailAddress) {
         List<Role> roles = new LinkedList<>();
 
         Properties env = new Properties();
@@ -70,10 +72,16 @@ public class RestLoginServiceImpl implements RestLoginService {
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         env.put(Context.PROVIDER_URL, "ldap://10.0.40.162:389");
 
+        String userType = getUserType(emailAddress, env);
+
+        if (userType.isBlank())
+            return Collections.emptyList();
+
         try {
             InitialDirContext ctx = new InitialDirContext(env);
 
-            String filter = "(&(objectClass=organizationalrole)(roleoccupant=uid=" + username + ",ou=employees,dc=openmicroscopy,dc=org))";
+            String base = "ou=roles,dc=openmicroscopy,dc=org";
+            String filter = "(&(objectClass=organizationalrole)(roleoccupant=uid=" + emailAddress + ",ou=" + userType + ",dc=openmicroscopy,dc=org))";
 
             String[] attrIDs = {"*"};
 
@@ -81,7 +89,6 @@ public class RestLoginServiceImpl implements RestLoginService {
             searchControls.setReturningAttributes(attrIDs);
             searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
-            String base = "ou=roles,dc=openmicroscopy,dc=org";
             NamingEnumeration<SearchResult> resultList = ctx.search(base, filter, searchControls);
 
             while (resultList.hasMore()) {
@@ -126,5 +133,36 @@ public class RestLoginServiceImpl implements RestLoginService {
         catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private String getUserType(String emailAddress, Properties env) {
+
+        try {
+            InitialDirContext ctx = new InitialDirContext(env);
+
+            String base = "dc=openmicroscopy,dc=org";
+            String filter = "(&(objectClass=inetOrgPerson)(uid=" + emailAddress + "))";
+
+            SearchControls searchControls = new SearchControls();
+            searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+
+            NamingEnumeration<SearchResult> resultList = ctx.search(base, filter, searchControls);
+
+            if (resultList.hasMore()) {
+                SearchResult result = resultList.next();
+                String name = result.getName();
+                ctx.close();
+
+                if (name.matches("(.*)ou=customer(.*)"))
+                    return "customer";
+                if (name.matches("(.*)ou=licensee(.*)"))
+                    return "licensee";
+            }
+
+        } catch (NamingException ex) {
+            ex.printStackTrace();
+        }
+
+        return "";
     }
 }

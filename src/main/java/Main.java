@@ -1,5 +1,7 @@
 
 import communication.rest.JwtManager;
+import communication.rest.RestLoginServiceImpl;
+import communication.rest.api.RestLoginService;
 
 import java.rmi.registry.Registry;
 import java.util.UUID;
@@ -9,6 +11,21 @@ public class Main {
 
     public static void main(String[] args) {
 
+        // customer
+        String emailAddress = "AdelinaLandmann1987@email.test";
+        String pw = "password04";
+
+        // licensee
+        String emailAddress2 = "CharlieBittner2006@email.test";
+        String pw2 = "password03";
+
+        // employee
+        String emailAddress3 = "essiga";
+        String pw3 = "password01";
+
+        RestLoginService restLoginService = new RestLoginServiceImpl();
+        restLoginService.checkCredentials(emailAddress, pw);
+        restLoginService.getRole(emailAddress3);
 //        try {
 //            System.setProperty("java.rmi.server.hostname", "localhost");
 //            //System.setSecurityManager(new SecurityManager());
