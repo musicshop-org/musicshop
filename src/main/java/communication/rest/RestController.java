@@ -39,11 +39,10 @@ public class RestController {
         String emailAddress = userData.getEmailAddress();
         String password = userData.getPassword();
 
-        // TODO: validate over LDAP
-//        if (restLoginServiceImpl.checkCredentials(username, password))
+        if (restLoginServiceImpl.checkCredentials(emailAddress, password))
             return JwtManager.createJWT(emailAddress, 900000);
 
-//        return "";
+        return "";
     }
 
 

@@ -11,21 +11,23 @@ public class Main {
 
     public static void main(String[] args) {
 
-        // customer
-        String emailAddress = "AdelinaLandmann1987@email.test";
-        String pw = "password04";
+//        // customer
+//        String emailAddress = "AdelinaLandmann1987@email.test";
+//        String pw = "password04";
+//
+//        // licensee
+//        String emailAddress2 = "CharlieBittner2006@email.test";
+//        String pw2 = "password03";
+//
+//        // employee
+//        String emailAddress3 = "essiga";
+//        String pw3 = "password01";
+//
+//        RestLoginService restLoginService = new RestLoginServiceImpl();
+//        restLoginService.checkCredentials(emailAddress, pw);
+//        restLoginService.getRole(emailAddress3);
 
-        // licensee
-        String emailAddress2 = "CharlieBittner2006@email.test";
-        String pw2 = "password03";
 
-        // employee
-        String emailAddress3 = "essiga";
-        String pw3 = "password01";
-
-        RestLoginService restLoginService = new RestLoginServiceImpl();
-        restLoginService.checkCredentials(emailAddress, pw);
-        restLoginService.getRole(emailAddress3);
 //        try {
 //            System.setProperty("java.rmi.server.hostname", "localhost");
 //            //System.setSecurityManager(new SecurityManager());
@@ -41,22 +43,28 @@ public class Main {
 //            e.printStackTrace();
 //        }
 
-//        // create JWT
-//        String username = "Test_Customer";
-//        long expiration = 900000;
-//        String jwtToken = JwtManager.createJWT(username, expiration);
-//
-//        System.out.println("Generated_Token:" + jwtToken);
-//
-//        System.out.println(JwtManager.getId(jwtToken));
-//        System.out.println(JwtManager.getIssuedAt(jwtToken));
-//        System.out.println(JwtManager.getExpiration(jwtToken));
-//        System.out.println(JwtManager.getIssuer(jwtToken));
-//        System.out.println(JwtManager.getUsername(jwtToken));
-//
-//
-//
-//        // decode JWT
-//        System.out.println(JwtManager.decodeJWT(jwtToken));
+        // create JWT
+        String emailAddress = "AdelinaLandmann1987@email.test";
+        String pw = "password04";
+
+        String emailAddress2 = "CharlieBittner2006@email.test";
+        String pw2 = "password03";
+
+        String username = "Test_Customer";
+
+        long expiration = 900000;
+        String jwtToken = JwtManager.createJWT(emailAddress2, expiration);
+
+        System.out.println("Generated_Token:" + jwtToken);
+
+        System.out.println(JwtManager.getId(jwtToken));
+        System.out.println(JwtManager.getIssuedAt(jwtToken));
+        System.out.println(JwtManager.getExpiration(jwtToken));
+        System.out.println(JwtManager.getIssuer(jwtToken));
+        System.out.println(JwtManager.getEmailAddress(jwtToken));
+        System.out.println(JwtManager.getRoles(jwtToken));
+
+        // decode JWT
+        System.out.println(JwtManager.decodeJWT(jwtToken));
     }
 }
