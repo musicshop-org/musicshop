@@ -7,6 +7,7 @@ import sharedrmi.domain.valueobjects.Role;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -65,7 +66,14 @@ public class JwtManager {
     }
 
     public static List<Role> getRoles(String jwt) {
-        return getClaims(jwt).get("roles", List.class);
+        List<String> rolesString = getClaims(jwt).get("roles", List.class);
+        List<Role> roles = new LinkedList<>();
+
+        for (String role : rolesString) {
+            roles.add(Role.valueOf(role));
+        }
+
+        return roles;
     }
 
     public static Date getExpiration(String jwt) {
@@ -76,7 +84,7 @@ public class JwtManager {
         return getClaims(jwt);
     }
 
-    public static boolean validateJwt(String jwt) {
+    public static boolean isValidToken(String jwt) {
         try {
             decodeJwt(jwt);
         }

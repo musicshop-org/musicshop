@@ -44,9 +44,9 @@ public class Main {
 //        }
 
             String jwt = JwtManager.createJWT("Test", 900000);
-            boolean notOkay = JwtManager.validateJwt("abc");
-            boolean notOkay2 = JwtManager.validateJwt("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
-            boolean okay = JwtManager.validateJwt(jwt);
+            boolean notOkay = JwtManager.isValidToken("abc");
+            boolean notOkay2 = JwtManager.isValidToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
+            boolean okay = JwtManager.isValidToken(jwt);
 
             System.out.println(notOkay);
             System.out.println(notOkay2);

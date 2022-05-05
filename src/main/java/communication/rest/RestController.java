@@ -7,9 +7,11 @@ import sharedrmi.application.api.ShoppingCartService;
 import sharedrmi.application.dto.AlbumDTO;
 import sharedrmi.application.dto.ShoppingCartDTO;
 import sharedrmi.application.dto.UserDataDTO;
+import sharedrmi.domain.valueobjects.Role;
 
 import javax.naming.NoPermissionException;
 import javax.ws.rs.*;
+import java.util.Collections;
 import java.util.List;
 
 @Path("")
@@ -50,9 +52,11 @@ public class RestController {
     @Path("/albums/{songTitle}")
     @Produces("application/json")
     public List<AlbumDTO> findAlbumsBySongTitle (@PathParam("songTitle") String songTitle, @HeaderParam("Authorization") String jwt_Token) {
-        System.out.println(jwt_Token);
-        System.out.println(JwtManager.decodeJwt(jwt_Token));
-        return productService.findAlbumsBySongTitle(songTitle);
+
+        if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token))
+            return productService.findAlbumsBySongTitle(songTitle);
+
+        return Collections.emptyList();
     }
 
 
@@ -60,48 +64,47 @@ public class RestController {
     @Path("/albums/addToCart")
     @Consumes("application/json")
     @Produces("text/plain")
-    public boolean addToCart(AlbumDTO album, @HeaderParam("Authorization") String jwt_Token) {
+    public boolean addToCart(AlbumDTO album, @HeaderParam("Authorization") String jwt_Token) throws NoPermissionException {
 
-        System.out.println(jwt_Token);
-        System.out.println(JwtManager.decodeJwt(jwt_Token));
-
-        try {
+        if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
             shoppingCartService.addProductToCart(album, album.getQuantityToAddToCart());
-        } catch (NoPermissionException e) {
-            e.printStackTrace();
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
 
     @GET
     @Path("/shoppingCart/display")
     @Produces("application/json")
-    public ShoppingCartDTO displayShoppingCart() {
+    public ShoppingCartDTO displayShoppingCart(@HeaderParam("Authorization") String jwt_Token) throws NoPermissionException {
 
-        try {
+        if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
             return shoppingCartService.getCart();
-        } catch (NoPermissionException e) {
-            e.printStackTrace();
-            return null;
         }
+
+        return null;
     }
 
 
     @GET
     @Path("/shoppingCart/clear")
     @Produces("text/plain")
-    public boolean clearShoppingCart() {
+    public boolean clearShoppingCart(@HeaderParam("Authorization") String jwt_Token) throws NoPermissionException {
 
-        try {
+        if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
             shoppingCartService.clearCart();
-        } catch (NoPermissionException e) {
-            e.printStackTrace();
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
+    }
+
+
+    private boolean isCustomerOrLicensee(String jwt_Token) {
+        List<Role> userRoles = JwtManager.getRoles(jwt_Token);
+
+        return userRoles.contains(Role.CUSTOMER) || userRoles.contains(Role.LICENSEE);
     }
 }

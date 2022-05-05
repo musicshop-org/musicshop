@@ -158,7 +158,6 @@ public class RestLoginServiceImpl implements RestLoginService {
                 if (name.matches("(.*)ou=licensee(.*)"))
                     return "licensee";
             }
-
         } catch (NamingException ex) {
             ex.printStackTrace();
         }
