@@ -65,7 +65,18 @@ public class JwtManager {
         return getClaims(jwt).get("email", String.class);
     }
 
+    public static Date getExpiration(String jwt) {
+        return getClaims(jwt).getExpiration();
+    }
+
+    private static Claims getClaims(String jwt) {
+        return Jwts.parser()
+                .setSigningKey(SECRET_KEY)
+                .parseClaimsJws(jwt).getBody();
+    }
+
     public static List<Role> getRoles(String jwt) {
+        @SuppressWarnings("unchecked")
         List<String> rolesString = getClaims(jwt).get("roles", List.class);
         List<Role> roles = new LinkedList<>();
 
@@ -76,28 +87,14 @@ public class JwtManager {
         return roles;
     }
 
-    public static Date getExpiration(String jwt) {
-        return getClaims(jwt).getExpiration();
-    }
-
-    public static Claims decodeJwt(String jwt) {
-        return getClaims(jwt);
-    }
-
     public static boolean isValidToken(String jwt) {
         try {
-            decodeJwt(jwt);
+            getClaims(jwt);
         }
         catch (JwtException e) {
             return false;
         }
 
         return true;
-    }
-
-    private static Claims getClaims(String jwt) {
-        return Jwts.parser()
-                .setSigningKey(SECRET_KEY)
-                .parseClaimsJws(jwt).getBody();
     }
 }
