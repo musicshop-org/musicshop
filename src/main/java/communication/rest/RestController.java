@@ -2,6 +2,7 @@ package communication.rest;
 
 import application.ProductServiceImpl;
 import application.ShoppingCartServiceImpl;
+import communication.rest.api.RestLoginService;
 import sharedrmi.application.api.ProductService;
 import sharedrmi.application.api.ShoppingCartService;
 import sharedrmi.application.dto.AlbumDTO;
@@ -29,12 +30,28 @@ public class RestController {
     @Consumes("application/json")
     @Produces("text/plain")
     public String login(UserDataDTO userData) {
-        RestLoginServiceImpl restLoginServiceImpl = new RestLoginServiceImpl();
+        RestLoginService restLoginService = new RestLoginServiceImpl();
 
         String emailAddress = userData.getEmailAddress();
         String password = userData.getPassword();
 
-        if (restLoginServiceImpl.checkCredentials(emailAddress, password))
+        if (restLoginService.checkCredentials(emailAddress, password) && restLoginService.getRole(emailAddress).contains(Role.LICENSEE))
+            return JwtManager.createJWT(emailAddress, 900000);
+
+        return "";
+    }
+
+    @POST
+    @Path("/loginWeb")
+    @Consumes("application/json")
+    @Produces("text/plain")
+    public String loginWeb(UserDataDTO userData) {
+        RestLoginService restLoginService = new RestLoginServiceImpl();
+
+        String emailAddress = userData.getEmailAddress();
+        String password = userData.getPassword();
+
+        if (restLoginService.checkCredentials(emailAddress, password) && restLoginService.getRole(emailAddress).contains(Role.CUSTOMER))
             return JwtManager.createJWT(emailAddress, 900000);
 
         return "";
