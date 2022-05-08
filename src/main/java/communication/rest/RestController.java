@@ -1,5 +1,6 @@
 package communication.rest;
 
+import application.InvoiceServiceImpl;
 import application.ProductServiceImpl;
 import application.ShoppingCartServiceImpl;
 import communication.rest.api.RestLoginService;
@@ -20,7 +21,6 @@ import sharedrmi.domain.valueobjects.InvoiceId;
 import javax.naming.NoPermissionException;
 import javax.ws.rs.*;
 import java.util.Collections;
-import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -55,6 +55,7 @@ public class RestController {
 
         return "";
     }
+
 
     @POST
     @Path("/loginWeb")
@@ -102,8 +103,6 @@ public class RestController {
         return false;
     }
 
-        return true;
-    }
 
     @POST
     @Path("/albums/buyProducts")
@@ -117,9 +116,9 @@ public class RestController {
             e.printStackTrace();
             return false;
         }
+
         return true;
     }
-
 
 
     @GET
