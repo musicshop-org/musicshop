@@ -3,6 +3,7 @@ package communication.rest;
 import application.InvoiceServiceImpl;
 import application.ProductServiceImpl;
 import application.ShoppingCartServiceImpl;
+import com.fasterxml.jackson.core.JsonParser;
 import communication.rest.api.RestLoginService;
 import sharedrmi.application.api.InvoiceService;
 import sharedrmi.application.api.ProductService;
@@ -22,6 +23,7 @@ import javax.naming.NoPermissionException;
 import javax.ws.rs.*;
 import java.util.Collections;
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
 
 @Path("")
@@ -105,19 +107,24 @@ public class RestController {
 
 
     @POST
-    @Path("/albums/buyProducts")
+    @Path("/shoppingCart/buyProducts")
     @Consumes("application/json")
     @Produces("text/plain")
-    public boolean buyProduct(List <InvoiceLineItemDTO> invoiceLineItemDTO) {
-        InvoiceDTO invoiceDTO = new InvoiceDTO(new InvoiceId(), invoiceLineItemDTO, PaymentMethod.CASH, LocalDate.now());
-        try {
+    public boolean buyProduct(List <InvoiceLineItemDTO> invoiceLineItemDTOs, @HeaderParam("Authorization") String jwt_Token) throws AlbumNotFoundException, NoPermissionException, NotEnoughStockException {
+
+        if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
+            InvoiceDTO invoiceDTO = new InvoiceDTO(
+                    new InvoiceId(),
+                    invoiceLineItemDTOs,
+                    PaymentMethod.CASH,
+                    LocalDate.now()
+            );
+
             invoiceService.createInvoice(invoiceDTO);
-        } catch (NotEnoughStockException | NoPermissionException | AlbumNotFoundException e) {
-            e.printStackTrace();
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
 
