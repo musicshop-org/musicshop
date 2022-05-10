@@ -29,6 +29,23 @@
         </property>
 
         <property name="date" column="date" type="java.time.LocalDate"/>
+
+        <component name="customerData" class="sharedrmi.domain.valueobjects.CustomerData">
+
+            <property name="firstName" column="firstName" type="java.lang.String"/>
+
+            <property name="lastName" column="lastName" type="java.lang.String"/>
+
+            <property name="email" column="email" type="java.lang.String"/>
+
+            <component name="address" class="sharedrmi.domain.valueobjects.Address">
+                <property name="addressCountry" column="addressCountry" type="java.lang.String"/>
+                <property name="addressLocality" column="addressLocality" type="java.lang.String"/>
+                <property name="postalCode" column="postalCode" type="java.lang.String"/>
+                <property name="streetAddress" column="streetAddress" type="java.lang.String"/>
+            </component>
+
+        </component>
     </class>
 
     <class name="domain.InvoiceLineItem" table="tbl_invoiceLineItem">

@@ -64,7 +64,8 @@ public class InvoiceRepositoryTest {
                         new BigDecimal("5.00")
                 )),
                 PaymentMethod.CREDIT_CARD,
-                LocalDate.now()
+                LocalDate.now(),
+                null
         );
 
         // when
