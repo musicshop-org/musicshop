@@ -167,7 +167,7 @@ public class SessionFacadeImpl implements SessionFacade {
     }
 
     @Override
-    public List<CustomerDTO> findCustomersByName(String name) throws NoPermissionException {
+    public List<CustomerDTO> findCustomersByName(String name) throws NoPermissionException, RemoteException {
 
         for (Role role : this.roles)
         {

@@ -1,15 +1,11 @@
+import sharedrmi.application.exceptions.AlbumNotFoundException;
+import sharedrmi.application.exceptions.NotEnoughStockException;
 
-import communication.rest.JwtManager;
-import communication.rest.RestLoginServiceImpl;
-import communication.rest.api.RestLoginService;
-
-import java.rmi.registry.Registry;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
+import javax.naming.NoPermissionException;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws AlbumNotFoundException, NoPermissionException, NotEnoughStockException {
 //        try {
 //            System.setProperty("java.rmi.server.hostname", "localhost");
 //            //System.setSecurityManager(new SecurityManager());
@@ -24,5 +20,27 @@ public class Main {
 //        } catch (RemoteException | MalformedURLException e) {
 //            e.printStackTrace();
 //        }
+
+//        InvoiceService invoiceService = new InvoiceServiceImpl();
+//        invoiceService.createInvoice(
+//                InvoiceDTO.builder()
+//                        .invoiceId(new InvoiceId(666777))
+//                        .invoiceLineItems(List.of(new InvoiceLineItemDTO(MediumType.CD, "Thriller", 1, BigDecimal.TEN, 0)))
+//                        .paymentMethod(PaymentMethod.CASH)
+//                        .date(LocalDate.now())
+//                        .customerData(
+//                                CustomerData.builder()
+//                                        .firstName("Fabian")
+//                                        .lastName("Egartner")
+//                                        .email("fabian.egartner@test.at")
+//                                        .address(Address.builder()
+//                                                .addressCountry("AT")
+//                                                .addressLocality("Lustenau")
+//                                                .postalCode("6890")
+//                                                .streetAddress("Teststrasse")
+//                                                .build())
+//                                        .build())
+//                        .build()
+//                );
     }
 }

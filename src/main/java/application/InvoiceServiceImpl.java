@@ -60,7 +60,8 @@ public class InvoiceServiceImpl implements InvoiceService {
                                 invoiceLineItem.getReturnedQuantity()))
                         .collect(Collectors.toList()),
                 result.get().getPaymentMethod(),
-                result.get().getDate()
+                result.get().getDate(),
+                null
         );
     }
 
@@ -94,7 +95,8 @@ public class InvoiceServiceImpl implements InvoiceService {
                 invoiceDTO.getInvoiceId(),
                 invoiceLineItems,
                 invoiceDTO.getPaymentMethod(),
-                invoiceDTO.getDate()
+                invoiceDTO.getDate(),
+                invoiceDTO.getCustomerData()
         );
 
         for (int i = 0; i < albums.size(); i++) {
