@@ -1,24 +1,22 @@
 package communication.rest;
 
-import application.InvoiceServiceImpl;
 import application.ProductServiceImpl;
 import application.ShoppingCartServiceImpl;
 import communication.rest.api.RestLoginService;
-import sharedrmi.application.api.InvoiceService;
 import sharedrmi.application.api.ProductService;
 import sharedrmi.application.api.ShoppingCartService;
-import sharedrmi.application.dto.*;
+import sharedrmi.application.dto.AlbumDTO;
+import sharedrmi.application.dto.ShoppingCartDTO;
+import sharedrmi.application.dto.UserDataDTO;
 import sharedrmi.application.exceptions.AlbumNotFoundException;
-import sharedrmi.application.exceptions.NotEnoughStockException;
-import sharedrmi.domain.enums.PaymentMethod;
-import sharedrmi.domain.valueobjects.InvoiceId;
 import sharedrmi.domain.valueobjects.Role;
 
 import javax.naming.NoPermissionException;
 import javax.ws.rs.*;
-import java.time.LocalDate;
+import javax.ws.rs.core.Response;
 import java.util.Collections;
 import java.util.List;
+
 
 @Path("")
 public class RestController {
@@ -75,12 +73,28 @@ public class RestController {
     @Produces("application/json")
     public List<AlbumDTO> findAlbumsBySongTitle(@PathParam("songTitle") String songTitle, @HeaderParam("Authorization") String jwt_Token) {
 
-        if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
-            ProductService productService = new ProductServiceImpl();
-            return productService.findAlbumsBySongTitle(songTitle);
+
+        ProductService productService = new ProductServiceImpl();
+        return productService.findAlbumsBySongTitle(songTitle);
+
+    }
+
+
+    @GET
+    @Path("/album/{albumId}")
+    @Produces("application/json")
+    public AlbumDTO findAlbumByAlbumId(@PathParam("albumId") String albumId, @HeaderParam("Authorization") String jwt_Token) {
+
+
+        ProductService productService = new ProductServiceImpl();
+        try {
+            return productService.findAlbumByAlbumId(albumId);
+        } catch (AlbumNotFoundException e) {
+            e.printStackTrace();
         }
 
-        return Collections.emptyList();
+
+        return null;
     }
 
 
