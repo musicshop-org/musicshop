@@ -119,8 +119,8 @@ public class RMIControllerImpl implements RMIController {
     }
 
     @Override
-    public void createInvoice(InvoiceDTO invoiceDTO) throws NoPermissionException, AlbumNotFoundException, NotEnoughStockException {
-        sessionFacade.createInvoice(invoiceDTO);
+    public InvoiceId createInvoice(InvoiceDTO invoiceDTO) throws NoPermissionException, AlbumNotFoundException, NotEnoughStockException {
+        return sessionFacade.createInvoice(invoiceDTO);
     }
 
     @Override

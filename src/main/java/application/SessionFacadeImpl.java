@@ -2,6 +2,7 @@ package application;
 
 import application.api.SessionFacade;
 
+import domain.Invoice;
 import sharedrmi.application.api.*;
 import sharedrmi.application.dto.*;
 import sharedrmi.application.exceptions.AlbumNotFoundException;
@@ -202,13 +203,12 @@ public class SessionFacadeImpl implements SessionFacade {
     }
 
     @Override
-    public void createInvoice(InvoiceDTO invoiceDTO) throws NoPermissionException, AlbumNotFoundException, NotEnoughStockException {
+    public InvoiceId createInvoice(InvoiceDTO invoiceDTO) throws NoPermissionException, AlbumNotFoundException, NotEnoughStockException {
 
         for (Role role : this.roles)
         {
             if (role.equals(Role.SALESPERSON)) {
-                invoiceService.createInvoice(invoiceDTO);
-                return;
+                return invoiceService.createInvoice(invoiceDTO);
             }
         }
 
