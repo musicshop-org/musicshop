@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFacade {
+public class SessionFacadeImpl implements SessionFacade {
 
     private final List<Role> roles;
     private final String username;
@@ -35,7 +35,7 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     private final MessageProducerService messageProducerService = new MessageProducerServiceImpl();
     private final UserService userService = new UserServiceImpl();
 
-    public SessionFacadeImpl(List<Role> roles, String username) throws RemoteException {
+    public SessionFacadeImpl(List<Role> roles, String username) {
         this.roles = roles;
         this.username = username;
 
@@ -45,32 +45,34 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
             customerService = (CustomerService) Naming.lookup("rmi://10.0.40.163/CustomerService");
         } catch (NotBoundException | MalformedURLException e) {
             e.printStackTrace();
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
 
     }
 
     @Override
-    public List<AlbumDTO> findAlbumsBySongTitle(String title) throws RemoteException {
+    public List<AlbumDTO> findAlbumsBySongTitle(String title) {
         return this.productService.findAlbumsBySongTitle(title);
     }
 
     @Override
-    public AlbumDTO findAlbumByAlbumTitleAndMedium(String title, MediumType mediumType) throws RemoteException, AlbumNotFoundException {
+    public AlbumDTO findAlbumByAlbumTitleAndMedium(String title, MediumType mediumType) throws AlbumNotFoundException {
         return this.productService.findAlbumByAlbumTitleAndMedium(title, mediumType);
     }
 
     @Override
-    public List<SongDTO> findSongsByTitle(String title) throws RemoteException {
+    public List<SongDTO> findSongsByTitle(String title) {
         return this.productService.findSongsByTitle(title);
     }
 
     @Override
-    public List<ArtistDTO> findArtistsByName(String name) throws RemoteException {
+    public List<ArtistDTO> findArtistsByName(String name) {
         return this.productService.findArtistsByName(name);
     }
 
     @Override
-    public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) throws RemoteException, NoPermissionException, NotEnoughStockException {
+    public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) throws NoPermissionException, NotEnoughStockException {
         for (Role role : this.roles)
         {
             if (role.equals(Role.SALESPERSON)) {
@@ -83,7 +85,7 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public void increaseStockOfAlbum(String title, MediumType mediumType, int increaseAmount) throws RemoteException, NoPermissionException {
+    public void increaseStockOfAlbum(String title, MediumType mediumType, int increaseAmount) throws NoPermissionException {
         for (Role role : this.roles)
         {
             if (role.equals(Role.SALESPERSON)) {
@@ -96,7 +98,7 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public ShoppingCartDTO getCart() throws RemoteException, NoPermissionException {
+    public ShoppingCartDTO getCart() throws NoPermissionException {
 
         for (Role role : this.roles)
         {
@@ -109,7 +111,7 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public void addProductToCart(AlbumDTO albumDTO, int i) throws RemoteException, NoPermissionException {
+    public void addProductToCart(AlbumDTO albumDTO, int i) throws NoPermissionException {
 
         for (Role role : this.roles)
         {
@@ -123,7 +125,7 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public void changeQuantity(CartLineItemDTO cartLineItemDTO, int i) throws RemoteException, NoPermissionException {
+    public void changeQuantity(CartLineItemDTO cartLineItemDTO, int i) throws NoPermissionException {
 
         for (Role role : this.roles)
         {
@@ -137,7 +139,7 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public void removeProductFromCart(CartLineItemDTO cartLineItemDTO) throws RemoteException, NoPermissionException {
+    public void removeProductFromCart(CartLineItemDTO cartLineItemDTO) throws NoPermissionException {
 
         for (Role role : this.roles)
         {
@@ -151,7 +153,7 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public void clearCart() throws RemoteException, NoPermissionException {
+    public void clearCart() throws NoPermissionException {
 
         for (Role role : this.roles)
         {
@@ -188,7 +190,7 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public InvoiceDTO findInvoiceById(InvoiceId invoiceId) throws RemoteException, NoPermissionException, InvoiceNotFoundException {
+    public InvoiceDTO findInvoiceById(InvoiceId invoiceId) throws NoPermissionException, InvoiceNotFoundException {
         for (Role role : this.roles)
         {
             if (role.equals(Role.SALESPERSON)) {
@@ -200,13 +202,12 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public void createInvoice(InvoiceDTO invoiceDTO) throws RemoteException, NoPermissionException, AlbumNotFoundException, NotEnoughStockException {
+    public InvoiceId createInvoice(InvoiceDTO invoiceDTO) throws NoPermissionException, AlbumNotFoundException, NotEnoughStockException {
 
         for (Role role : this.roles)
         {
             if (role.equals(Role.SALESPERSON)) {
-                invoiceService.createInvoice(invoiceDTO);
-                return;
+                return invoiceService.createInvoice(invoiceDTO);
             }
         }
 
@@ -214,7 +215,7 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws RemoteException, NoPermissionException, InvoiceNotFoundException {
+    public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws NoPermissionException, InvoiceNotFoundException {
 
         for (Role role : this.roles)
         {
@@ -228,7 +229,7 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public void publish(List<String> topics, MessageDTO messageDTO) throws RemoteException, NoPermissionException {
+    public void publish(List<String> topics, MessageDTO messageDTO) throws NoPermissionException {
 
         for (Role role : this.roles)
         {
@@ -242,32 +243,32 @@ public class SessionFacadeImpl extends UnicastRemoteObject implements SessionFac
     }
 
     @Override
-    public List<String> getAllTopics() throws RemoteException {
+    public List<String> getAllTopics() {
         return userService.getAllTopics();
     }
 
     @Override
-    public List<String> getSubscribedTopicsForUser(String username) throws RemoteException {
+    public List<String> getSubscribedTopicsForUser(String username) {
         return userService.getSubscribedTopicsForUser(username);
     }
 
     @Override
-    public void changeLastViewed(String username, LocalDateTime lastViewed) throws UserNotFoundException, RemoteException {
+    public void changeLastViewed(String username, LocalDateTime lastViewed) throws UserNotFoundException {
         userService.changeLastViewed(username, lastViewed);
     }
 
     @Override
-    public LocalDateTime getLastViewedForUser(String username) throws UserNotFoundException, RemoteException {
+    public LocalDateTime getLastViewedForUser(String username) throws UserNotFoundException {
         return userService.getLastViewedForUser(username);
     }
 
     @Override
-    public boolean subscribe(String topic, String username) throws RemoteException {
+    public boolean subscribe(String topic, String username) {
         return userService.subscribe(topic, username);
     }
 
     @Override
-    public boolean unsubscribe(String topic, String username) throws RemoteException {
+    public boolean unsubscribe(String topic, String username) {
         return userService.unsubscribe(topic, username);
     }
 }

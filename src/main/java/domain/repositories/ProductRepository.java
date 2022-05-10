@@ -5,11 +5,11 @@ import domain.Artist;
 import domain.Song;
 import sharedrmi.domain.enums.MediumType;
 
-import java.rmi.RemoteException;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
-public interface ProductRepository {
+public interface ProductRepository extends Serializable {
 
     Set<Album> findAlbumsBySongTitle(String title);
 

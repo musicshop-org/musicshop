@@ -1,7 +1,6 @@
-package application;
+package communication.rest;
 
-import application.api.LoginService;
-import application.api.SessionFacade;
+import communication.rest.api.RestLoginService;
 import sharedrmi.domain.valueobjects.Role;
 
 import javax.naming.Context;
@@ -10,40 +9,15 @@ import javax.naming.NamingException;
 import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
-import javax.security.auth.login.FailedLoginException;
 import java.math.BigInteger;
-import java.nio.file.AccessDeniedException;
-import java.rmi.RemoteException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
-public class LoginServiceImpl implements LoginService {
+public class RestLoginServiceImpl implements RestLoginService {
 
     @Override
-    public SessionFacade login(String username, String password) throws FailedLoginException, AccessDeniedException {
-
-        if (password.equals("PssWrd")) {
-            return new SessionFacadeImpl(List.of(Role.SALESPERSON, Role.OPERATOR), username);
-        }
-
-        if (checkCredentials(username, password)) {
-
-            List<Role> roles = this.getRole(username);
-
-            if (roles.isEmpty()) {
-                throw new AccessDeniedException("access denied - no permission!");
-            }
-
-            return new SessionFacadeImpl(roles, username);
-
-        } else {
-            throw new FailedLoginException("wrong username or password");
-        }
-    }
-
-    @Override
-    public Boolean checkCredentials(String username, String password) {
+    public boolean checkCredentials(String emailAddress, String password) {
         boolean matchingPassword = false;
 
         Properties env = new Properties();
@@ -51,10 +25,15 @@ public class LoginServiceImpl implements LoginService {
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         env.put(Context.PROVIDER_URL, "ldap://10.0.40.162:389");
 
+        String userType = getUserType(emailAddress, env);
+
+        if (userType.isBlank())
+            return false;
+
         try {
             InitialDirContext ctx = new InitialDirContext(env);
 
-            String filter = "(&(objectClass=inetOrgPerson)(uid=" + username + "))";
+            String filter = "(&(objectClass=inetOrgPerson)(uid=" + emailAddress + "))";
 
             String[] attrIDs = {"userpassword"};
 
@@ -62,7 +41,7 @@ public class LoginServiceImpl implements LoginService {
             searchControls.setReturningAttributes(attrIDs);
             searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
-            String base = "ou=employees,dc=openmicroscopy,dc=org";
+            String base = "ou=" + userType + ",dc=openmicroscopy,dc=org";
             NamingEnumeration<SearchResult> resultList = ctx.search(base, filter, searchControls);
 
             while (resultList.hasMore()) {
@@ -70,7 +49,6 @@ public class LoginServiceImpl implements LoginService {
                 String ldapPass = new String((byte[]) result.getAttributes().get("userPassword").get());
                 byte[] ldapDecoded = Base64.getDecoder().decode(ldapPass.split("}")[1]);
                 String ldapHex = String.format("%040x", new BigInteger(1, ldapDecoded));
-
 
                 if (ldapHex.equals(encryptSHA512(password))) {
                     matchingPassword = true;
@@ -86,7 +64,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public List<Role> getRole(String username) {
+    public List<Role> getRole(String emailAddress) {
         List<Role> roles = new LinkedList<>();
 
         Properties env = new Properties();
@@ -94,10 +72,16 @@ public class LoginServiceImpl implements LoginService {
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         env.put(Context.PROVIDER_URL, "ldap://10.0.40.162:389");
 
+        String userType = getUserType(emailAddress, env);
+
+        if (userType.isBlank())
+            return Collections.emptyList();
+
         try {
             InitialDirContext ctx = new InitialDirContext(env);
 
-            String filter = "(&(objectClass=organizationalrole)(roleoccupant=uid=" + username + ",ou=employees,dc=openmicroscopy,dc=org))";
+            String base = "ou=roles,dc=openmicroscopy,dc=org";
+            String filter = "(&(objectClass=organizationalrole)(roleoccupant=uid=" + emailAddress + ",ou=" + userType + ",dc=openmicroscopy,dc=org))";
 
             String[] attrIDs = {"*"};
 
@@ -105,7 +89,6 @@ public class LoginServiceImpl implements LoginService {
             searchControls.setReturningAttributes(attrIDs);
             searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
-            String base = "ou=roles,dc=openmicroscopy,dc=org";
             NamingEnumeration<SearchResult> resultList = ctx.search(base, filter, searchControls);
 
             while (resultList.hasMore()) {
@@ -150,5 +133,35 @@ public class LoginServiceImpl implements LoginService {
         catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private String getUserType(String emailAddress, Properties env) {
+
+        try {
+            InitialDirContext ctx = new InitialDirContext(env);
+
+            String base = "dc=openmicroscopy,dc=org";
+            String filter = "(&(objectClass=inetOrgPerson)(uid=" + emailAddress + "))";
+
+            SearchControls searchControls = new SearchControls();
+            searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+
+            NamingEnumeration<SearchResult> resultList = ctx.search(base, filter, searchControls);
+
+            if (resultList.hasMore()) {
+                SearchResult result = resultList.next();
+                String name = result.getName();
+                ctx.close();
+
+                if (name.matches("(.*)ou=customer(.*)"))
+                    return "customer";
+                if (name.matches("(.*)ou=licensee(.*)"))
+                    return "licensee";
+            }
+        } catch (NamingException ex) {
+            ex.printStackTrace();
+        }
+
+        return "";
     }
 }

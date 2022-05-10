@@ -9,7 +9,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import sharedrmi.application.api.ShoppingCartService;
 import sharedrmi.application.dto.AlbumDTO;
 import sharedrmi.application.dto.CartLineItemDTO;
@@ -77,7 +76,7 @@ public class ShoppingCartServiceTest {
     void given_album_when_addProduct_return_new_entry() throws RemoteException, NoPermissionException {
         //given
         int quantity = 2;
-        AlbumDTO album = new AlbumDTO("TestAlbum", BigDecimal.TEN, 10, MediumType.CD, LocalDate.now(), new AlbumId(), "TestLabel", null);
+        AlbumDTO album = new AlbumDTO("TestAlbum", BigDecimal.TEN, 10, MediumType.CD, LocalDate.now().toString(), new AlbumId(), "TestLabel", null, 0);
 
         //when
         shoppingCartService.addProductToCart(album, quantity);

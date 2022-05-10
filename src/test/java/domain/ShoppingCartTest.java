@@ -1,7 +1,7 @@
 package domain;
 
-import sharedrmi.domain.enums.MediumType;
 import org.junit.jupiter.api.Test;
+import sharedrmi.domain.enums.MediumType;
 
 import java.math.BigDecimal;
 import java.util.UUID;

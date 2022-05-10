@@ -70,7 +70,8 @@ public class InvoiceServiceTest {
                         new BigDecimal("5.00")
                 )),
                 PaymentMethod.CREDIT_CARD,
-                LocalDate.now()
+                LocalDate.now(),
+                null
         );
 
         invoiceService = new InvoiceServiceImpl(invoiceRepository, productRepository);
@@ -137,7 +138,8 @@ public class InvoiceServiceTest {
                         givenInvoice.getInvoiceLineItems().get(0).getReturnedQuantity()
                 )),
                 givenInvoice.getPaymentMethod(),
-                givenInvoice.getDate()
+                givenInvoice.getDate(),
+                null
         );
 
         Mockito.when(productRepository.findAlbumByAlbumTitleAndMedium(
@@ -172,7 +174,8 @@ public class InvoiceServiceTest {
                         givenInvoice.getInvoiceLineItems().get(0).getReturnedQuantity()
                 )),
                 givenInvoice.getPaymentMethod(),
-                givenInvoice.getDate()
+                givenInvoice.getDate(),
+                null
         );
 
         Mockito.when(productRepository.findAlbumByAlbumTitleAndMedium(
@@ -206,7 +209,8 @@ public class InvoiceServiceTest {
                         givenInvoice.getInvoiceLineItems().get(0).getReturnedQuantity()
                 )),
                 givenInvoice.getPaymentMethod(),
-                givenInvoice.getDate()
+                givenInvoice.getDate(),
+                null
         );
 
         Mockito.when(productRepository.findAlbumByAlbumTitleAndMedium(

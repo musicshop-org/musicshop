@@ -1,19 +1,18 @@
 package infrastructure;
 
-import application.InvoiceServiceImpl;
 import domain.Album;
 import domain.Artist;
 import domain.Song;
-
 import domain.repositories.ProductRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-import sharedrmi.application.api.InvoiceService;
 import sharedrmi.domain.enums.MediumType;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ProductRepositoryImpl implements ProductRepository {
 

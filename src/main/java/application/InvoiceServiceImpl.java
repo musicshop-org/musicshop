@@ -24,24 +24,24 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceService {
+public class InvoiceServiceImpl implements InvoiceService {
 
     private final InvoiceRepository invoiceRepository;
     private final ProductRepository productRepository;
 
-    public InvoiceServiceImpl() throws RemoteException {
+    public InvoiceServiceImpl() {
         this.invoiceRepository = new InvoiceRepositoryImpl();
         this.productRepository = new ProductRepositoryImpl();
     }
 
-    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, ProductRepository productRepository) throws RemoteException {
+    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, ProductRepository productRepository) {
         this.invoiceRepository = invoiceRepository;
         this.productRepository = productRepository;
     }
 
     @Transactional
     @Override
-    public InvoiceDTO findInvoiceById(InvoiceId invoiceId) throws RemoteException, InvoiceNotFoundException {
+    public InvoiceDTO findInvoiceById(InvoiceId invoiceId) throws InvoiceNotFoundException {
 
         Optional<Invoice> result = invoiceRepository.findInvoiceById(invoiceId);
 
@@ -60,13 +60,14 @@ public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceSe
                                 invoiceLineItem.getReturnedQuantity()))
                         .collect(Collectors.toList()),
                 result.get().getPaymentMethod(),
-                result.get().getDate()
+                result.get().getDate(),
+                null
         );
     }
 
     @Transactional
     @Override
-    public void createInvoice(InvoiceDTO invoiceDTO) throws RemoteException, NotEnoughStockException, AlbumNotFoundException {
+    public InvoiceId createInvoice(InvoiceDTO invoiceDTO) throws NotEnoughStockException, AlbumNotFoundException {
         List<Album> albums = new LinkedList<>();
         for (InvoiceLineItemDTO invoiceLineItem: invoiceDTO.getInvoiceLineItems()) {
             Album album  = productRepository.findAlbumByAlbumTitleAndMedium(invoiceLineItem.getName(), invoiceLineItem.getMediumType());
@@ -94,7 +95,8 @@ public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceSe
                 invoiceDTO.getInvoiceId(),
                 invoiceLineItems,
                 invoiceDTO.getPaymentMethod(),
-                invoiceDTO.getDate()
+                invoiceDTO.getDate(),
+                invoiceDTO.getCustomerData()
         );
 
         for (int i = 0; i < albums.size(); i++) {
@@ -103,11 +105,12 @@ public class InvoiceServiceImpl extends UnicastRemoteObject implements InvoiceSe
         }
 
         this.invoiceRepository.createInvoice(invoice);
+        return invoiceDTO.getInvoiceId();
     }
 
     @Transactional
     @Override
-    public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws RemoteException, InvoiceNotFoundException {
+    public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws InvoiceNotFoundException {
         Optional<Invoice> invoice = invoiceRepository.findInvoiceById(invoiceId);
 
         if (invoice.isEmpty()) {
