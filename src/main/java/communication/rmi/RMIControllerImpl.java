@@ -109,7 +109,7 @@ public class RMIControllerImpl implements RMIController {
     }
 
     @Override
-    public List<CustomerDTO> findCustomersByName(String name) throws NoPermissionException {
+    public List<CustomerDTO> findCustomersByName(String name) throws NoPermissionException, RemoteException {
         return sessionFacade.findCustomersByName(name);
     }
 
