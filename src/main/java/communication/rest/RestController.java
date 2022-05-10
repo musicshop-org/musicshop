@@ -111,7 +111,8 @@ public class RestController {
                     new InvoiceId(),
                     invoiceLineItemDTOs,
                     PaymentMethod.CASH,
-                    LocalDate.now()
+                    LocalDate.now(),
+                    null
             );
 
             invoiceService.createInvoice(invoiceDTO);
