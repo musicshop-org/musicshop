@@ -21,6 +21,12 @@ import java.util.List;
 @Path("")
 public class RestController {
 
+    private final ProductService productService = new ProductServiceImpl();
+    private final ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl("PythonTestClient");
+    private final InvoiceService invoiceService = new InvoiceServiceImpl();
+
+    public RestController() {}
+
     @GET
     @Produces("text/html")
     public String welcome() {
@@ -43,6 +49,7 @@ public class RestController {
 
         return "";
     }
+
 
     @POST
     @Path("/loginWeb")
@@ -100,6 +107,29 @@ public class RestController {
         if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
             ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(JwtManager.getEmailAddress(jwt_Token));
             shoppingCartService.addProductToCart(album, album.getQuantityToAddToCart());
+            return true;
+        }
+
+        return false;
+    }
+
+
+    @POST
+    @Path("/shoppingCart/buyProducts")
+    @Consumes("application/json")
+    @Produces("text/plain")
+    public boolean buyProduct(List <InvoiceLineItemDTO> invoiceLineItemDTOs, @HeaderParam("Authorization") String jwt_Token) throws AlbumNotFoundException, NoPermissionException, NotEnoughStockException {
+
+        if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
+            InvoiceDTO invoiceDTO = new InvoiceDTO(
+                    new InvoiceId(),
+                    invoiceLineItemDTOs,
+                    PaymentMethod.CASH,
+                    LocalDate.now(),
+                    null
+            );
+
+            invoiceService.createInvoice(invoiceDTO);
             return true;
         }
 

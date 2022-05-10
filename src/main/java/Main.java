@@ -1,15 +1,11 @@
+import sharedrmi.application.exceptions.AlbumNotFoundException;
+import sharedrmi.application.exceptions.NotEnoughStockException;
 
-import communication.rest.JwtManager;
-import communication.rest.RestLoginServiceImpl;
-import communication.rest.api.RestLoginService;
-
-import java.rmi.registry.Registry;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
+import javax.naming.NoPermissionException;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws AlbumNotFoundException, NoPermissionException, NotEnoughStockException {
 //        try {
 //            System.setProperty("java.rmi.server.hostname", "localhost");
 //            //System.setSecurityManager(new SecurityManager());

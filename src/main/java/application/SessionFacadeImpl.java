@@ -172,7 +172,7 @@ public class SessionFacadeImpl implements SessionFacade {
     }
 
     @Override
-    public List<CustomerDTO> findCustomersByName(String name) throws NoPermissionException {
+    public List<CustomerDTO> findCustomersByName(String name) throws NoPermissionException, RemoteException {
 
         for (Role role : this.roles)
         {
@@ -207,13 +207,12 @@ public class SessionFacadeImpl implements SessionFacade {
     }
 
     @Override
-    public void createInvoice(InvoiceDTO invoiceDTO) throws NoPermissionException, AlbumNotFoundException, NotEnoughStockException {
+    public InvoiceId createInvoice(InvoiceDTO invoiceDTO) throws NoPermissionException, AlbumNotFoundException, NotEnoughStockException {
 
         for (Role role : this.roles)
         {
             if (role.equals(Role.SALESPERSON)) {
-                invoiceService.createInvoice(invoiceDTO);
-                return;
+                return invoiceService.createInvoice(invoiceDTO);
             }
         }
 

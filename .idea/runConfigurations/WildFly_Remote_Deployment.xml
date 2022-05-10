@@ -11,7 +11,7 @@
     <server-settings>
       <data>
         <option name="credentialAlias" value="9573e6de-b7be-4849-8806-4251a385225e" />
-        <option name="managementPort" value="9990" />
+        <option name="managementPort" value="9991" />
         <option name="stagingRemotePath" value="" />
         <option name="transportStagingTarget">
           <TransportTarget>
@@ -22,7 +22,7 @@
         <option name="username" value="admin" />
         <username>admin</username>
         <credential-alias>9573e6de-b7be-4849-8806-4251a385225e</credential-alias>
-        <management-port>9990</management-port>
+        <management-port>9991</management-port>
         <transport-target>
           <TransportTarget>
             <option name="id" value="bbcd93d1-78f9-4dda-be9e-6876ae6d8d94" />

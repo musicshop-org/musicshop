@@ -1,29 +1,24 @@
 package communication.rmi;
 
-import application.api.LoginService;
 import application.LoginServiceImpl;
+import application.api.LoginService;
 import application.api.SessionFacade;
-
 import sharedrmi.application.dto.*;
 import sharedrmi.application.exceptions.AlbumNotFoundException;
 import sharedrmi.application.exceptions.InvoiceNotFoundException;
 import sharedrmi.application.exceptions.NotEnoughStockException;
 import sharedrmi.application.exceptions.UserNotFoundException;
 import sharedrmi.communication.rmi.RMIController;
-import sharedrmi.communication.rmi.RMIControllerFactory;
 import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.valueobjects.InvoiceId;
 import sharedrmi.domain.valueobjects.Role;
 
-import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateful;
-import javax.jms.JMSException;
 import javax.naming.NoPermissionException;
 import javax.security.auth.login.FailedLoginException;
 import java.nio.file.AccessDeniedException;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -119,13 +114,13 @@ public class RMIControllerImpl implements RMIController {
     }
 
     @Override
-    public List<CustomerDTO> findCustomersByName(String name) throws NoPermissionException {
+    public List<CustomerDTO> findCustomersByName(String name) throws NoPermissionException, RemoteException {
         return sessionFacade.findCustomersByName(name);
     }
 
     @Override
-    public void createInvoice(InvoiceDTO invoiceDTO) throws NoPermissionException, AlbumNotFoundException, NotEnoughStockException {
-        sessionFacade.createInvoice(invoiceDTO);
+    public InvoiceId createInvoice(InvoiceDTO invoiceDTO) throws NoPermissionException, AlbumNotFoundException, NotEnoughStockException {
+        return sessionFacade.createInvoice(invoiceDTO);
     }
 
     @Override
