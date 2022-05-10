@@ -5,11 +5,12 @@
 
 package sharedrmi.application.dto;
 
-import sharedrmi.domain.enums.MediumType;
-import sharedrmi.domain.valueobjects.AlbumId;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Set;
+import sharedrmi.domain.enums.MediumType;
+import sharedrmi.domain.valueobjects.AlbumId;
 
 public class AlbumDTOString implements Serializable {
 

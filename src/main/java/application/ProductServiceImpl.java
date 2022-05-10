@@ -1,19 +1,24 @@
 package application;
 
-import domain.Album;
 import domain.Artist;
-import domain.Song;
-import domain.repositories.ProductRepository;
-import infrastructure.ProductRepositoryImpl;
 import jakarta.transaction.Transactional;
+
 import sharedrmi.application.api.ProductService;
 import sharedrmi.application.dto.AlbumDTO;
 import sharedrmi.application.dto.ArtistDTO;
 import sharedrmi.application.dto.SongDTO;
+
+import domain.Album;
+import domain.Song;
+
+import domain.repositories.ProductRepository;
+import infrastructure.ProductRepositoryImpl;
 import sharedrmi.application.exceptions.AlbumNotFoundException;
 import sharedrmi.application.exceptions.NotEnoughStockException;
 import sharedrmi.domain.enums.MediumType;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.util.stream.Collectors;
 

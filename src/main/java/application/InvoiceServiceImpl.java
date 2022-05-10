@@ -16,9 +16,12 @@ import sharedrmi.application.exceptions.InvoiceNotFoundException;
 import sharedrmi.application.exceptions.NotEnoughStockException;
 import sharedrmi.domain.valueobjects.InvoiceId;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class InvoiceServiceImpl implements InvoiceService {
@@ -63,7 +66,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Transactional
     @Override
-    public InvoiceId createInvoice(InvoiceDTO invoiceDTO) throws NotEnoughStockException, AlbumNotFoundException {
+    public void createInvoice(InvoiceDTO invoiceDTO) throws NotEnoughStockException, AlbumNotFoundException {
         List<Album> albums = new LinkedList<>();
         for (InvoiceLineItemDTO invoiceLineItem: invoiceDTO.getInvoiceLineItems()) {
             Album album  = productRepository.findAlbumByAlbumTitleAndMedium(invoiceLineItem.getName(), invoiceLineItem.getMediumType());
@@ -100,7 +103,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
 
         this.invoiceRepository.createInvoice(invoice);
-        return invoiceDTO.getInvoiceId();
     }
 
     @Transactional

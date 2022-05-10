@@ -202,12 +202,13 @@ public class SessionFacadeImpl implements SessionFacade {
     }
 
     @Override
-    public InvoiceId createInvoice(InvoiceDTO invoiceDTO) throws NoPermissionException, AlbumNotFoundException, NotEnoughStockException {
+    public void createInvoice(InvoiceDTO invoiceDTO) throws NoPermissionException, AlbumNotFoundException, NotEnoughStockException {
 
         for (Role role : this.roles)
         {
             if (role.equals(Role.SALESPERSON)) {
-                return invoiceService.createInvoice(invoiceDTO);
+                invoiceService.createInvoice(invoiceDTO);
+                return;
             }
         }
 
