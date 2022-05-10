@@ -1,6 +1,5 @@
 package application;
 
-import infrastructure.ProductRepositoryImpl;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import sharedrmi.application.api.MessageProducerService;
 import sharedrmi.application.dto.MessageDTO;

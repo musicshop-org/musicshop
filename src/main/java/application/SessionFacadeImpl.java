@@ -2,7 +2,6 @@ package application;
 
 import application.api.SessionFacade;
 
-import domain.Invoice;
 import sharedrmi.application.api.*;
 import sharedrmi.application.dto.*;
 import sharedrmi.application.exceptions.AlbumNotFoundException;

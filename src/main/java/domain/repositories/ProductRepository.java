@@ -6,7 +6,6 @@ import domain.Song;
 import sharedrmi.domain.enums.MediumType;
 
 import java.io.Serializable;
-import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Set;
 
