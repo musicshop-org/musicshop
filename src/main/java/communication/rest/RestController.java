@@ -1,22 +1,33 @@
 package communication.rest;
 
+import application.InvoiceServiceImpl;
 import application.ProductServiceImpl;
 import application.ShoppingCartServiceImpl;
 import communication.rest.api.RestLoginService;
+import sharedrmi.application.api.InvoiceService;
 import sharedrmi.application.api.ProductService;
 import sharedrmi.application.api.ShoppingCartService;
-import sharedrmi.application.dto.AlbumDTO;
-import sharedrmi.application.dto.ShoppingCartDTO;
-import sharedrmi.application.dto.UserDataDTO;
+import sharedrmi.application.dto.*;
+import sharedrmi.application.exceptions.AlbumNotFoundException;
+import sharedrmi.application.exceptions.NotEnoughStockException;
+import sharedrmi.domain.enums.PaymentMethod;
+import sharedrmi.domain.valueobjects.InvoiceId;
 import sharedrmi.domain.valueobjects.Role;
 
 import javax.naming.NoPermissionException;
 import javax.ws.rs.*;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
 @Path("")
 public class RestController {
+
+    private final ProductService productService = new ProductServiceImpl();
+    private final ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl("PythonTestClient");
+    private final InvoiceService invoiceService = new InvoiceServiceImpl();
+
+    public RestController() {}
 
     @GET
     @Produces("text/html")
@@ -40,6 +51,7 @@ public class RestController {
 
         return "";
     }
+
 
     @POST
     @Path("/loginWeb")
@@ -81,6 +93,29 @@ public class RestController {
         if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
             ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(JwtManager.getEmailAddress(jwt_Token));
             shoppingCartService.addProductToCart(album, album.getQuantityToAddToCart());
+            return true;
+        }
+
+        return false;
+    }
+
+
+    @POST
+    @Path("/shoppingCart/buyProducts")
+    @Consumes("application/json")
+    @Produces("text/plain")
+    public boolean buyProduct(List <InvoiceLineItemDTO> invoiceLineItemDTOs, @HeaderParam("Authorization") String jwt_Token) throws AlbumNotFoundException, NoPermissionException, NotEnoughStockException {
+
+        if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
+            InvoiceDTO invoiceDTO = new InvoiceDTO(
+                    new InvoiceId(),
+                    invoiceLineItemDTOs,
+                    PaymentMethod.CASH,
+                    LocalDate.now(),
+                    null
+            );
+
+            invoiceService.createInvoice(invoiceDTO);
             return true;
         }
 

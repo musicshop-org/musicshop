@@ -8,7 +8,6 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import sharedrmi.domain.valueobjects.InvoiceId;
 
-import java.rmi.RemoteException;
 import java.util.Optional;
 
 public class InvoiceRepositoryImpl implements InvoiceRepository {

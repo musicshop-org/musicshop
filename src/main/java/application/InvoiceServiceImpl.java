@@ -67,7 +67,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Transactional
     @Override
-    public void createInvoice(InvoiceDTO invoiceDTO) throws NotEnoughStockException, AlbumNotFoundException {
+    public InvoiceId createInvoice(InvoiceDTO invoiceDTO) throws NotEnoughStockException, AlbumNotFoundException {
         List<Album> albums = new LinkedList<>();
         for (InvoiceLineItemDTO invoiceLineItem: invoiceDTO.getInvoiceLineItems()) {
             Album album  = productRepository.findAlbumByAlbumTitleAndMedium(invoiceLineItem.getName(), invoiceLineItem.getMediumType());
@@ -105,6 +105,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
 
         this.invoiceRepository.createInvoice(invoice);
+        return invoiceDTO.getInvoiceId();
     }
 
     @Transactional

@@ -1,21 +1,19 @@
 package infrastructure;
 
 import domain.Album;
-
 import domain.Artist;
 import domain.Song;
 import org.junit.jupiter.api.Test;
 import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.valueobjects.AlbumId;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.math.BigDecimal;
-
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ProductRepositoryTest {
 
