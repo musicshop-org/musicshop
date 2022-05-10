@@ -1,7 +1,6 @@
 package application;
 
 import application.api.SessionFacade;
-
 import sharedrmi.application.api.*;
 import sharedrmi.application.dto.*;
 import sharedrmi.application.exceptions.AlbumNotFoundException;
@@ -12,15 +11,12 @@ import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.valueobjects.InvoiceId;
 import sharedrmi.domain.valueobjects.Role;
 
-import javax.jms.JMSException;
 import javax.naming.NoPermissionException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDateTime;
-import java.util.LinkedList;
 import java.util.List;
 
 public class SessionFacadeImpl implements SessionFacade {
@@ -202,13 +198,12 @@ public class SessionFacadeImpl implements SessionFacade {
     }
 
     @Override
-    public void createInvoice(InvoiceDTO invoiceDTO) throws NoPermissionException, AlbumNotFoundException, NotEnoughStockException {
+    public InvoiceId createInvoice(InvoiceDTO invoiceDTO) throws NoPermissionException, AlbumNotFoundException, NotEnoughStockException {
 
         for (Role role : this.roles)
         {
             if (role.equals(Role.SALESPERSON)) {
-                invoiceService.createInvoice(invoiceDTO);
-                return;
+                return invoiceService.createInvoice(invoiceDTO);
             }
         }
 

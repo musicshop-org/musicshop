@@ -4,16 +4,12 @@ import domain.CartLineItem;
 import domain.ShoppingCart;
 import domain.repositories.ShoppingCartRepository;
 import infrastructure.ShoppingCartRepositoryImpl;
-
 import jakarta.transaction.Transactional;
 import sharedrmi.application.api.ShoppingCartService;
 import sharedrmi.application.dto.AlbumDTO;
 import sharedrmi.application.dto.CartLineItemDTO;
 import sharedrmi.application.dto.ShoppingCartDTO;
 
-import javax.naming.NoPermissionException;
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
