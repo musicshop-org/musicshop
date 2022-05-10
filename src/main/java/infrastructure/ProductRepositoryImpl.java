@@ -12,6 +12,7 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import sharedrmi.application.api.InvoiceService;
 import sharedrmi.domain.enums.MediumType;
+import sharedrmi.domain.valueobjects.AlbumId;
 
 import java.util.*;
 
@@ -74,6 +75,16 @@ public class ProductRepositoryImpl implements ProductRepository {
                 .getSingleResultOrNull();
 
         return album;
+    }
+
+    @Override
+    public Optional<Album> findAlbumByAlbumId(String albumId) {
+        Session session = sessionFactory.openSession();
+        Album album = session.createQuery("from Album where albumId = (:albumId)", Album.class)
+                .setParameter("albumId", new AlbumId(albumId))
+                .getSingleResultOrNull();
+
+        return Optional.of(album);
     }
 
     @Override

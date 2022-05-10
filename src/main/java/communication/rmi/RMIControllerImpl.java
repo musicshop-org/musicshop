@@ -64,6 +64,11 @@ public class RMIControllerImpl implements RMIController {
     }
 
     @Override
+    public AlbumDTO findAlbumByAlbumId(String albumId) throws AlbumNotFoundException {
+        return sessionFacade.findAlbumByAlbumId(albumId);
+    }
+
+    @Override
     public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) throws NoPermissionException, NotEnoughStockException {
         sessionFacade.decreaseStockOfAlbum(title, mediumType, decreaseAmount);
     }

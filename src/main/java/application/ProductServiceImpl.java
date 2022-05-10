@@ -16,6 +16,7 @@ import infrastructure.ProductRepositoryImpl;
 import sharedrmi.application.exceptions.AlbumNotFoundException;
 import sharedrmi.application.exceptions.NotEnoughStockException;
 import sharedrmi.domain.enums.MediumType;
+import sharedrmi.domain.valueobjects.AlbumId;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -117,6 +118,47 @@ public class ProductServiceImpl implements ProductService {
                         .collect(Collectors.toSet())
                 )
                 .build();
+    }
+
+    @Transactional
+    @Override
+    public AlbumDTO findAlbumByAlbumId(String albumId) throws AlbumNotFoundException {
+
+        Optional<Album> albumOpt = productRepository.findAlbumByAlbumId(albumId);
+        if(albumOpt.isPresent()) {
+            Album album = albumOpt.get();
+            return AlbumDTO.builder()
+                    .title(album.getTitle())
+                    .price(album.getPrice())
+                    .stock(album.getStock())
+                    .mediumType(album.getMediumType())
+                    .releaseDate(album.getReleaseDate().toString())
+                    .albumId(album.getAlbumId())
+                    .label(album.getLabel())
+                    .songs(album.getSongs()
+                            .stream()
+                            .map(song -> SongDTO.builder()
+                                    .title(song.getTitle())
+                                    .artists(song.getArtists()
+                                            .stream()
+                                            .map(artist -> new ArtistDTO(artist.getName()))
+                                            .collect(Collectors.toList())
+                                    )
+                                    .mediumType(song.getMediumType())
+                                    .price(song.getPrice())
+                                    .releaseDate(song.getReleaseDate().toString())
+                                    .genre(song.getGenre())
+                                    .stock(song.getStock())
+                                    .inAlbum(Collections.emptySet())
+                                    .build()
+                            )
+                            .collect(Collectors.toSet())
+                    )
+                    .build();
+        } else {
+            throw new AlbumNotFoundException("album not found");
+        }
+
     }
 
     @Transactional
