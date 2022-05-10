@@ -3,27 +3,21 @@ package communication.rest;
 import application.InvoiceServiceImpl;
 import application.ProductServiceImpl;
 import application.ShoppingCartServiceImpl;
-import com.fasterxml.jackson.core.JsonParser;
 import communication.rest.api.RestLoginService;
 import sharedrmi.application.api.InvoiceService;
 import sharedrmi.application.api.ProductService;
 import sharedrmi.application.api.ShoppingCartService;
-import sharedrmi.application.dto.AlbumDTO;
-import sharedrmi.application.dto.InvoiceDTO;
-import sharedrmi.application.dto.InvoiceLineItemDTO;
-import sharedrmi.application.dto.ShoppingCartDTO;
-import sharedrmi.application.dto.UserDataDTO;
-import sharedrmi.domain.valueobjects.Role;
+import sharedrmi.application.dto.*;
 import sharedrmi.application.exceptions.AlbumNotFoundException;
 import sharedrmi.application.exceptions.NotEnoughStockException;
 import sharedrmi.domain.enums.PaymentMethod;
 import sharedrmi.domain.valueobjects.InvoiceId;
+import sharedrmi.domain.valueobjects.Role;
 
 import javax.naming.NoPermissionException;
 import javax.ws.rs.*;
-import java.util.Collections;
 import java.time.LocalDate;
-import java.util.LinkedList;
+import java.util.Collections;
 import java.util.List;
 
 @Path("")

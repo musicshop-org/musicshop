@@ -1,7 +1,7 @@
 package domain;
 
-import sharedrmi.domain.enums.MediumType;
 import lombok.Getter;
+import sharedrmi.domain.enums.MediumType;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
