@@ -13,6 +13,7 @@ import sharedrmi.domain.valueobjects.AlbumId;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class ProductRepositoryImpl implements ProductRepository {

@@ -1,19 +1,23 @@
 package communication.rest;
 
+import application.InvoiceServiceImpl;
 import application.ProductServiceImpl;
 import application.ShoppingCartServiceImpl;
 import communication.rest.api.RestLoginService;
+import sharedrmi.application.api.InvoiceService;
 import sharedrmi.application.api.ProductService;
 import sharedrmi.application.api.ShoppingCartService;
-import sharedrmi.application.dto.AlbumDTO;
-import sharedrmi.application.dto.ShoppingCartDTO;
-import sharedrmi.application.dto.UserDataDTO;
+import sharedrmi.application.dto.*;
 import sharedrmi.application.exceptions.AlbumNotFoundException;
+import sharedrmi.application.exceptions.NotEnoughStockException;
+import sharedrmi.domain.enums.PaymentMethod;
+import sharedrmi.domain.valueobjects.InvoiceId;
 import sharedrmi.domain.valueobjects.Role;
 
 import javax.naming.NoPermissionException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
@@ -118,7 +122,7 @@ public class RestController {
     @Path("/shoppingCart/buyProducts")
     @Consumes("application/json")
     @Produces("text/plain")
-    public boolean buyProduct(List <InvoiceLineItemDTO> invoiceLineItemDTOs, @HeaderParam("Authorization") String jwt_Token) throws AlbumNotFoundException, NoPermissionException, NotEnoughStockException {
+    public boolean buyProduct(List <InvoiceLineItemDTO> invoiceLineItemDTOs, @HeaderParam("Authorization") String jwt_Token) throws AlbumNotFoundException, NoPermissionException, NotEnoughStockException, NotEnoughStockException {
 
         if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
             InvoiceDTO invoiceDTO = new InvoiceDTO(
