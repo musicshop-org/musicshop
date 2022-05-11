@@ -9,9 +9,11 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import sharedrmi.domain.enums.MediumType;
+import sharedrmi.domain.valueobjects.AlbumId;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class ProductRepositoryImpl implements ProductRepository {
@@ -73,6 +75,16 @@ public class ProductRepositoryImpl implements ProductRepository {
                 .getSingleResultOrNull();
 
         return album;
+    }
+
+    @Override
+    public Optional<Album> findAlbumByAlbumId(String albumId) {
+        Session session = sessionFactory.openSession();
+        Album album = session.createQuery("from Album where albumId = (:albumId)", Album.class)
+                .setParameter("albumId", new AlbumId(albumId))
+                .getSingleResultOrNull();
+
+        return Optional.of(album);
     }
 
     @Override

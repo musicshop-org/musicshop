@@ -16,9 +16,11 @@ import sharedrmi.domain.valueobjects.Role;
 
 import javax.naming.NoPermissionException;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+
 
 @Path("")
 public class RestController {
@@ -75,12 +77,28 @@ public class RestController {
     @Produces("application/json")
     public List<AlbumDTO> findAlbumsBySongTitle(@PathParam("songTitle") String songTitle, @HeaderParam("Authorization") String jwt_Token) {
 
-        if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
-            ProductService productService = new ProductServiceImpl();
-            return productService.findAlbumsBySongTitle(songTitle);
+
+        ProductService productService = new ProductServiceImpl();
+        return productService.findAlbumsBySongTitle(songTitle);
+
+    }
+
+
+    @GET
+    @Path("/album/{albumId}")
+    @Produces("application/json")
+    public AlbumDTO findAlbumByAlbumId(@PathParam("albumId") String albumId, @HeaderParam("Authorization") String jwt_Token) {
+
+
+        ProductService productService = new ProductServiceImpl();
+        try {
+            return productService.findAlbumByAlbumId(albumId);
+        } catch (AlbumNotFoundException e) {
+            e.printStackTrace();
         }
 
-        return Collections.emptyList();
+
+        return null;
     }
 
 
@@ -104,14 +122,15 @@ public class RestController {
     @Path("/shoppingCart/buyProducts")
     @Consumes("application/json")
     @Produces("text/plain")
-    public boolean buyProduct(List <InvoiceLineItemDTO> invoiceLineItemDTOs, @HeaderParam("Authorization") String jwt_Token) throws AlbumNotFoundException, NoPermissionException, NotEnoughStockException {
+    public boolean buyProduct(List <InvoiceLineItemDTO> invoiceLineItemDTOs, @HeaderParam("Authorization") String jwt_Token) throws AlbumNotFoundException, NoPermissionException, NotEnoughStockException, NotEnoughStockException {
 
         if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
             InvoiceDTO invoiceDTO = new InvoiceDTO(
                     new InvoiceId(),
                     invoiceLineItemDTOs,
                     PaymentMethod.CASH,
-                    LocalDate.now()
+                    LocalDate.now(),
+                    null
             );
 
             invoiceService.createInvoice(invoiceDTO);

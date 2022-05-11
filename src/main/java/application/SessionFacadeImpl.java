@@ -72,6 +72,11 @@ public class SessionFacadeImpl implements SessionFacade {
     }
 
     @Override
+    public AlbumDTO findAlbumByAlbumId(String albumId) throws AlbumNotFoundException {
+        return this.productService.findAlbumByAlbumId(albumId);
+    }
+
+    @Override
     public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) throws NoPermissionException, NotEnoughStockException {
         for (Role role : this.roles)
         {
