@@ -4,6 +4,12 @@ import application.InvoiceServiceImpl;
 import application.ProductServiceImpl;
 import application.ShoppingCartServiceImpl;
 import communication.rest.api.RestLoginService;
+
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.servers.Server;
+
 import sharedrmi.application.api.InvoiceService;
 import sharedrmi.application.api.ProductService;
 import sharedrmi.application.api.ShoppingCartService;
@@ -16,12 +22,21 @@ import sharedrmi.domain.valueobjects.Role;
 
 import javax.naming.NoPermissionException;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 
-
+@OpenAPIDefinition(
+        info = @Info(
+                title = "OpenAPIDefinition",
+                description = "Music shop REST API"
+        ),
+        servers = {
+                @Server(
+                        url = "https://localhost:8080/musicshop-1.0",
+                        description = "Music shop REST"
+                )
+        }
+)
 @Path("")
 public class RestController {
 
@@ -29,7 +44,8 @@ public class RestController {
     private final ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl("PythonTestClient");
     private final InvoiceService invoiceService = new InvoiceServiceImpl();
 
-    public RestController() {}
+    public RestController() {
+    }
 
     @GET
     @Produces("text/html")
@@ -42,6 +58,8 @@ public class RestController {
     @Path("/login")
     @Consumes("application/json")
     @Produces("text/plain")
+    @ApiResponse(responseCode = "200", description = "Login ok", useReturnTypeSchema = true)
+    @ApiResponse(responseCode = "404", description = "Method name not found", useReturnTypeSchema = true)
     public String login(UserDataDTO userData) {
         RestLoginService restLoginService = new RestLoginServiceImpl();
 
@@ -59,6 +77,8 @@ public class RestController {
     @Path("/loginWeb")
     @Consumes("application/json")
     @Produces("text/plain")
+    @ApiResponse(responseCode = "200", description = "Login successful", useReturnTypeSchema = true)
+    @ApiResponse(responseCode = "404", description = "Method name not found", useReturnTypeSchema = true)
     public String loginWeb(UserDataDTO userData) {
         RestLoginService restLoginService = new RestLoginServiceImpl();
 
@@ -75,6 +95,8 @@ public class RestController {
     @GET
     @Path("/albums/{songTitle}")
     @Produces("application/json")
+    @ApiResponse(responseCode = "200", description = "Album found", useReturnTypeSchema = true)
+    @ApiResponse(responseCode = "404", description = "Method name not found", useReturnTypeSchema = true)
     public List<AlbumDTO> findAlbumsBySongTitle(@PathParam("songTitle") String songTitle, @HeaderParam("Authorization") String jwt_Token) {
 
 
@@ -87,6 +109,8 @@ public class RestController {
     @GET
     @Path("/album/{albumId}")
     @Produces("application/json")
+    @ApiResponse(responseCode = "200", description = "Album found", useReturnTypeSchema = true)
+    @ApiResponse(responseCode = "404", description = "Method name not found", useReturnTypeSchema = true)
     public AlbumDTO findAlbumByAlbumId(@PathParam("albumId") String albumId, @HeaderParam("Authorization") String jwt_Token) {
 
 
@@ -106,6 +130,8 @@ public class RestController {
     @Path("/albums/addToCart")
     @Consumes("application/json")
     @Produces("text/plain")
+    @ApiResponse(responseCode = "200", description = "Add to cart successful", useReturnTypeSchema = true)
+    @ApiResponse(responseCode = "404", description = "Method name not found", useReturnTypeSchema = true)
     public boolean addToCart(AlbumDTO album, @HeaderParam("Authorization") String jwt_Token) throws NoPermissionException {
 
         if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
@@ -122,7 +148,9 @@ public class RestController {
     @Path("/shoppingCart/buyProducts")
     @Consumes("application/json")
     @Produces("text/plain")
-    public boolean buyProduct(List <InvoiceLineItemDTO> invoiceLineItemDTOs, @HeaderParam("Authorization") String jwt_Token) throws AlbumNotFoundException, NoPermissionException, NotEnoughStockException, NotEnoughStockException {
+    @ApiResponse(responseCode = "200", description = "Buy product successful", useReturnTypeSchema = true)
+    @ApiResponse(responseCode = "404", description = "Method name not found", useReturnTypeSchema = true)
+    public boolean buyProduct(List<InvoiceLineItemDTO> invoiceLineItemDTOs, @HeaderParam("Authorization") String jwt_Token) throws AlbumNotFoundException, NoPermissionException, NotEnoughStockException, NotEnoughStockException {
 
         if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
             InvoiceDTO invoiceDTO = new InvoiceDTO(
@@ -144,6 +172,8 @@ public class RestController {
     @GET
     @Path("/shoppingCart/display")
     @Produces("application/json")
+    @ApiResponse(responseCode = "200", description = "Success", useReturnTypeSchema = true)
+    @ApiResponse(responseCode = "404", description = "Method name not found", useReturnTypeSchema = true)
     public ShoppingCartDTO displayShoppingCart(@HeaderParam("Authorization") String jwt_Token) throws NoPermissionException {
 
         if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
@@ -158,6 +188,8 @@ public class RestController {
     @GET
     @Path("/shoppingCart/clear")
     @Produces("text/plain")
+    @ApiResponse(responseCode = "200", description = "Success", useReturnTypeSchema = true)
+    @ApiResponse(responseCode = "404", description = "Method name not found", useReturnTypeSchema = true)
     public boolean clearShoppingCart(@HeaderParam("Authorization") String jwt_Token) throws NoPermissionException {
 
         if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
