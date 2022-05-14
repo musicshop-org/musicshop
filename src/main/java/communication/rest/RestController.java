@@ -29,7 +29,8 @@ public class RestController {
     private final ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl("PythonTestClient");
     private final InvoiceService invoiceService = new InvoiceServiceImpl();
 
-    public RestController() {}
+    public RestController() {
+    }
 
     @GET
     @Produces("text/html")
@@ -106,15 +107,12 @@ public class RestController {
     @Path("/albums/addToCart")
     @Consumes("application/json")
     @Produces("text/plain")
-    public boolean addToCart(AlbumDTO album, @HeaderParam("Authorization") String jwt_Token) throws NoPermissionException {
+    public boolean addToCart(AlbumDTO album, String UUID) throws NoPermissionException {
 
-        if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
-            ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(JwtManager.getEmailAddress(jwt_Token));
-            shoppingCartService.addProductToCart(album, album.getQuantityToAddToCart());
-            return true;
-        }
+        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+        shoppingCartService.addProductToCart(album, album.getQuantityToAddToCart());
+        return true;
 
-        return false;
     }
 
 
@@ -122,7 +120,7 @@ public class RestController {
     @Path("/shoppingCart/buyProducts")
     @Consumes("application/json")
     @Produces("text/plain")
-    public boolean buyProduct(List <InvoiceLineItemDTO> invoiceLineItemDTOs, @HeaderParam("Authorization") String jwt_Token) throws AlbumNotFoundException, NoPermissionException, NotEnoughStockException, NotEnoughStockException {
+    public boolean buyProduct(List<InvoiceLineItemDTO> invoiceLineItemDTOs, @HeaderParam("Authorization") String jwt_Token) throws AlbumNotFoundException, NoPermissionException, NotEnoughStockException, NotEnoughStockException {
 
         if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
             InvoiceDTO invoiceDTO = new InvoiceDTO(
