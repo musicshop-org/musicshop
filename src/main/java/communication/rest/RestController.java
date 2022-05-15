@@ -107,10 +107,27 @@ public class RestController {
     @Path("/albums/addToCart")
     @Consumes("application/json")
     @Produces("text/plain")
-    public boolean addToCart(AlbumDTO album, String UUID) throws NoPermissionException {
+    public boolean addToCart(AlbumDTO album, @HeaderParam("CartUUID") String UUID) throws NoPermissionException {
 
         ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
         shoppingCartService.addProductToCart(album, album.getQuantityToAddToCart());
+        System.out.println(album.getTitle());
+        return true;
+
+    }
+
+    @POST
+    @Path("/albums/addSongsToCart")
+    @Consumes("application/json")
+    @Produces("text/plain")
+    public boolean addSongsToCart(List<SongDTO> songs, @HeaderParam("CartUUID") String UUID) throws NoPermissionException {
+
+        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+        shoppingCartService.addSongsToCart(songs);
+
+        for (SongDTO song : songs) {
+            System.out.println(song.getTitle());
+        }
         return true;
 
     }

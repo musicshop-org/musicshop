@@ -130,6 +130,11 @@ public class SessionFacadeImpl implements SessionFacade {
     }
 
     @Override
+    public void addSongsToCart(List<SongDTO> songs) throws NoPermissionException {
+        shoppingCartService.addSongsToCart(songs);
+    }
+
+    @Override
     public void changeQuantity(CartLineItemDTO cartLineItemDTO, int i) throws NoPermissionException {
 
         for (Role role : this.roles)

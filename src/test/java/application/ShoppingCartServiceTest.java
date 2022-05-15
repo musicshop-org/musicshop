@@ -10,9 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sharedrmi.application.api.ShoppingCartService;
-import sharedrmi.application.dto.AlbumDTO;
-import sharedrmi.application.dto.CartLineItemDTO;
-import sharedrmi.application.dto.ShoppingCartDTO;
+import sharedrmi.application.dto.*;
 import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.valueobjects.AlbumId;
 
@@ -20,10 +18,7 @@ import javax.naming.NoPermissionException;
 import java.math.BigDecimal;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -89,6 +84,35 @@ public class ShoppingCartServiceTest {
                 () -> assertEquals(quantity, cartDTO.getCartLineItems().get(2).getQuantity()),
                 () -> assertEquals(album.getPrice(), cartDTO.getCartLineItems().get(2).getPrice()),
                 () -> assertEquals(album.getMediumType(), cartDTO.getCartLineItems().get(2).getMediumType())
+        );
+    }
+
+    @Test
+    void given_songs_when_addSongs_return_new_entry() throws RemoteException, NoPermissionException {
+        //given
+        List<SongDTO> songs = new LinkedList<>();
+        songs.add(SongDTO.builder()
+                .title("TestSong1")
+                .price(BigDecimal.TEN)
+                .stock(-1)
+                .mediumType(MediumType.DIGITAL)
+                .releaseDate(LocalDate.now().toString())
+                .genre("TestGenre")
+                .inAlbum(Collections.EMPTY_SET)
+                .artists(new LinkedList<>())
+                .build());
+
+        //when
+        shoppingCartService.addSongsToCart(songs);
+
+        //then
+        ShoppingCartDTO cartDTO = shoppingCartService.getCart();
+        assertEquals(givenCart.getOwnerId(), cartDTO.getOwnerId());
+        assertAll("LineItem 3",
+                () -> assertEquals(songs.get(0).getTitle(), cartDTO.getCartLineItems().get(2).getName()),
+                () -> assertEquals(1, cartDTO.getCartLineItems().get(2).getQuantity()),
+                () -> assertEquals(songs.get(0).getPrice(), cartDTO.getCartLineItems().get(2).getPrice()),
+                () -> assertEquals(songs.get(0).getMediumType(), cartDTO.getCartLineItems().get(2).getMediumType())
         );
     }
 

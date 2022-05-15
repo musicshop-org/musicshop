@@ -84,6 +84,11 @@ public class RMIControllerImpl implements RMIController {
     }
 
     @Override
+    public void addSongsToCart(List<SongDTO> songs) throws NoPermissionException {
+        sessionFacade.addSongsToCart(songs);
+    }
+
+    @Override
     public void changeQuantity(CartLineItemDTO cartLineItemDTO, int i) throws NoPermissionException {
         sessionFacade.changeQuantity(cartLineItemDTO, i);
     }

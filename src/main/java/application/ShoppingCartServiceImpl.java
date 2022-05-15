@@ -10,6 +10,7 @@ import sharedrmi.application.api.ShoppingCartService;
 import sharedrmi.application.dto.AlbumDTO;
 import sharedrmi.application.dto.CartLineItemDTO;
 import sharedrmi.application.dto.ShoppingCartDTO;
+import sharedrmi.application.dto.SongDTO;
 
 import javax.naming.NoPermissionException;
 import java.rmi.RemoteException;
@@ -80,6 +81,23 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         );
 
         this.shoppingCart.addLineItem(cartLineItem);
+    }
+
+    @Transactional
+    @Override
+    public void addSongsToCart(List<SongDTO> songs) {
+
+        for (SongDTO song : songs) {
+            CartLineItem cartLineItem = new CartLineItem(
+                    song.getMediumType(),
+                    song.getTitle(), 1,
+                    song.getPrice(),
+                    song.getStock()
+            );
+
+            this.shoppingCart.addLineItem(cartLineItem);
+
+        }
     }
 
     @Transactional
