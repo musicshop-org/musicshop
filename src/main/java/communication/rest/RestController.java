@@ -81,7 +81,7 @@ public class RestController {
 
 
         ProductService productService = new ProductServiceImpl();
-        return productService.findAlbumsBySongTitle(songTitle);
+        return productService.findAlbumsBySongTitleDigital(songTitle);
 
     }
 

@@ -45,37 +45,86 @@ public class ProductServiceImpl implements ProductService {
         List<AlbumDTO> albumDTOs = new LinkedList<>();
 
         Set<Album> albums = productRepository.findAlbumsBySongTitle(title);
+        List<MediumType> acceptedMediums = List.of(MediumType.CD,MediumType.VINYL);
 
         for (Album album : albums) {
-            Set<SongDTO> songDTOs = new HashSet<>();
+            if (acceptedMediums.contains(album.getMediumType())){
+                Set<SongDTO> songDTOs = new HashSet<>();
 
-            for (Song song : album.getSongs()) {
-                songDTOs.add(new SongDTO(
-                        song.getTitle(),
-                        song.getPrice(),
-                        song.getStock(),
-                        song.getMediumType(),
-                        song.getReleaseDate().toString(),
-                        song.getGenre(),
-                        song.getArtists()
-                                .stream()
-                                .map(artist -> new ArtistDTO(artist.getName()))
-                                .collect(Collectors.toList()),
-                        Collections.emptySet()
+                for (Song song : album.getSongs()) {
+                    songDTOs.add(new SongDTO(
+                            song.getTitle(),
+                            song.getPrice(),
+                            song.getStock(),
+                            song.getMediumType(),
+                            song.getReleaseDate().toString(),
+                            song.getGenre(),
+                            song.getArtists()
+                                    .stream()
+                                    .map(artist -> new ArtistDTO(artist.getName()))
+                                    .collect(Collectors.toList()),
+                            Collections.emptySet()
+                    ));
+                }
+
+                albumDTOs.add(new AlbumDTO(
+                        album.getTitle(),
+                        album.getPrice(),
+                        album.getStock(),
+                        album.getMediumType(),
+                        album.getReleaseDate().toString(),
+                        album.getAlbumId(),
+                        album.getLabel(),
+                        songDTOs,
+                        0
                 ));
             }
+        }
 
-            albumDTOs.add(new AlbumDTO(
-                    album.getTitle(),
-                    album.getPrice(),
-                    album.getStock(),
-                    album.getMediumType(),
-                    album.getReleaseDate().toString(),
-                    album.getAlbumId(),
-                    album.getLabel(),
-                    songDTOs,
-                    0
-            ));
+        return albumDTOs;
+    }
+
+    @Transactional
+    @Override
+    public List<AlbumDTO> findAlbumsBySongTitleDigital(String title) {
+
+        List<AlbumDTO> albumDTOs = new LinkedList<>();
+
+        Set<Album> albums = productRepository.findAlbumsBySongTitle(title);
+        List<MediumType> acceptedMediums = List.of(MediumType.DIGITAL);
+
+        for (Album album : albums) {
+            if (acceptedMediums.contains(album.getMediumType())){
+                Set<SongDTO> songDTOs = new HashSet<>();
+
+                for (Song song : album.getSongs()) {
+                    songDTOs.add(new SongDTO(
+                            song.getTitle(),
+                            song.getPrice(),
+                            song.getStock(),
+                            song.getMediumType(),
+                            song.getReleaseDate().toString(),
+                            song.getGenre(),
+                            song.getArtists()
+                                    .stream()
+                                    .map(artist -> new ArtistDTO(artist.getName()))
+                                    .collect(Collectors.toList()),
+                            Collections.emptySet()
+                    ));
+                }
+
+                albumDTOs.add(new AlbumDTO(
+                        album.getTitle(),
+                        album.getPrice(),
+                        album.getStock(),
+                        album.getMediumType(),
+                        album.getReleaseDate().toString(),
+                        album.getAlbumId(),
+                        album.getLabel(),
+                        songDTOs,
+                        0
+                ));
+            }
         }
 
         return albumDTOs;
