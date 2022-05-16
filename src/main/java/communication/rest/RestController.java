@@ -111,7 +111,6 @@ public class RestController {
 
         ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
         shoppingCartService.addProductToCart(album, album.getQuantityToAddToCart());
-        System.out.println(album.getTitle());
         return true;
 
     }
