@@ -37,8 +37,8 @@ public class ShoppingCartServiceTest {
         String ownerId = UUID.randomUUID().toString();
 
         List<CartLineItem> lineItems = new LinkedList<>();
-        lineItems.add(new CartLineItem(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18), 5));
-        lineItems.add(new CartLineItem(MediumType.CD, "BAM BAM", 20, BigDecimal.valueOf(36), 5));
+        lineItems.add(new CartLineItem(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18), 5, ""));
+        lineItems.add(new CartLineItem(MediumType.CD, "BAM BAM", 20, BigDecimal.valueOf(36), 5, ""));
 
         givenCart = new ShoppingCart(ownerId, lineItems);
 
@@ -98,7 +98,7 @@ public class ShoppingCartServiceTest {
                 .mediumType(MediumType.DIGITAL)
                 .releaseDate(LocalDate.now().toString())
                 .genre("TestGenre")
-                .inAlbum(Collections.EMPTY_SET)
+                .inAlbum(Collections.emptySet())
                 .artists(new LinkedList<>())
                 .build());
 
@@ -117,11 +117,11 @@ public class ShoppingCartServiceTest {
     }
 
     @Test
-    void given_newquantity_when_changeQuantity_return_new_quantity() throws RemoteException, NoPermissionException {
+    void given_newQuantity_when_changeQuantity_return_new_quantity() throws RemoteException, NoPermissionException {
         //given
         int newQuantity = 10;
 
-        CartLineItemDTO lineItemDTO = new CartLineItemDTO(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18), 5);
+        CartLineItemDTO lineItemDTO = new CartLineItemDTO(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18), 5, "");
 
         //when
         shoppingCartService.changeQuantity(lineItemDTO, newQuantity);
@@ -134,7 +134,7 @@ public class ShoppingCartServiceTest {
     void given_cart_when_removeProductFromCart_return_new_size() throws RemoteException, NoPermissionException {
         //given
         int expected = 1;
-        CartLineItemDTO lineItemDTO = new CartLineItemDTO(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18), 5);
+        CartLineItemDTO lineItemDTO = new CartLineItemDTO(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18), 5, "");
 
         //when
         shoppingCartService.removeProductFromCart(lineItemDTO);

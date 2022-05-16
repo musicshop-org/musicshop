@@ -15,16 +15,18 @@ public class CartLineItem implements Serializable {
     private int quantity;
     private BigDecimal price;
     private int stock;
+    private String imageUrl;
 
     protected CartLineItem() {
     }
 
-    public CartLineItem(MediumType mediumType, String name, int quantity, BigDecimal price, int stock) {
+    public CartLineItem(MediumType mediumType, String name, int quantity, BigDecimal price, int stock, String imageUrl) {
         this.mediumType = mediumType;
         this.name = name;
         this.quantity = quantity;
         this.price = price;
         this.stock = stock;
+        this.imageUrl = imageUrl;
     }
 
     public void changeQuantity(int newQuantity) {
@@ -36,7 +38,7 @@ public class CartLineItem implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CartLineItem cartLineItem = (CartLineItem) o;
-        return mediumType == cartLineItem.mediumType && name.equals(cartLineItem.name) && price.equals(cartLineItem.price);
+        return mediumType == cartLineItem.mediumType && name.equals(cartLineItem.name) && price.equals(cartLineItem.price) && imageUrl.equals(cartLineItem.imageUrl);
     }
 
 }

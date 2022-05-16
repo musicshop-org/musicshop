@@ -79,7 +79,6 @@ public class RestController {
     @Produces("application/json")
     public List<AlbumDTO> findAlbumsBySongTitle(@PathParam("songTitle") String songTitle, @HeaderParam("Authorization") String jwt_Token) {
 
-
         ProductService productService = new ProductServiceImpl();
         return productService.findAlbumsBySongTitleDigital(songTitle);
 

@@ -63,7 +63,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                     cartLineItem.getName(),
                     cartLineItem.getQuantity(),
                     cartLineItem.getPrice(),
-                    cartLineItem.getStock()
+                    cartLineItem.getStock(),
+                    cartLineItem.getImageUrl()
             ));
         }
 
@@ -77,7 +78,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 album.getMediumType(),
                 album.getTitle(), amount,
                 album.getPrice(),
-                album.getStock()
+                album.getStock(),
+                album.getImageUrl()
         );
 
         this.shoppingCart.addLineItem(cartLineItem);
@@ -88,11 +90,20 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public void addSongsToCart(List<SongDTO> songs) {
 
         for (SongDTO song : songs) {
+
+            String imageUrl;
+            if (!song.getInAlbum().isEmpty()) {
+                imageUrl = song.getInAlbum().iterator().next().getImageUrl();
+            } else {
+                imageUrl = "";
+            }
+
             CartLineItem cartLineItem = new CartLineItem(
                     song.getMediumType(),
                     song.getTitle(), 1,
                     song.getPrice(),
-                    song.getStock()
+                    song.getStock(),
+                    imageUrl
             );
 
             this.shoppingCart.addLineItem(cartLineItem);
@@ -107,7 +118,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 cartLineItemDTO.getName(),
                 cartLineItemDTO.getQuantity(),
                 cartLineItemDTO.getPrice(),
-                cartLineItemDTO.getStock()
+                cartLineItemDTO.getStock(),
+                cartLineItemDTO.getImageUrl()
         );
 
         this.shoppingCart.changeQuantity(cartLineItem, quantity);
@@ -121,7 +133,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 cartLineItemDTO.getName(),
                 cartLineItemDTO.getQuantity(),
                 cartLineItemDTO.getPrice(),
-                cartLineItemDTO.getStock()
+                cartLineItemDTO.getStock(),
+                cartLineItemDTO.getImageUrl()
         );
 
         this.shoppingCart.removeLineItem(cartLineItem);
