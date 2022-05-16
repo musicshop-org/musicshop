@@ -168,14 +168,11 @@ public class RestController {
     @GET
     @Path("/shoppingCart/display")
     @Produces("application/json")
-    public ShoppingCartDTO displayShoppingCart(@HeaderParam("Authorization") String jwt_Token) throws NoPermissionException {
+    public ShoppingCartDTO displayShoppingCart(@HeaderParam("CartUUID") String UUID) throws NoPermissionException {
 
-        if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
-            ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(JwtManager.getEmailAddress(jwt_Token));
-            return shoppingCartService.getCart();
-        }
+        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+        return shoppingCartService.getCart();
 
-        return null;
     }
 
 
