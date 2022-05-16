@@ -69,6 +69,7 @@ public class ProductServiceImpl implements ProductService {
 
                 albumDTOs.add(new AlbumDTO(
                         album.getTitle(),
+                        album.getImageUrl(),
                         album.getPrice(),
                         album.getStock(),
                         album.getMediumType(),
@@ -115,6 +116,7 @@ public class ProductServiceImpl implements ProductService {
 
                 albumDTOs.add(new AlbumDTO(
                         album.getTitle(),
+                        album.getImageUrl(),
                         album.getPrice(),
                         album.getStock(),
                         album.getMediumType(),
@@ -141,6 +143,7 @@ public class ProductServiceImpl implements ProductService {
 
         return AlbumDTO.builder()
                 .title(album.getTitle())
+                .imageUrl(album.getImageUrl())
                 .price(album.getPrice())
                 .stock(album.getStock())
                 .mediumType(album.getMediumType())
@@ -178,6 +181,7 @@ public class ProductServiceImpl implements ProductService {
             Album album = albumOpt.get();
             return AlbumDTO.builder()
                     .title(album.getTitle())
+                    .imageUrl(album.getImageUrl())
                     .price(album.getPrice())
                     .stock(album.getStock())
                     .mediumType(album.getMediumType())
