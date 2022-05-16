@@ -96,7 +96,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             );
 
             this.shoppingCart.addLineItem(cartLineItem);
-
         }
     }
 

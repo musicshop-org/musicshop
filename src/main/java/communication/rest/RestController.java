@@ -19,6 +19,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -116,6 +117,7 @@ public class RestController {
 
     }
 
+
     @POST
     @Path("/albums/addSongsToCart")
     @Consumes("application/json")
@@ -124,10 +126,19 @@ public class RestController {
 
         ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
         shoppingCartService.addSongsToCart(songs);
+        return true;
 
-        for (SongDTO song : songs) {
-            System.out.println(song.getTitle());
-        }
+    }
+
+
+    @POST
+    @Path("/albums/addSongsFromAlbumToCart")
+    @Consumes("application/json")
+    @Produces("text/plain")
+    public boolean addAlbumToCart(AlbumDTO album, @HeaderParam("CartUUID") String UUID) throws NoPermissionException {
+
+        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+        shoppingCartService.addSongsToCart(new LinkedList<>(album.getSongs()));
         return true;
 
     }
@@ -137,7 +148,7 @@ public class RestController {
     @Path("/shoppingCart/buyProducts")
     @Consumes("application/json")
     @Produces("text/plain")
-    public boolean buyProduct(List<InvoiceLineItemDTO> invoiceLineItemDTOs, @HeaderParam("Authorization") String jwt_Token) throws AlbumNotFoundException, NoPermissionException, NotEnoughStockException, NotEnoughStockException {
+    public boolean buyProduct(List<InvoiceLineItemDTO> invoiceLineItemDTOs, @HeaderParam("Authorization") String jwt_Token) throws AlbumNotFoundException, NoPermissionException, NotEnoughStockException {
 
         if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
             InvoiceDTO invoiceDTO = new InvoiceDTO(
