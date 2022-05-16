@@ -38,6 +38,7 @@
 
         <subclass name="domain.Album" discriminator-value="album">
             <property name="label" column="label" type="java.lang.String"/>
+            <property name="imageUrl" column="imageUrl" type="java.lang.String"/>
             <component name="albumId" class="sharedrmi.domain.valueobjects.AlbumId">
                 <property name="albumId" column="albumId" type="java.util.UUID"/>
             </component>

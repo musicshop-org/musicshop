@@ -44,6 +44,11 @@ public class RMIControllerImpl implements RMIController {
     }
 
     @Override
+    public List<AlbumDTO> findAlbumsBySongTitleDigital(String s) {
+        return null;
+    }
+
+    @Override
     public AlbumDTO findAlbumByAlbumTitleAndMedium(String s, MediumType mediumType) throws AlbumNotFoundException {
         return sessionFacade.findAlbumByAlbumTitleAndMedium(s, mediumType);
     }

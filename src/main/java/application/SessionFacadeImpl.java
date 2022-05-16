@@ -57,6 +57,11 @@ public class SessionFacadeImpl implements SessionFacade {
     }
 
     @Override
+    public List<AlbumDTO> findAlbumsBySongTitleDigital(String s) {
+        return null;
+    }
+
+    @Override
     public AlbumDTO findAlbumByAlbumTitleAndMedium(String title, MediumType mediumType) throws AlbumNotFoundException {
         return this.productService.findAlbumByAlbumTitleAndMedium(title, mediumType);
     }
