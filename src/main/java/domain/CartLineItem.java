@@ -6,6 +6,8 @@ import sharedrmi.domain.enums.ProductType;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 public class CartLineItem implements Serializable {
@@ -18,6 +20,7 @@ public class CartLineItem implements Serializable {
     private int stock;
     private String imageUrl;
     private ProductType productType;
+    private List<String> artists;
 
     protected CartLineItem() {
     }
@@ -30,6 +33,18 @@ public class CartLineItem implements Serializable {
         this.stock = stock;
         this.imageUrl = imageUrl;
         this.productType = productType;
+        this.artists = new ArrayList<String>();
+    }
+
+    public CartLineItem(MediumType mediumType, String name, int quantity, BigDecimal price, int stock, String imageUrl, ProductType productType, List<String> artists) {
+        this.mediumType = mediumType;
+        this.name = name;
+        this.quantity = quantity;
+        this.price = price;
+        this.stock = stock;
+        this.imageUrl = imageUrl;
+        this.productType = productType;
+        this.artists = artists;
     }
 
     public void changeQuantity(int newQuantity) {
