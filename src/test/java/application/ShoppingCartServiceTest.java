@@ -2,6 +2,7 @@ package application;
 
 import domain.CartLineItem;
 import domain.ShoppingCart;
+import domain.Song;
 import domain.repositories.ShoppingCartRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

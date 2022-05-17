@@ -61,9 +61,23 @@ public class ProductServiceImpl implements ProductService {
                             song.getGenre(),
                             song.getArtists()
                                     .stream()
-                                    .map(artist -> new ArtistDTO(artist.getName()))
+                                    .map(artistDTO -> new ArtistDTO(
+                                            artistDTO.getName()))
                                     .collect(Collectors.toList()),
-                            Collections.emptySet()
+                            song.getInAlbum()
+                                    .stream()
+                                    .map(albumDTO -> new AlbumDTO(
+                                            albumDTO.getTitle(),
+                                            albumDTO.getImageUrl(),
+                                            albumDTO.getPrice(),
+                                            albumDTO.getStock(),
+                                            albumDTO.getMediumType(),
+                                            albumDTO.getReleaseDate().toString(),
+                                            albumDTO.getAlbumId(),
+                                            albumDTO.getLabel(),
+                                            Collections.emptySet(),
+                                            0))
+                                    .collect(Collectors.toSet())
                     ));
                 }
 
@@ -108,9 +122,23 @@ public class ProductServiceImpl implements ProductService {
                             song.getGenre(),
                             song.getArtists()
                                     .stream()
-                                    .map(artist -> new ArtistDTO(artist.getName()))
+                                    .map(artistDTO -> new ArtistDTO(
+                                            artistDTO.getName()))
                                     .collect(Collectors.toList()),
-                            Collections.emptySet()
+                            song.getInAlbum()
+                                    .stream()
+                                    .map(albumDTO -> new AlbumDTO(
+                                            albumDTO.getTitle(),
+                                            albumDTO.getImageUrl(),
+                                            albumDTO.getPrice(),
+                                            albumDTO.getStock(),
+                                            albumDTO.getMediumType(),
+                                            albumDTO.getReleaseDate().toString(),
+                                            albumDTO.getAlbumId(),
+                                            albumDTO.getLabel(),
+                                            Collections.emptySet(),
+                                            0))
+                                    .collect(Collectors.toSet())
                     ));
                 }
 
