@@ -39,23 +39,28 @@ public class RMIControllerImpl implements RMIController {
     }
 
     @Override
-    public List<AlbumDTO> findAlbumsBySongTitle(String s) {
-        return sessionFacade.findAlbumsBySongTitle(s);
+    public List<AlbumDTO> findAlbumsBySongTitle(String title) {
+        return sessionFacade.findAlbumsBySongTitle(title);
     }
 
     @Override
-    public AlbumDTO findAlbumByAlbumTitleAndMedium(String s, MediumType mediumType) throws AlbumNotFoundException {
-        return sessionFacade.findAlbumByAlbumTitleAndMedium(s, mediumType);
+    public List<AlbumDTO> findAlbumsBySongTitleDigital(String title) {
+        return sessionFacade.findAlbumsBySongTitleDigital(title);
     }
 
     @Override
-    public List<SongDTO> findSongsByTitle(String s) {
-        return sessionFacade.findSongsByTitle(s);
+    public AlbumDTO findAlbumByAlbumTitleAndMedium(String title, MediumType mediumType) throws AlbumNotFoundException {
+        return sessionFacade.findAlbumByAlbumTitleAndMedium(title, mediumType);
     }
 
     @Override
-    public List<ArtistDTO> findArtistsByName(String s) {
-        return sessionFacade.findArtistsByName(s);
+    public List<SongDTO> findSongsByTitle(String title) {
+        return sessionFacade.findSongsByTitle(title);
+    }
+
+    @Override
+    public List<ArtistDTO> findArtistsByName(String name) {
+        return sessionFacade.findArtistsByName(name);
     }
 
     @Override
@@ -125,7 +130,7 @@ public class RMIControllerImpl implements RMIController {
 
     @Override
     public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws NoPermissionException, InvoiceNotFoundException {
-        sessionFacade.returnInvoiceLineItem(invoiceId,invoiceLineItemDTO,returnQuantity);
+        sessionFacade.returnInvoiceLineItem(invoiceId, invoiceLineItemDTO, returnQuantity);
     }
 
     @Override

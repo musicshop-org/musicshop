@@ -7,7 +7,11 @@ import communication.rest.api.RestLoginService;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.servers.Server;
 
 import sharedrmi.application.api.InvoiceService;
@@ -21,18 +25,23 @@ import sharedrmi.domain.valueobjects.InvoiceId;
 import sharedrmi.domain.valueobjects.Role;
 
 import javax.naming.NoPermissionException;
+
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import java.time.LocalDate;
 import java.util.List;
 
 @OpenAPIDefinition(
         info = @Info(
                 title = "OpenAPIDefinition",
-                description = "Music shop REST API"
+                description = "Music shop REST API",
+                version = "1.0.0"
         ),
         servers = {
                 @Server(
-                        url = "https://localhost:8080/musicshop-1.0",
+                        url = "http://localhost:8080/musicshop-1.0",
                         description = "Music shop REST"
                 )
         }
@@ -66,8 +75,9 @@ public class RestController {
         String emailAddress = userData.getEmailAddress();
         String password = userData.getPassword();
 
-        if (restLoginService.checkCredentials(emailAddress, password) && restLoginService.getRole(emailAddress).contains(Role.LICENSEE))
+        if (restLoginService.checkCredentials(emailAddress, password) && restLoginService.getRole(emailAddress).contains(Role.LICENSEE)) {
             return JwtManager.createJWT(emailAddress, 900000);
+        }
 
         return "";
     }
@@ -85,8 +95,9 @@ public class RestController {
         String emailAddress = userData.getEmailAddress();
         String password = userData.getPassword();
 
-        if (restLoginService.checkCredentials(emailAddress, password) && restLoginService.getRole(emailAddress).contains(Role.CUSTOMER))
+        if (restLoginService.checkCredentials(emailAddress, password) && restLoginService.getRole(emailAddress).contains(Role.CUSTOMER)) {
             return JwtManager.createJWT(emailAddress, 900000);
+        }
 
         return "";
     }
@@ -94,17 +105,48 @@ public class RestController {
 
     @GET
     @Path("/albums/{songTitle}")
-    @Produces("application/json")
-    @ApiResponse(responseCode = "200", description = "Album found", useReturnTypeSchema = true)
-    @ApiResponse(responseCode = "404", description = "Method name not found", useReturnTypeSchema = true)
-    public List<AlbumDTO> findAlbumsBySongTitle(@PathParam("songTitle") String songTitle, @HeaderParam("Authorization") String jwt_Token) {
-
-
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Album(s) found",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON,
+                                            array = @ArraySchema(schema = @Schema(implementation = AlbumDTO.class))
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No album found",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    )
+            })
+    public Response findAlbumsBySongTitle(@PathParam("songTitle") String songTitle, @HeaderParam("Authorization") String jwt_Token) {
         ProductService productService = new ProductServiceImpl();
-        return productService.findAlbumsBySongTitleDigital(songTitle);
 
+        List<AlbumDTO> albumDTOList = productService.findAlbumsBySongTitleDigital(songTitle);
+
+        if (albumDTOList.size() <= 0) {
+            return Response
+                    .status(Response.Status.NOT_FOUND)
+                    .entity("No album found")
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
+
+        return Response
+                .status(Response.Status.OK)
+                .entity(albumDTOList)
+                .type(MediaType.APPLICATION_JSON)
+                .build();
     }
-
 
     @GET
     @Path("/album/{albumId}")
@@ -112,15 +154,13 @@ public class RestController {
     @ApiResponse(responseCode = "200", description = "Album found", useReturnTypeSchema = true)
     @ApiResponse(responseCode = "404", description = "Method name not found", useReturnTypeSchema = true)
     public AlbumDTO findAlbumByAlbumId(@PathParam("albumId") String albumId, @HeaderParam("Authorization") String jwt_Token) {
-
-
         ProductService productService = new ProductServiceImpl();
+
         try {
             return productService.findAlbumByAlbumId(albumId);
         } catch (AlbumNotFoundException e) {
             e.printStackTrace();
         }
-
 
         return null;
     }
@@ -129,18 +169,84 @@ public class RestController {
     @POST
     @Path("/albums/addToCart")
     @Consumes("application/json")
-    @Produces("text/plain")
-    @ApiResponse(responseCode = "200", description = "Add to cart successful", useReturnTypeSchema = true)
-    @ApiResponse(responseCode = "404", description = "Method name not found", useReturnTypeSchema = true)
-    public boolean addToCart(AlbumDTO album, @HeaderParam("Authorization") String jwt_Token) throws NoPermissionException {
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Add to cart successful",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            array = @ArraySchema(schema = @Schema(implementation = String.class))
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "No authorization provided",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            array = @ArraySchema(schema = @Schema(implementation = String.class))
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "No permission",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            array = @ArraySchema(schema = @Schema(implementation = String.class))
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Add to cart failed",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            array = @ArraySchema(schema = @Schema(implementation = String.class))
+                                    )
+                            }
+                    )
+            })
+    public Response addToCart(AlbumDTO album, @HeaderParam("Authorization") String jwt_Token) throws NoPermissionException {
 
-        if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
+        Response.Status status;
+        String responseText;
+
+        if (jwt_Token == null || jwt_Token.equals("")) {
+
+            status = Response.Status.UNAUTHORIZED;
+            responseText = "No authorization provided";
+
+        } else if (!JwtManager.isValidToken(jwt_Token)) {
+
+            status = Response.Status.UNAUTHORIZED;
+            responseText = "Invalid JWT token provided";
+
+        } else if (isCustomerOrLicensee(jwt_Token)) {
+
             ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(JwtManager.getEmailAddress(jwt_Token));
             shoppingCartService.addProductToCart(album, album.getQuantityToAddToCart());
-            return true;
+
+            status = Response.Status.OK;
+            responseText = "Add to cart successful";
+
+        } else {
+
+            status = Response.Status.FORBIDDEN;
+            responseText = "No permission";
+
         }
 
-        return false;
+        return Response
+                .status(status)
+                .entity(responseText)
+                .type(MediaType.TEXT_PLAIN)
+                .build();
     }
 
 
