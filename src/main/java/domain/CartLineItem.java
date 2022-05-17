@@ -2,6 +2,7 @@ package domain;
 
 import lombok.Getter;
 import sharedrmi.domain.enums.MediumType;
+import sharedrmi.domain.enums.ProductType;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -16,17 +17,19 @@ public class CartLineItem implements Serializable {
     private BigDecimal price;
     private int stock;
     private String imageUrl;
+    private ProductType productType;
 
     protected CartLineItem() {
     }
 
-    public CartLineItem(MediumType mediumType, String name, int quantity, BigDecimal price, int stock, String imageUrl) {
+    public CartLineItem(MediumType mediumType, String name, int quantity, BigDecimal price, int stock, String imageUrl, ProductType productType) {
         this.mediumType = mediumType;
         this.name = name;
         this.quantity = quantity;
         this.price = price;
         this.stock = stock;
         this.imageUrl = imageUrl;
+        this.productType = productType;
     }
 
     public void changeQuantity(int newQuantity) {

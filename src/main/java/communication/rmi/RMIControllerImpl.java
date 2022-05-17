@@ -84,8 +84,8 @@ public class RMIControllerImpl implements RMIController {
     }
 
     @Override
-    public void addProductToCart(AlbumDTO albumDTO, int i) throws NoPermissionException {
-        sessionFacade.addProductToCart(albumDTO, i);
+    public void addAlbumsToCart(AlbumDTO albumDTO, int i) throws NoPermissionException {
+        sessionFacade.addAlbumsToCart(albumDTO, i);
     }
 
     @Override
@@ -99,8 +99,8 @@ public class RMIControllerImpl implements RMIController {
     }
 
     @Override
-    public void removeProductFromCart(CartLineItemDTO cartLineItemDTO) throws NoPermissionException {
-        sessionFacade.removeProductFromCart(cartLineItemDTO);
+    public void removeLineItemFromCart(CartLineItemDTO cartLineItemDTO) throws NoPermissionException {
+        sessionFacade.removeLineItemFromCart(cartLineItemDTO);
     }
 
     @Override

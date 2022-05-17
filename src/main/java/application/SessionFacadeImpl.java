@@ -43,9 +43,7 @@ public class SessionFacadeImpl implements SessionFacade {
 
         try {
             customerService = (CustomerService) Naming.lookup("rmi://10.0.40.163/CustomerService");
-        } catch (NotBoundException | MalformedURLException e) {
-            e.printStackTrace();
-        } catch (RemoteException e) {
+        } catch (NotBoundException | MalformedURLException | RemoteException e) {
             e.printStackTrace();
         }
 
@@ -121,12 +119,12 @@ public class SessionFacadeImpl implements SessionFacade {
     }
 
     @Override
-    public void addProductToCart(AlbumDTO albumDTO, int i) throws NoPermissionException {
+    public void addAlbumsToCart(AlbumDTO albumDTO, int i) throws NoPermissionException {
 
         for (Role role : this.roles)
         {
             if (role.equals(Role.SALESPERSON)) {
-                this.shoppingCartService.addProductToCart(albumDTO, i);
+                this.shoppingCartService.addAlbumsToCart(albumDTO, i);
                 return;
             }
         }
@@ -154,12 +152,12 @@ public class SessionFacadeImpl implements SessionFacade {
     }
 
     @Override
-    public void removeProductFromCart(CartLineItemDTO cartLineItemDTO) throws NoPermissionException {
+    public void removeLineItemFromCart(CartLineItemDTO cartLineItemDTO) throws NoPermissionException {
 
         for (Role role : this.roles)
         {
             if (role.equals(Role.SALESPERSON)) {
-                this.shoppingCartService.removeProductFromCart(cartLineItemDTO);
+                this.shoppingCartService.removeLineItemFromCart(cartLineItemDTO);
                 return;
             }
         }

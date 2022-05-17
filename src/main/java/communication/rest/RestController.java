@@ -110,7 +110,7 @@ public class RestController {
     public boolean addToCart(AlbumDTO album, @HeaderParam("CartUUID") String UUID) throws NoPermissionException {
 
         ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
-        shoppingCartService.addProductToCart(album, album.getQuantityToAddToCart());
+        shoppingCartService.addAlbumsToCart(album, album.getQuantityToAddToCart());
         return true;
 
     }

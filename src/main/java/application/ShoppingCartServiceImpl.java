@@ -11,6 +11,7 @@ import sharedrmi.application.dto.AlbumDTO;
 import sharedrmi.application.dto.CartLineItemDTO;
 import sharedrmi.application.dto.ShoppingCartDTO;
 import sharedrmi.application.dto.SongDTO;
+import sharedrmi.domain.enums.ProductType;
 
 import javax.naming.NoPermissionException;
 import java.rmi.RemoteException;
@@ -64,7 +65,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                     cartLineItem.getQuantity(),
                     cartLineItem.getPrice(),
                     cartLineItem.getStock(),
-                    cartLineItem.getImageUrl()
+                    cartLineItem.getImageUrl(),
+                    cartLineItem.getProductType()
             ));
         }
 
@@ -73,13 +75,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Transactional
     @Override
-    public void addProductToCart(AlbumDTO album, int amount) {
+    public void addAlbumsToCart(AlbumDTO album, int amount) {
         CartLineItem cartLineItem = new CartLineItem(
                 album.getMediumType(),
                 album.getTitle(), amount,
                 album.getPrice(),
                 album.getStock(),
-                album.getImageUrl()
+                album.getImageUrl(),
+                ProductType.ALBUM
         );
 
         this.shoppingCart.addLineItem(cartLineItem);
@@ -103,7 +106,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                     song.getTitle(), 1,
                     song.getPrice(),
                     song.getStock(),
-                    imageUrl
+                    imageUrl,
+                    ProductType.SONG
             );
 
             this.shoppingCart.addLineItem(cartLineItem);
@@ -119,7 +123,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 cartLineItemDTO.getQuantity(),
                 cartLineItemDTO.getPrice(),
                 cartLineItemDTO.getStock(),
-                cartLineItemDTO.getImageUrl()
+                cartLineItemDTO.getImageUrl(),
+                cartLineItemDTO.getProductType()
         );
 
         this.shoppingCart.changeQuantity(cartLineItem, quantity);
@@ -127,14 +132,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Transactional
     @Override
-    public void removeProductFromCart(CartLineItemDTO cartLineItemDTO) {
+    public void removeLineItemFromCart(CartLineItemDTO cartLineItemDTO) {
         CartLineItem cartLineItem = new CartLineItem(
                 cartLineItemDTO.getMediumType(),
                 cartLineItemDTO.getName(),
                 cartLineItemDTO.getQuantity(),
                 cartLineItemDTO.getPrice(),
                 cartLineItemDTO.getStock(),
-                cartLineItemDTO.getImageUrl()
+                cartLineItemDTO.getImageUrl(),
+                cartLineItemDTO.getProductType()
         );
 
         this.shoppingCart.removeLineItem(cartLineItem);
