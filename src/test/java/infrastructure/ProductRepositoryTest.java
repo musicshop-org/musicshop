@@ -231,6 +231,7 @@ public class ProductRepositoryTest {
         final MediumType mediumType = MediumType.CD;
 
         Album expectedAlbum = new Album(title,
+                "",
                 BigDecimal.TEN,
                 8,
                 mediumType,

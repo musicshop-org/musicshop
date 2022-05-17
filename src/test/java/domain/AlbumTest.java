@@ -21,6 +21,7 @@ public class AlbumTest {
         final int expectedQuantity = 13;
 
         Album album = new Album("title1",
+                            "",
                             BigDecimal.TEN,
                             givenStock,
                             MediumType.CD,
@@ -45,6 +46,7 @@ public class AlbumTest {
         final int expectedQuantity = 3;
 
         Album album = new Album("title1",
+                "",
                 BigDecimal.TEN,
                 givenStock,
                 MediumType.CD,
