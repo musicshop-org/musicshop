@@ -16,9 +16,8 @@ import sharedrmi.domain.valueobjects.Role;
 
 import javax.naming.NoPermissionException;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
 import java.time.LocalDate;
-import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -29,7 +28,8 @@ public class RestController {
     private final ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl("PythonTestClient");
     private final InvoiceService invoiceService = new InvoiceServiceImpl();
 
-    public RestController() {}
+    public RestController() {
+    }
 
     @GET
     @Produces("text/html")
@@ -77,7 +77,6 @@ public class RestController {
     @Produces("application/json")
     public List<AlbumDTO> findAlbumsBySongTitle(@PathParam("songTitle") String songTitle, @HeaderParam("Authorization") String jwt_Token) {
 
-
         ProductService productService = new ProductServiceImpl();
         return productService.findAlbumsBySongTitleDigital(songTitle);
 
@@ -89,7 +88,6 @@ public class RestController {
     @Produces("application/json")
     public AlbumDTO findAlbumByAlbumId(@PathParam("albumId") String albumId, @HeaderParam("Authorization") String jwt_Token) {
 
-
         ProductService productService = new ProductServiceImpl();
         try {
             return productService.findAlbumByAlbumId(albumId);
@@ -97,24 +95,46 @@ public class RestController {
             e.printStackTrace();
         }
 
-
         return null;
     }
 
 
     @POST
-    @Path("/albums/addToCart")
+    @Path("/albums/addAlbumsToCart")
     @Consumes("application/json")
     @Produces("text/plain")
-    public boolean addToCart(AlbumDTO album, @HeaderParam("Authorization") String jwt_Token) throws NoPermissionException {
+    public boolean addAlbumsToCart(AlbumDTO album, @HeaderParam("CartUUID") String UUID) throws NoPermissionException {
 
-        if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
-            ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(JwtManager.getEmailAddress(jwt_Token));
-            shoppingCartService.addProductToCart(album, album.getQuantityToAddToCart());
-            return true;
-        }
+        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+        shoppingCartService.addAlbumsToCart(album, album.getQuantityToAddToCart());
+        return true;
 
-        return false;
+    }
+
+
+    @POST
+    @Path("/albums/addSongsToCart")
+    @Consumes("application/json")
+    @Produces("text/plain")
+    public boolean addSongsToCart(List<SongDTO> songs, @HeaderParam("CartUUID") String UUID) throws NoPermissionException {
+
+        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+        shoppingCartService.addSongsToCart(songs);
+        return true;
+
+    }
+
+
+    @POST
+    @Path("/albums/addSongsFromAlbumToCart")
+    @Consumes("application/json")
+    @Produces("text/plain")
+    public boolean addSongsFromAlbumToCart(AlbumDTO album, @HeaderParam("CartUUID") String UUID) throws NoPermissionException {
+
+        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+        shoppingCartService.addSongsToCart(new LinkedList<>(album.getSongs()));
+        return true;
+
     }
 
 
@@ -122,7 +142,7 @@ public class RestController {
     @Path("/shoppingCart/buyProducts")
     @Consumes("application/json")
     @Produces("text/plain")
-    public boolean buyProduct(List <InvoiceLineItemDTO> invoiceLineItemDTOs, @HeaderParam("Authorization") String jwt_Token) throws AlbumNotFoundException, NoPermissionException, NotEnoughStockException, NotEnoughStockException {
+    public boolean buyProduct(List<InvoiceLineItemDTO> invoiceLineItemDTOs, @HeaderParam("Authorization") String jwt_Token) throws AlbumNotFoundException, NoPermissionException, NotEnoughStockException {
 
         if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
             InvoiceDTO invoiceDTO = new InvoiceDTO(
@@ -144,29 +164,23 @@ public class RestController {
     @GET
     @Path("/shoppingCart/display")
     @Produces("application/json")
-    public ShoppingCartDTO displayShoppingCart(@HeaderParam("Authorization") String jwt_Token) throws NoPermissionException {
+    public ShoppingCartDTO displayShoppingCart(@HeaderParam("CartUUID") String UUID) throws NoPermissionException {
 
-        if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
-            ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(JwtManager.getEmailAddress(jwt_Token));
-            return shoppingCartService.getCart();
-        }
+        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+        return shoppingCartService.getCart();
 
-        return null;
     }
 
 
     @GET
     @Path("/shoppingCart/clear")
     @Produces("text/plain")
-    public boolean clearShoppingCart(@HeaderParam("Authorization") String jwt_Token) throws NoPermissionException {
+    public boolean clearShoppingCart(@HeaderParam("CartUUID") String UUID) throws NoPermissionException {
 
-        if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
-            ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(JwtManager.getEmailAddress(jwt_Token));
-            shoppingCartService.clearCart();
-            return true;
-        }
+        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+        shoppingCartService.clearCart();
+        return true;
 
-        return false;
     }
 
 

@@ -1,11 +1,11 @@
 -- Seeed - Seeed
 update tbl_product
-set imageurl = 'https://www.fan-lexikon.de/musik/seeed/bilder/l/seeed-seeed-album-cover-19090.jpg'
+set imageurl = 'https://m.media-amazon.com/images/I/41vyTSmdXlL.jpg'
 where product_id = 118;
 
 -- Seed - BAM BAM
 update tbl_product
-set imageurl = 'https://media1.jpc.de/image/w220/front/0/4050538532142.jpg'
+set imageurl = 'https://i.discogs.com/SRue3B6AbUEXkWfoJ_jMTipbWY3aoI7iwF2uPD9IuG0/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0MjIz/ODQ5LTE1NzAxOTk2/MTktMTUyNi5qcGVn.jpeg'
 where product_id = 119;
 
 -- Bruno Mars - 24K Magic

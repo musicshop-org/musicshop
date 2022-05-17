@@ -2,6 +2,7 @@ package application;
 
 import domain.CartLineItem;
 import domain.ShoppingCart;
+import domain.Song;
 import domain.repositories.ShoppingCartRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,20 +11,16 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sharedrmi.application.api.ShoppingCartService;
-import sharedrmi.application.dto.AlbumDTO;
-import sharedrmi.application.dto.CartLineItemDTO;
-import sharedrmi.application.dto.ShoppingCartDTO;
+import sharedrmi.application.dto.*;
 import sharedrmi.domain.enums.MediumType;
+import sharedrmi.domain.enums.ProductType;
 import sharedrmi.domain.valueobjects.AlbumId;
 
 import javax.naming.NoPermissionException;
 import java.math.BigDecimal;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,8 +39,8 @@ public class ShoppingCartServiceTest {
         String ownerId = UUID.randomUUID().toString();
 
         List<CartLineItem> lineItems = new LinkedList<>();
-        lineItems.add(new CartLineItem(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18), 5));
-        lineItems.add(new CartLineItem(MediumType.CD, "BAM BAM", 20, BigDecimal.valueOf(36), 5));
+        lineItems.add(new CartLineItem(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18), 5, "", ProductType.ALBUM));
+        lineItems.add(new CartLineItem(MediumType.CD, "BAM BAM", 20, BigDecimal.valueOf(36), 5, "", ProductType.ALBUM));
 
         givenCart = new ShoppingCart(ownerId, lineItems);
 
@@ -79,7 +76,7 @@ public class ShoppingCartServiceTest {
         AlbumDTO album = new AlbumDTO("TestAlbum", "", BigDecimal.TEN, 10, MediumType.CD, LocalDate.now().toString(), new AlbumId(), "TestLabel", null, 0);
 
         //when
-        shoppingCartService.addProductToCart(album, quantity);
+        shoppingCartService.addAlbumsToCart(album, quantity);
 
         //then
         ShoppingCartDTO cartDTO = shoppingCartService.getCart();
@@ -93,11 +90,40 @@ public class ShoppingCartServiceTest {
     }
 
     @Test
-    void given_newquantity_when_changeQuantity_return_new_quantity() throws RemoteException, NoPermissionException {
+    void given_songs_when_addSongs_return_new_entry() throws RemoteException, NoPermissionException {
+        //given
+        List<SongDTO> songs = new LinkedList<>();
+        songs.add(SongDTO.builder()
+                .title("TestSong1")
+                .price(BigDecimal.TEN)
+                .stock(-1)
+                .mediumType(MediumType.DIGITAL)
+                .releaseDate(LocalDate.now().toString())
+                .genre("TestGenre")
+                .inAlbum(Collections.emptySet())
+                .artists(new LinkedList<>())
+                .build());
+
+        //when
+        shoppingCartService.addSongsToCart(songs);
+
+        //then
+        ShoppingCartDTO cartDTO = shoppingCartService.getCart();
+        assertEquals(givenCart.getOwnerId(), cartDTO.getOwnerId());
+        assertAll("LineItem 3",
+                () -> assertEquals(songs.get(0).getTitle(), cartDTO.getCartLineItems().get(2).getName()),
+                () -> assertEquals(1, cartDTO.getCartLineItems().get(2).getQuantity()),
+                () -> assertEquals(songs.get(0).getPrice(), cartDTO.getCartLineItems().get(2).getPrice()),
+                () -> assertEquals(songs.get(0).getMediumType(), cartDTO.getCartLineItems().get(2).getMediumType())
+        );
+    }
+
+    @Test
+    void given_newQuantity_when_changeQuantity_return_new_quantity() throws RemoteException, NoPermissionException {
         //given
         int newQuantity = 10;
 
-        CartLineItemDTO lineItemDTO = new CartLineItemDTO(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18), 5);
+        CartLineItemDTO lineItemDTO = new CartLineItemDTO(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18), 5, "", ProductType.ALBUM);
 
         //when
         shoppingCartService.changeQuantity(lineItemDTO, newQuantity);
@@ -110,10 +136,10 @@ public class ShoppingCartServiceTest {
     void given_cart_when_removeProductFromCart_return_new_size() throws RemoteException, NoPermissionException {
         //given
         int expected = 1;
-        CartLineItemDTO lineItemDTO = new CartLineItemDTO(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18), 5);
+        CartLineItemDTO lineItemDTO = new CartLineItemDTO(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18), 5, "", ProductType.ALBUM);
 
         //when
-        shoppingCartService.removeProductFromCart(lineItemDTO);
+        shoppingCartService.removeLineItemFromCart(lineItemDTO);
 
         //then
         assertEquals(expected, shoppingCartService.getCart().getCartLineItems().size());
