@@ -38,7 +38,7 @@ public class CartLineItem implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CartLineItem cartLineItem = (CartLineItem) o;
-        return mediumType == cartLineItem.mediumType && name.equals(cartLineItem.name) && price.equals(cartLineItem.price) && imageUrl.equals(cartLineItem.imageUrl);
+        return mediumType == cartLineItem.mediumType && name.equals(cartLineItem.name) && price.equals(cartLineItem.price);
     }
 
 }
