@@ -16,9 +16,7 @@ import sharedrmi.domain.valueobjects.Role;
 
 import javax.naming.NoPermissionException;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -90,7 +88,6 @@ public class RestController {
     @Produces("application/json")
     public AlbumDTO findAlbumByAlbumId(@PathParam("albumId") String albumId, @HeaderParam("Authorization") String jwt_Token) {
 
-
         ProductService productService = new ProductServiceImpl();
         try {
             return productService.findAlbumByAlbumId(albumId);
@@ -98,16 +95,15 @@ public class RestController {
             e.printStackTrace();
         }
 
-
         return null;
     }
 
 
     @POST
-    @Path("/albums/addToCart")
+    @Path("/albums/addAlbumsToCart")
     @Consumes("application/json")
     @Produces("text/plain")
-    public boolean addToCart(AlbumDTO album, @HeaderParam("CartUUID") String UUID) throws NoPermissionException {
+    public boolean addAlbumsToCart(AlbumDTO album, @HeaderParam("CartUUID") String UUID) throws NoPermissionException {
 
         ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
         shoppingCartService.addAlbumsToCart(album, album.getQuantityToAddToCart());
@@ -133,7 +129,7 @@ public class RestController {
     @Path("/albums/addSongsFromAlbumToCart")
     @Consumes("application/json")
     @Produces("text/plain")
-    public boolean addAlbumToCart(AlbumDTO album, @HeaderParam("CartUUID") String UUID) throws NoPermissionException {
+    public boolean addSongsFromAlbumToCart(AlbumDTO album, @HeaderParam("CartUUID") String UUID) throws NoPermissionException {
 
         ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
         shoppingCartService.addSongsToCart(new LinkedList<>(album.getSongs()));
