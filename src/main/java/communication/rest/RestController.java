@@ -175,15 +175,12 @@ public class RestController {
     @GET
     @Path("/shoppingCart/clear")
     @Produces("text/plain")
-    public boolean clearShoppingCart(@HeaderParam("Authorization") String jwt_Token) throws NoPermissionException {
+    public boolean clearShoppingCart(@HeaderParam("CartUUID") String UUID) throws NoPermissionException {
 
-        if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
-            ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(JwtManager.getEmailAddress(jwt_Token));
-            shoppingCartService.clearCart();
-            return true;
-        }
+        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+        shoppingCartService.clearCart();
+        return true;
 
-        return false;
     }
 
 
