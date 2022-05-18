@@ -177,7 +177,7 @@ public class RestController {
                             content = {
                                     @Content(
                                             mediaType = MediaType.TEXT_PLAIN,
-                                            array = @ArraySchema(schema = @Schema(implementation = String.class))
+                                            schema = @Schema(implementation = String.class)
                                     )
                             }
                     ),
@@ -187,7 +187,7 @@ public class RestController {
                             content = {
                                     @Content(
                                             mediaType = MediaType.TEXT_PLAIN,
-                                            array = @ArraySchema(schema = @Schema(implementation = String.class))
+                                            schema = @Schema(implementation = String.class)
                                     )
                             }
                     ),
@@ -197,13 +197,13 @@ public class RestController {
                             content = {
                                     @Content(
                                             mediaType = MediaType.TEXT_PLAIN,
-                                            array = @ArraySchema(schema = @Schema(implementation = String.class))
+                                            schema = @Schema(implementation = String.class)
                                     )
                             }
                     ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "Add to cart failed",
+                            description = "Not found",
                             content = {
                                     @Content(
                                             mediaType = MediaType.TEXT_PLAIN,
