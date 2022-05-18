@@ -64,7 +64,7 @@ public class ProductRepositoryTest {
         Set<Album> albums = productRepository.findAlbumsBySongTitle(songTitle);
 
         // then
-        assertEquals(1, albums.size());
+        assertEquals(2, albums.size());
     }
 
     @Test
@@ -176,7 +176,7 @@ public class ProductRepositoryTest {
         Set <Album> albums = productRepository.findAlbumsBySongTitle(songTitle);
 
         // then
-        assertEquals(4, albums.size());
+        assertEquals(7, albums.size());
     }
 
     @Test
@@ -204,7 +204,7 @@ public class ProductRepositoryTest {
         List<Album> albums = productRepository.findAlbumsByAlbumTitle(albumTitle);
 
         // then
-        assertEquals(2, albums.size());
+        assertEquals(3, albums.size());
     }
 
     @Test
@@ -231,6 +231,7 @@ public class ProductRepositoryTest {
         final MediumType mediumType = MediumType.CD;
 
         Album expectedAlbum = new Album(title,
+                "",
                 BigDecimal.TEN,
                 8,
                 mediumType,

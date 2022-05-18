@@ -31,6 +31,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
 
 @OpenAPIDefinition(
@@ -167,7 +168,7 @@ public class RestController {
 
 
     @POST
-    @Path("/albums/addToCart")
+    @Path("/albums/addAlbumsToCart")
     @Consumes("application/json")
     @ApiResponses(
             value = {
@@ -212,7 +213,11 @@ public class RestController {
                             }
                     )
             })
-    public Response addToCart(AlbumDTO album, @HeaderParam("Authorization") String jwt_Token) throws NoPermissionException {
+    public Response addToCart(AlbumDTO album, @HeaderParam("CartUUID") String UUID) throws NoPermissionException {
+
+        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+        shoppingCartService.addAlbumsToCart(album, album.getQuantityToAddToCart());
+        return true;
 
         Response.Status status;
         String responseText;
@@ -251,12 +256,38 @@ public class RestController {
 
 
     @POST
+    @Path("/albums/addSongsToCart")
+    @Consumes("application/json")
+    @Produces("text/plain")
+    public boolean addSongsToCart(List<SongDTO> songs, @HeaderParam("CartUUID") String UUID) throws NoPermissionException {
+
+        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+        shoppingCartService.addSongsToCart(songs);
+        return true;
+
+    }
+
+
+    @POST
+    @Path("/albums/addSongsFromAlbumToCart")
+    @Consumes("application/json")
+    @Produces("text/plain")
+    public boolean addSongsFromAlbumToCart(AlbumDTO album, @HeaderParam("CartUUID") String UUID) throws NoPermissionException {
+
+        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+        shoppingCartService.addSongsToCart(new LinkedList<>(album.getSongs()));
+        return true;
+
+    }
+
+
+    @POST
     @Path("/shoppingCart/buyProducts")
     @Consumes("application/json")
     @Produces("text/plain")
     @ApiResponse(responseCode = "200", description = "Buy product successful", useReturnTypeSchema = true)
     @ApiResponse(responseCode = "404", description = "Method name not found", useReturnTypeSchema = true)
-    public boolean buyProduct(List<InvoiceLineItemDTO> invoiceLineItemDTOs, @HeaderParam("Authorization") String jwt_Token) throws AlbumNotFoundException, NoPermissionException, NotEnoughStockException, NotEnoughStockException {
+    public boolean buyProduct(List<InvoiceLineItemDTO> invoiceLineItemDTOs, @HeaderParam("Authorization") String jwt_Token) throws AlbumNotFoundException, NoPermissionException, NotEnoughStockException {
 
         if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
             InvoiceDTO invoiceDTO = new InvoiceDTO(
@@ -278,33 +309,23 @@ public class RestController {
     @GET
     @Path("/shoppingCart/display")
     @Produces("application/json")
-    @ApiResponse(responseCode = "200", description = "Success", useReturnTypeSchema = true)
-    @ApiResponse(responseCode = "404", description = "Method name not found", useReturnTypeSchema = true)
-    public ShoppingCartDTO displayShoppingCart(@HeaderParam("Authorization") String jwt_Token) throws NoPermissionException {
+    public ShoppingCartDTO displayShoppingCart(@HeaderParam("CartUUID") String UUID) throws NoPermissionException {
 
-        if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
-            ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(JwtManager.getEmailAddress(jwt_Token));
-            return shoppingCartService.getCart();
-        }
+        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+        return shoppingCartService.getCart();
 
-        return null;
     }
 
 
     @GET
     @Path("/shoppingCart/clear")
     @Produces("text/plain")
-    @ApiResponse(responseCode = "200", description = "Success", useReturnTypeSchema = true)
-    @ApiResponse(responseCode = "404", description = "Method name not found", useReturnTypeSchema = true)
-    public boolean clearShoppingCart(@HeaderParam("Authorization") String jwt_Token) throws NoPermissionException {
+    public boolean clearShoppingCart(@HeaderParam("CartUUID") String UUID) throws NoPermissionException {
 
-        if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
-            ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(JwtManager.getEmailAddress(jwt_Token));
-            shoppingCartService.clearCart();
-            return true;
-        }
+        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+        shoppingCartService.clearCart();
+        return true;
 
-        return false;
     }
 
 

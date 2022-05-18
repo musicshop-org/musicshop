@@ -46,6 +46,7 @@ public class SessionFacadeImpl implements SessionFacade {
         } catch (NotBoundException | MalformedURLException | RemoteException e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
@@ -54,8 +55,8 @@ public class SessionFacadeImpl implements SessionFacade {
     }
 
     @Override
-    public List<AlbumDTO> findAlbumsBySongTitleDigital(String title) {
-        return this.productService.findAlbumsBySongTitleDigital(title);
+    public List<AlbumDTO> findAlbumsBySongTitleDigital(String s) {
+        return null;
     }
 
     @Override
@@ -80,7 +81,8 @@ public class SessionFacadeImpl implements SessionFacade {
 
     @Override
     public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) throws NoPermissionException, NotEnoughStockException {
-        for (Role role : this.roles) {
+        for (Role role : this.roles)
+        {
             if (role.equals(Role.SALESPERSON)) {
                 this.productService.decreaseStockOfAlbum(title, mediumType, decreaseAmount);
                 return;
@@ -92,7 +94,8 @@ public class SessionFacadeImpl implements SessionFacade {
 
     @Override
     public void increaseStockOfAlbum(String title, MediumType mediumType, int increaseAmount) throws NoPermissionException {
-        for (Role role : this.roles) {
+        for (Role role : this.roles)
+        {
             if (role.equals(Role.SALESPERSON)) {
                 this.productService.increaseStockOfAlbum(title, mediumType, increaseAmount);
                 return;
@@ -105,7 +108,8 @@ public class SessionFacadeImpl implements SessionFacade {
     @Override
     public ShoppingCartDTO getCart() throws NoPermissionException {
 
-        for (Role role : this.roles) {
+        for (Role role : this.roles)
+        {
             if (role.equals(Role.SALESPERSON)) {
                 return this.shoppingCartService.getCart();
             }
@@ -115,11 +119,12 @@ public class SessionFacadeImpl implements SessionFacade {
     }
 
     @Override
-    public void addProductToCart(AlbumDTO albumDTO, int i) throws NoPermissionException {
+    public void addAlbumsToCart(AlbumDTO albumDTO, int i) throws NoPermissionException {
 
-        for (Role role : this.roles) {
+        for (Role role : this.roles)
+        {
             if (role.equals(Role.SALESPERSON)) {
-                this.shoppingCartService.addProductToCart(albumDTO, i);
+                this.shoppingCartService.addAlbumsToCart(albumDTO, i);
                 return;
             }
         }
@@ -128,9 +133,15 @@ public class SessionFacadeImpl implements SessionFacade {
     }
 
     @Override
+    public void addSongsToCart(List<SongDTO> songs) throws NoPermissionException {
+        shoppingCartService.addSongsToCart(songs);
+    }
+
+    @Override
     public void changeQuantity(CartLineItemDTO cartLineItemDTO, int i) throws NoPermissionException {
 
-        for (Role role : this.roles) {
+        for (Role role : this.roles)
+        {
             if (role.equals(Role.SALESPERSON)) {
                 this.shoppingCartService.changeQuantity(cartLineItemDTO, i);
                 return;
@@ -141,11 +152,12 @@ public class SessionFacadeImpl implements SessionFacade {
     }
 
     @Override
-    public void removeProductFromCart(CartLineItemDTO cartLineItemDTO) throws NoPermissionException {
+    public void removeLineItemFromCart(CartLineItemDTO cartLineItemDTO) throws NoPermissionException {
 
-        for (Role role : this.roles) {
+        for (Role role : this.roles)
+        {
             if (role.equals(Role.SALESPERSON)) {
-                this.shoppingCartService.removeProductFromCart(cartLineItemDTO);
+                this.shoppingCartService.removeLineItemFromCart(cartLineItemDTO);
                 return;
             }
         }
@@ -156,7 +168,8 @@ public class SessionFacadeImpl implements SessionFacade {
     @Override
     public void clearCart() throws NoPermissionException {
 
-        for (Role role : this.roles) {
+        for (Role role : this.roles)
+        {
             if (role.equals(Role.SALESPERSON)) {
                 this.shoppingCartService.clearCart();
                 return;
@@ -169,7 +182,8 @@ public class SessionFacadeImpl implements SessionFacade {
     @Override
     public List<CustomerDTO> findCustomersByName(String name) throws NoPermissionException, RemoteException {
 
-        for (Role role : this.roles) {
+        for (Role role : this.roles)
+        {
             if (role.equals(Role.SALESPERSON)) {
                 return customerService.findCustomersByName(name);
             }
@@ -190,7 +204,8 @@ public class SessionFacadeImpl implements SessionFacade {
 
     @Override
     public InvoiceDTO findInvoiceById(InvoiceId invoiceId) throws NoPermissionException, InvoiceNotFoundException {
-        for (Role role : this.roles) {
+        for (Role role : this.roles)
+        {
             if (role.equals(Role.SALESPERSON)) {
                 return invoiceService.findInvoiceById(invoiceId);
             }
@@ -202,7 +217,8 @@ public class SessionFacadeImpl implements SessionFacade {
     @Override
     public InvoiceId createInvoice(InvoiceDTO invoiceDTO) throws NoPermissionException, AlbumNotFoundException, NotEnoughStockException {
 
-        for (Role role : this.roles) {
+        for (Role role : this.roles)
+        {
             if (role.equals(Role.SALESPERSON)) {
                 return invoiceService.createInvoice(invoiceDTO);
             }
@@ -214,7 +230,8 @@ public class SessionFacadeImpl implements SessionFacade {
     @Override
     public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws NoPermissionException, InvoiceNotFoundException {
 
-        for (Role role : this.roles) {
+        for (Role role : this.roles)
+        {
             if (role.equals(Role.SALESPERSON)) {
                 invoiceService.returnInvoiceLineItem(invoiceId, invoiceLineItemDTO, returnQuantity);
                 return;
@@ -227,7 +244,8 @@ public class SessionFacadeImpl implements SessionFacade {
     @Override
     public void publish(List<String> topics, MessageDTO messageDTO) throws NoPermissionException {
 
-        for (Role role : this.roles) {
+        for (Role role : this.roles)
+        {
             if (role.equals(Role.OPERATOR) || role.equals(Role.SALESPERSON)) {
                 messageProducerService.publish(topics, messageDTO);
                 return;

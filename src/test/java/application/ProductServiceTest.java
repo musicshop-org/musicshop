@@ -57,9 +57,9 @@ public class ProductServiceTest {
 
 
         Set<Album> albums = new HashSet<>();
-        albums.add(new Album("Thriller", new BigDecimal(12), 4, MediumType.CD, LocalDate.of(1983, 6, 6), new AlbumId(), "Epic", songs));
+        albums.add(new Album("Thriller", "", new BigDecimal(12), 4, MediumType.CD, LocalDate.of(1983, 6, 6), new AlbumId(), "Epic", songs));
 
-        givenAlbumDTOs.add(new AlbumDTO("Thriller", new BigDecimal(12), 4, MediumType.CD, LocalDate.of(1983, 6, 6).toString(), new AlbumId(), "Epic", songDTOs, 0));
+        givenAlbumDTOs.add(new AlbumDTO("Thriller", "", new BigDecimal(12), 4, MediumType.CD, LocalDate.of(1983, 6, 6).toString(), new AlbumId(), "Epic", songDTOs, 0));
 
         Mockito.when(productRepository.findAlbumsBySongTitle(songTitle)).thenReturn(albums);
 
@@ -105,9 +105,9 @@ public class ProductServiceTest {
 
 
         Set<Album> albums = new HashSet<>();
-        albums.add(new Album("Thriller", new BigDecimal(12), 4, MediumType.CD, LocalDate.of(1983, 6, 6), new AlbumId(), "Epic", songs));
+        albums.add(new Album("Thriller", "", new BigDecimal(12), 4, MediumType.CD, LocalDate.of(1983, 6, 6), new AlbumId(), "Epic", songs));
 
-        givenAlbumDTOs.add(new AlbumDTO("Thriller", new BigDecimal(12), 4, MediumType.CD, LocalDate.of(1983, 6, 6).toString(), new AlbumId(), "Epic", songDTOs, 0));
+        givenAlbumDTOs.add(new AlbumDTO("Thriller", "", new BigDecimal(12), 4, MediumType.CD, LocalDate.of(1983, 6, 6).toString(), new AlbumId(), "Epic", songDTOs, 0));
 
         Mockito.when(productRepository.findAlbumsBySongTitle(songTitle)).thenReturn(albums);
 
@@ -255,6 +255,7 @@ public class ProductServiceTest {
         final int expectedQuantity = 3;
 
         Album album = new Album(title,
+                "",
                 BigDecimal.TEN,
                 givenStock,
                 mediumType,
@@ -280,6 +281,7 @@ public class ProductServiceTest {
         final MediumType mediumType = MediumType.CD;
 
         Album album = new Album(title,
+                "",
                 BigDecimal.TEN,
                 8,
                 mediumType,
@@ -307,6 +309,7 @@ public class ProductServiceTest {
         final MediumType mediumType = MediumType.CD;
 
         Album album = new Album(title,
+                "",
                 BigDecimal.TEN,
                 8,
                 mediumType,
