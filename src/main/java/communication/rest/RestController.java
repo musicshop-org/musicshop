@@ -70,6 +70,7 @@ public class RestController {
     @Produces("text/plain")
     @ApiResponse(responseCode = "200", description = "Login ok", useReturnTypeSchema = true)
     @ApiResponse(responseCode = "404", description = "Method name not found", useReturnTypeSchema = true)
+    // TODO:: API Response
     public String login(UserDataDTO userData) {
         RestLoginService restLoginService = new RestLoginServiceImpl();
 
@@ -90,6 +91,7 @@ public class RestController {
     @Produces("text/plain")
     @ApiResponse(responseCode = "200", description = "Login successful", useReturnTypeSchema = true)
     @ApiResponse(responseCode = "404", description = "Method name not found", useReturnTypeSchema = true)
+    // TODO:: API Response
     public String loginWeb(UserDataDTO userData) {
         RestLoginService restLoginService = new RestLoginServiceImpl();
 
@@ -154,6 +156,7 @@ public class RestController {
     @Produces("application/json")
     @ApiResponse(responseCode = "200", description = "Album found", useReturnTypeSchema = true)
     @ApiResponse(responseCode = "404", description = "Method name not found", useReturnTypeSchema = true)
+    // TODO:: API Response
     public AlbumDTO findAlbumByAlbumId(@PathParam("albumId") String albumId, @HeaderParam("Authorization") String jwt_Token) {
         ProductService productService = new ProductServiceImpl();
 
@@ -213,45 +216,45 @@ public class RestController {
                             }
                     )
             })
-    public Response addToCart(AlbumDTO album, @HeaderParam("CartUUID") String UUID) throws NoPermissionException {
+    public boolean addToCart(AlbumDTO album, @HeaderParam("CartUUID") String UUID) throws NoPermissionException {
 
         ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
         shoppingCartService.addAlbumsToCart(album, album.getQuantityToAddToCart());
         return true;
 
-        Response.Status status;
-        String responseText;
-
-        if (jwt_Token == null || jwt_Token.equals("")) {
-
-            status = Response.Status.UNAUTHORIZED;
-            responseText = "No authorization provided";
-
-        } else if (!JwtManager.isValidToken(jwt_Token)) {
-
-            status = Response.Status.UNAUTHORIZED;
-            responseText = "Invalid JWT token provided";
-
-        } else if (isCustomerOrLicensee(jwt_Token)) {
-
-            ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(JwtManager.getEmailAddress(jwt_Token));
-            shoppingCartService.addProductToCart(album, album.getQuantityToAddToCart());
-
-            status = Response.Status.OK;
-            responseText = "Add to cart successful";
-
-        } else {
-
-            status = Response.Status.FORBIDDEN;
-            responseText = "No permission";
-
-        }
-
-        return Response
-                .status(status)
-                .entity(responseText)
-                .type(MediaType.TEXT_PLAIN)
-                .build();
+//        Response.Status status;
+//        String responseText;
+//
+//        if (jwt_Token == null || jwt_Token.equals("")) {
+//
+//            status = Response.Status.UNAUTHORIZED;
+//            responseText = "No authorization provided";
+//
+//        } else if (!JwtManager.isValidToken(jwt_Token)) {
+//
+//            status = Response.Status.UNAUTHORIZED;
+//            responseText = "Invalid JWT token provided";
+//
+//        } else if (isCustomerOrLicensee(jwt_Token)) {
+//
+//            ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(JwtManager.getEmailAddress(jwt_Token));
+//            shoppingCartService.addProductToCart(album, album.getQuantityToAddToCart());
+//
+//            status = Response.Status.OK;
+//            responseText = "Add to cart successful";
+//
+//        } else {
+//
+//            status = Response.Status.FORBIDDEN;
+//            responseText = "No permission";
+//
+//        }
+//
+//        return Response
+//                .status(status)
+//                .entity(responseText)
+//                .type(MediaType.TEXT_PLAIN)
+//                .build();
     }
 
 
@@ -259,6 +262,7 @@ public class RestController {
     @Path("/albums/addSongsToCart")
     @Consumes("application/json")
     @Produces("text/plain")
+    // TODO:: API Response
     public boolean addSongsToCart(List<SongDTO> songs, @HeaderParam("CartUUID") String UUID) throws NoPermissionException {
 
         ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
@@ -272,6 +276,7 @@ public class RestController {
     @Path("/albums/addSongsFromAlbumToCart")
     @Consumes("application/json")
     @Produces("text/plain")
+    // TODO:: API Response
     public boolean addSongsFromAlbumToCart(AlbumDTO album, @HeaderParam("CartUUID") String UUID) throws NoPermissionException {
 
         ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
@@ -287,6 +292,7 @@ public class RestController {
     @Produces("text/plain")
     @ApiResponse(responseCode = "200", description = "Buy product successful", useReturnTypeSchema = true)
     @ApiResponse(responseCode = "404", description = "Method name not found", useReturnTypeSchema = true)
+    // TODO:: API Response
     public boolean buyProduct(List<InvoiceLineItemDTO> invoiceLineItemDTOs, @HeaderParam("Authorization") String jwt_Token) throws AlbumNotFoundException, NoPermissionException, NotEnoughStockException {
 
         if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
@@ -309,6 +315,7 @@ public class RestController {
     @GET
     @Path("/shoppingCart/display")
     @Produces("application/json")
+    // TODO:: API Response
     public ShoppingCartDTO displayShoppingCart(@HeaderParam("CartUUID") String UUID) throws NoPermissionException {
 
         ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
@@ -320,6 +327,7 @@ public class RestController {
     @GET
     @Path("/shoppingCart/clear")
     @Produces("text/plain")
+    // TODO:: API Response
     public boolean clearShoppingCart(@HeaderParam("CartUUID") String UUID) throws NoPermissionException {
 
         ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
