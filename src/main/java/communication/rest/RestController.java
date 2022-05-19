@@ -136,6 +136,13 @@ public class RestController {
 
         List<AlbumDTO> albumDTOList = productService.findAlbumsBySongTitleDigital(songTitle);
 
+        Response response = ResponseWrapper.
+                builder()
+                .considerJWT(jwt_Token)
+                .considerRoles(this.isCustomerOrLicensee(jwt_Token))
+                .responseConfiguration(ResponseConfiguration::new)
+                .build();
+
         if (albumDTOList.size() <= 0) {
             return Response
                     .status(Response.Status.NOT_FOUND)

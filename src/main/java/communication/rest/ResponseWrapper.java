@@ -96,10 +96,3 @@ public class ResponseWrapper {
         }
     }
 }
-
-    //Response response = ResponseWrapper.
-    //        builder()
-    //        .considerJWT(jwt_Token)
-    //        .considerRoles(this.isCustomerOrLicensee(jwt_Token))
-    //        .responseConfiguration(ResponseConfiguration::new)
-    //        .build();
