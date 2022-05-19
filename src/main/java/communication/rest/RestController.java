@@ -216,7 +216,7 @@ public class RestController {
                             }
                     )
             })
-    public boolean addToCart(AlbumDTO album, @HeaderParam("CartUUID") String UUID) throws NoPermissionException {
+    public boolean addAlbumsToCart(AlbumDTO album, @HeaderParam("CartUUID") String UUID) throws NoPermissionException {
 
         ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
         shoppingCartService.addAlbumsToCart(album, album.getQuantityToAddToCart());
