@@ -13,7 +13,7 @@ import java.util.Set;
 public class Album extends Product {
 
     private String label;
-    private String imageUrl;
+    private String imageUrl = " ";
     private AlbumId albumId;
     private Set<Song> songs = new HashSet<>();
 

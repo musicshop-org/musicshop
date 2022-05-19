@@ -66,7 +66,7 @@ public class ProductServiceImpl implements ProductService {
                                     .stream()
                                     .map(albumDTO -> new AlbumDTO(
                                             albumDTO.getTitle(),
-                                            albumDTO.getImageUrl(),
+                                            albumDTO.getImageUrl() != null ? albumDTO.getImageUrl() : " ",
                                             albumDTO.getPrice(),
                                             albumDTO.getStock(),
                                             albumDTO.getMediumType(),
@@ -81,7 +81,7 @@ public class ProductServiceImpl implements ProductService {
 
                 albumDTOs.add(new AlbumDTO(
                         album.getTitle(),
-                        album.getImageUrl(),
+                        album.getImageUrl() != null ? album.getImageUrl() : " ",
                         album.getPrice(),
                         album.getStock(),
                         album.getMediumType(),
@@ -128,7 +128,7 @@ public class ProductServiceImpl implements ProductService {
                                     .stream()
                                     .map(albumDTO -> new AlbumDTO(
                                             albumDTO.getTitle(),
-                                            albumDTO.getImageUrl(),
+                                            albumDTO.getImageUrl() != null ? albumDTO.getImageUrl() : " ",
                                             albumDTO.getPrice(),
                                             albumDTO.getStock(),
                                             albumDTO.getMediumType(),
@@ -143,7 +143,7 @@ public class ProductServiceImpl implements ProductService {
 
                 albumDTOs.add(new AlbumDTO(
                         album.getTitle(),
-                        album.getImageUrl(),
+                        album.getImageUrl() != null ? album.getImageUrl() : " ",
                         album.getPrice(),
                         album.getStock(),
                         album.getMediumType(),
@@ -170,7 +170,7 @@ public class ProductServiceImpl implements ProductService {
 
         return AlbumDTO.builder()
                 .title(album.getTitle())
-                .imageUrl(album.getImageUrl())
+                .imageUrl(album.getImageUrl() != null ? album.getImageUrl() : " ")
                 .price(album.getPrice())
                 .stock(album.getStock())
                 .mediumType(album.getMediumType())
@@ -193,7 +193,7 @@ public class ProductServiceImpl implements ProductService {
                                 .stock(song.getStock())
                                 .inAlbum(Set.of(new AlbumDTO(
                                         album.getTitle(),
-                                        album.getImageUrl(),
+                                        album.getImageUrl() != null ? album.getImageUrl() : " ",
                                         album.getPrice(),
                                         album.getStock(),
                                         album.getMediumType(),
@@ -220,7 +220,7 @@ public class ProductServiceImpl implements ProductService {
 
             return AlbumDTO.builder()
                     .title(album.getTitle())
-                    .imageUrl(album.getImageUrl())
+                    .imageUrl(album.getImageUrl() != null ? album.getImageUrl() : " ")
                     .price(album.getPrice())
                     .stock(album.getStock())
                     .mediumType(album.getMediumType())
@@ -243,7 +243,7 @@ public class ProductServiceImpl implements ProductService {
                                     .stock(song.getStock())
                                     .inAlbum(Set.of(new AlbumDTO(
                                             album.getTitle(),
-                                            album.getImageUrl(),
+                                            album.getImageUrl() != null ? album.getImageUrl() : " ",
                                             album.getPrice(),
                                             album.getStock(),
                                             album.getMediumType(),

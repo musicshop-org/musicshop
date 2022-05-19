@@ -4,6 +4,7 @@ import application.InvoiceServiceImpl;
 import application.ProductServiceImpl;
 import application.ShoppingCartServiceImpl;
 import communication.rest.api.RestLoginService;
+import domain.Album;
 import sharedrmi.application.api.InvoiceService;
 import sharedrmi.application.api.ProductService;
 import sharedrmi.application.api.ShoppingCartService;
@@ -24,8 +25,6 @@ import java.util.List;
 @Path("")
 public class RestController {
 
-    private final ProductService productService = new ProductServiceImpl();
-    private final ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl("PythonTestClient");
     private final InvoiceService invoiceService = new InvoiceServiceImpl();
 
     public RestController() {
@@ -80,6 +79,15 @@ public class RestController {
         ProductService productService = new ProductServiceImpl();
         return productService.findAlbumsBySongTitleDigital(songTitle);
 
+    }
+
+    @GET
+    @Path("/albums/{songTitle}")
+    @Produces("application/json")
+    public List<AlbumDTO> findAlbumsBySongTitlePhysical(@PathParam("songTitle") String songTitle, @HeaderParam("Authorization") String jwt_Token) {
+
+        ProductService productService = new ProductServiceImpl();
+        return productService.findAlbumsBySongTitle(songTitle);
     }
 
 
