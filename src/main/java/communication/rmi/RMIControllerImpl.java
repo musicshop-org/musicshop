@@ -39,28 +39,28 @@ public class RMIControllerImpl implements RMIController {
     }
 
     @Override
-    public List<AlbumDTO> findAlbumsBySongTitle(String title) {
-        return sessionFacade.findAlbumsBySongTitle(title);
+    public List<AlbumDTO> findAlbumsBySongTitle(String s) {
+        return sessionFacade.findAlbumsBySongTitle(s);
     }
 
     @Override
-    public List<AlbumDTO> findAlbumsBySongTitleDigital(String title) {
-        return sessionFacade.findAlbumsBySongTitleDigital(title);
+    public List<AlbumDTO> findAlbumsBySongTitleDigital(String s) {
+        return null;
     }
 
     @Override
-    public AlbumDTO findAlbumByAlbumTitleAndMedium(String title, MediumType mediumType) throws AlbumNotFoundException {
-        return sessionFacade.findAlbumByAlbumTitleAndMedium(title, mediumType);
+    public AlbumDTO findAlbumByAlbumTitleAndMedium(String s, MediumType mediumType) throws AlbumNotFoundException {
+        return sessionFacade.findAlbumByAlbumTitleAndMedium(s, mediumType);
     }
 
     @Override
-    public List<SongDTO> findSongsByTitle(String title) {
-        return sessionFacade.findSongsByTitle(title);
+    public List<SongDTO> findSongsByTitle(String s) {
+        return sessionFacade.findSongsByTitle(s);
     }
 
     @Override
-    public List<ArtistDTO> findArtistsByName(String name) {
-        return sessionFacade.findArtistsByName(name);
+    public List<ArtistDTO> findArtistsByName(String s) {
+        return sessionFacade.findArtistsByName(s);
     }
 
     @Override
@@ -84,8 +84,13 @@ public class RMIControllerImpl implements RMIController {
     }
 
     @Override
-    public void addProductToCart(AlbumDTO albumDTO, int i) throws NoPermissionException {
-        sessionFacade.addProductToCart(albumDTO, i);
+    public void addAlbumsToCart(AlbumDTO albumDTO, int i) throws NoPermissionException {
+        sessionFacade.addAlbumsToCart(albumDTO, i);
+    }
+
+    @Override
+    public void addSongsToCart(List<SongDTO> songs) throws NoPermissionException {
+        sessionFacade.addSongsToCart(songs);
     }
 
     @Override
@@ -94,8 +99,8 @@ public class RMIControllerImpl implements RMIController {
     }
 
     @Override
-    public void removeProductFromCart(CartLineItemDTO cartLineItemDTO) throws NoPermissionException {
-        sessionFacade.removeProductFromCart(cartLineItemDTO);
+    public void removeLineItemFromCart(CartLineItemDTO cartLineItemDTO) throws NoPermissionException {
+        sessionFacade.removeLineItemFromCart(cartLineItemDTO);
     }
 
     @Override
@@ -130,7 +135,7 @@ public class RMIControllerImpl implements RMIController {
 
     @Override
     public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws NoPermissionException, InvoiceNotFoundException {
-        sessionFacade.returnInvoiceLineItem(invoiceId, invoiceLineItemDTO, returnQuantity);
+        sessionFacade.returnInvoiceLineItem(invoiceId,invoiceLineItemDTO,returnQuantity);
     }
 
     @Override

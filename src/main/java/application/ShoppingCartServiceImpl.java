@@ -10,13 +10,17 @@ import sharedrmi.application.api.ShoppingCartService;
 import sharedrmi.application.dto.AlbumDTO;
 import sharedrmi.application.dto.CartLineItemDTO;
 import sharedrmi.application.dto.ShoppingCartDTO;
+import sharedrmi.application.dto.SongDTO;
+import sharedrmi.domain.enums.ProductType;
 
 import javax.naming.NoPermissionException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ShoppingCartServiceImpl implements ShoppingCartService {
 
@@ -62,7 +66,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                     cartLineItem.getName(),
                     cartLineItem.getQuantity(),
                     cartLineItem.getPrice(),
-                    cartLineItem.getStock()
+                    cartLineItem.getStock(),
+                    cartLineItem.getImageUrl(),
+                    cartLineItem.getProductType(),
+                    cartLineItem.getArtists()
             ));
         }
 
@@ -71,15 +78,45 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Transactional
     @Override
-    public void addProductToCart(AlbumDTO album, int amount) {
+    public void addAlbumsToCart(AlbumDTO album, int amount) {
         CartLineItem cartLineItem = new CartLineItem(
                 album.getMediumType(),
                 album.getTitle(), amount,
                 album.getPrice(),
-                album.getStock()
+                album.getStock(),
+                album.getImageUrl(),
+                ProductType.ALBUM,
+                album.getSongs().stream().map(song -> song.getArtists().stream().map(artist -> artist.getName()).findFirst().get()).collect(Collectors.toList())
         );
 
         this.shoppingCart.addLineItem(cartLineItem);
+    }
+
+    @Transactional
+    @Override
+    public void addSongsToCart(List<SongDTO> songs) {
+
+        for (SongDTO song : songs) {
+
+            String imageUrl;
+            if (!song.getInAlbum().isEmpty()) {
+                imageUrl = song.getInAlbum().iterator().next().getImageUrl();
+            } else {
+                imageUrl = "";
+            }
+
+            CartLineItem cartLineItem = new CartLineItem(
+                    song.getMediumType(),
+                    song.getTitle(), 1,
+                    song.getPrice(),
+                    song.getStock(),
+                    imageUrl,
+                    ProductType.SONG,
+                    song.getArtists().stream().map(artist -> artist.getName()).collect(Collectors.toList())
+            );
+
+            this.shoppingCart.addLineItem(cartLineItem);
+        }
     }
 
     @Transactional
@@ -90,7 +127,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 cartLineItemDTO.getName(),
                 cartLineItemDTO.getQuantity(),
                 cartLineItemDTO.getPrice(),
-                cartLineItemDTO.getStock()
+                cartLineItemDTO.getStock(),
+                cartLineItemDTO.getImageUrl(),
+                cartLineItemDTO.getProductType()
         );
 
         this.shoppingCart.changeQuantity(cartLineItem, quantity);
@@ -98,13 +137,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Transactional
     @Override
-    public void removeProductFromCart(CartLineItemDTO cartLineItemDTO) {
+    public void removeLineItemFromCart(CartLineItemDTO cartLineItemDTO) {
         CartLineItem cartLineItem = new CartLineItem(
                 cartLineItemDTO.getMediumType(),
                 cartLineItemDTO.getName(),
                 cartLineItemDTO.getQuantity(),
                 cartLineItemDTO.getPrice(),
-                cartLineItemDTO.getStock()
+                cartLineItemDTO.getStock(),
+                cartLineItemDTO.getImageUrl(),
+                cartLineItemDTO.getProductType()
         );
 
         this.shoppingCart.removeLineItem(cartLineItem);
