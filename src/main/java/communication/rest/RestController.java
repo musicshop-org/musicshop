@@ -3,9 +3,10 @@ package communication.rest;
 import application.InvoiceServiceImpl;
 import application.ProductServiceImpl;
 import application.ShoppingCartServiceImpl;
-import communication.rest.api.RestLoginService;
 
+import communication.rest.api.RestLoginService;
 import communication.rest.util.ResponseWrapper;
+
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -52,7 +53,6 @@ import java.util.List;
 public class RestController {
 
     private final ProductService productService = new ProductServiceImpl();
-    private final ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl("PythonTestClient");
     private final InvoiceService invoiceService = new InvoiceServiceImpl();
 
     public RestController() {
@@ -586,40 +586,213 @@ public class RestController {
 
     @GET
     @Path("/shoppingCart/display")
-    @Produces("application/json")
-    // TODO:: API Response
-    public ShoppingCartDTO displayShoppingCart(@HeaderParam("CartUUID") String UUID) throws NoPermissionException {
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Ok",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON,
+                                            schema = @Schema(implementation = ShoppingCartDTO.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Request parameter not ok",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "No permission",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    )
+            })
+    public Response displayShoppingCart(@HeaderParam("CartUUID") String UUID) {
 
-        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
-        return shoppingCartService.getCart();
+        if (UUID == null) {
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("Request parameter not ok")
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
 
+        return ResponseWrapper
+                .builder()
+                .response(() -> {
+
+                    ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+
+                    try {
+                        return Response
+                                .status(Response.Status.OK)
+                                .entity(shoppingCartService.getCart())
+                                .type(MediaType.APPLICATION_JSON)
+                                .build();
+                    } catch (NoPermissionException e) {
+                        return Response
+                                .status(Response.Status.FORBIDDEN)
+                                .entity("No permission")
+                                .type(MediaType.TEXT_PLAIN)
+                                .build();
+                    }
+                })
+                .build();
     }
 
 
     @POST
     @Path("/shoppingCart/removeLineItemFromCart")
     @Consumes("application/json")
-    @Produces("text/plain")
-    // TODO:: API Response
-    public boolean removeLineItemFromCart(CartLineItemDTO cartLineItemDTO, @HeaderParam("CartUUID") String UUID) throws NoPermissionException {
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Remove item successful",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Request parameter not ok",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "No permission",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    )
+            })
+    public Response removeLineItemFromCart(CartLineItemDTO cartLineItemDTO, @HeaderParam("CartUUID") String UUID) {
 
-        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
-        shoppingCartService.removeLineItemFromCart(cartLineItemDTO);
-        return true;
+        if (cartLineItemDTO == null || UUID == null) {
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("Request parameter not ok")
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
 
+        return ResponseWrapper
+                .builder()
+                .response(() -> {
+
+                    ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+
+                    try {
+                        shoppingCartService.removeLineItemFromCart(cartLineItemDTO);
+                    } catch (NoPermissionException e) {
+                        return Response
+                                .status(Response.Status.FORBIDDEN)
+                                .entity("No permission")
+                                .type(MediaType.TEXT_PLAIN)
+                                .build();
+                    }
+
+                    return Response
+                            .status(Response.Status.OK)
+                            .entity("Remove item successful")
+                            .type(MediaType.TEXT_PLAIN)
+                            .build();
+                })
+                .build();
     }
 
 
     @GET
     @Path("/shoppingCart/clear")
-    @Produces("text/plain")
-    // TODO:: API Response
-    public boolean clearShoppingCart(@HeaderParam("CartUUID") String UUID) throws NoPermissionException {
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "CLear cart successful",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Request parameter not ok",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "No permission",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    )
+            })
+    public Response clearShoppingCart(@HeaderParam("CartUUID") String UUID) {
 
-        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
-        shoppingCartService.clearCart();
-        return true;
+        if (UUID == null) {
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("Request parameter not ok")
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
 
+        return ResponseWrapper
+                .builder()
+                .response(() -> {
+
+                    ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+
+                    try {
+                        shoppingCartService.clearCart();
+                    } catch (NoPermissionException e) {
+                        return Response
+                                .status(Response.Status.FORBIDDEN)
+                                .entity("No permission")
+                                .type(MediaType.TEXT_PLAIN)
+                                .build();
+                    }
+
+                    return Response
+                            .status(Response.Status.OK)
+                            .entity("CLear cart successful")
+                            .type(MediaType.TEXT_PLAIN)
+                            .build();
+                })
+                .build();
     }
 
     @POST
@@ -708,7 +881,7 @@ public class RestController {
                             }
                     )
             })
-    public Response buyProduct(List<InvoiceLineItemDTO> invoiceLineItemDTOs, @HeaderParam("Authorization") String jwt_Token) throws AlbumNotFoundException, NoPermissionException, NotEnoughStockException {
+    public Response buyProduct(List<InvoiceLineItemDTO> invoiceLineItemDTOs, @HeaderParam("Authorization") String jwt_Token) {
 
         if (invoiceLineItemDTOs == null || jwt_Token == null) {
             return Response
