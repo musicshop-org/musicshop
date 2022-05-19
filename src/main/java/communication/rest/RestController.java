@@ -324,6 +324,20 @@ public class RestController {
     }
 
 
+    @POST
+    @Path("/shoppingCart/removeLineItemFromCart")
+    @Consumes("application/json")
+    @Produces("text/plain")
+    // TODO:: API Response
+    public boolean removeLineItemFromCart(CartLineItemDTO cartLineItemDTO, @HeaderParam("CartUUID") String UUID) throws NoPermissionException {
+
+        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+        shoppingCartService.removeLineItemFromCart(cartLineItemDTO);
+        return true;
+
+    }
+
+
     @GET
     @Path("/shoppingCart/clear")
     @Produces("text/plain")
