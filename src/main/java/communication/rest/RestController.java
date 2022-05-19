@@ -138,8 +138,8 @@ public class RestController {
 
         return ResponseWrapper
                 .builder()
-                .checkCredentials(restLoginService.checkCredentials(emailAddress, password))
-                .checkRoles(restLoginService.getRole(emailAddress).contains(Role.LICENSEE))
+                .considerLogin(restLoginService.checkCredentials(emailAddress, password))
+                .considerRoles(restLoginService.getRole(emailAddress).contains(Role.LICENSEE))
                 .response(() -> Response
                         .status(Response.Status.OK)
                         .entity(JwtManager.createJWT(emailAddress, 900000))
@@ -222,8 +222,8 @@ public class RestController {
 
         return ResponseWrapper
                 .builder()
-                .checkCredentials(restLoginService.checkCredentials(emailAddress, password))
-                .checkRoles(restLoginService.getRole(emailAddress).contains(Role.CUSTOMER))
+                .considerLogin(restLoginService.checkCredentials(emailAddress, password))
+                .considerRoles(restLoginService.getRole(emailAddress).contains(Role.CUSTOMER))
                 .response(() -> Response
                         .status(Response.Status.OK)
                         .entity(JwtManager.createJWT(emailAddress, 900000))
@@ -394,38 +394,8 @@ public class RestController {
                             }
                     ),
                     @ApiResponse(
-                            responseCode = "401",
-                            description = "No authorization provided",
-                            content = {
-                                    @Content(
-                                            mediaType = MediaType.TEXT_PLAIN,
-                                            schema = @Schema(implementation = String.class)
-                                    )
-                            }
-                    ),
-                    @ApiResponse(
                             responseCode = "403",
                             description = "No permission",
-                            content = {
-                                    @Content(
-                                            mediaType = MediaType.TEXT_PLAIN,
-                                            schema = @Schema(implementation = String.class)
-                                    )
-                            }
-                    ),
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Shopping cart not found",
-                            content = {
-                                    @Content(
-                                            mediaType = MediaType.TEXT_PLAIN,
-                                            schema = @Schema(implementation = String.class)
-                                    )
-                            }
-                    ),
-                    @ApiResponse(
-                            responseCode = "500",
-                            description = "Internal server error, please contact our support",
                             content = {
                                     @Content(
                                             mediaType = MediaType.TEXT_PLAIN,
@@ -454,8 +424,8 @@ public class RestController {
                         shoppingCartService.addAlbumsToCart(album, album.getQuantityToAddToCart());
                     } catch (NoPermissionException e) {
                         return Response
-                                .status(Response.Status.INTERNAL_SERVER_ERROR)
-                                .entity("Internal server error, please contact our support")
+                                .status(Response.Status.FORBIDDEN)
+                                .entity("No permission")
                                 .type(MediaType.TEXT_PLAIN)
                                 .build();
                     }
@@ -473,13 +443,72 @@ public class RestController {
     @POST
     @Path("/albums/addSongsToCart")
     @Consumes("application/json")
-    @Produces("text/plain")
-    // TODO:: API Response
-    public boolean addSongsToCart(List<SongDTO> songs, @HeaderParam("CartUUID") String UUID) throws NoPermissionException {
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Add to cart successful",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Request parameter not ok",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "No permission",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    )
+            })
+    public Response addSongsToCart(List<SongDTO> songs, @HeaderParam("CartUUID") String UUID) {
 
-        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
-        shoppingCartService.addSongsToCart(songs);
-        return true;
+        if (songs == null || UUID == null) {
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("Request parameter not ok")
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
+
+        return ResponseWrapper
+                .builder()
+                .response(() -> {
+
+                    ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+
+                    try {
+                        shoppingCartService.addSongsToCart(songs);
+                    } catch (NoPermissionException e) {
+                        return Response
+                                .status(Response.Status.FORBIDDEN)
+                                .entity("No permission")
+                                .type(MediaType.TEXT_PLAIN)
+                                .build();
+                    }
+
+                    return Response
+                            .status(Response.Status.OK)
+                            .entity("Add to cart successful")
+                            .type(MediaType.TEXT_PLAIN)
+                            .build();
+                })
+                .build();
 
     }
 
@@ -487,42 +516,73 @@ public class RestController {
     @POST
     @Path("/albums/addSongsFromAlbumToCart")
     @Consumes("application/json")
-    @Produces("text/plain")
-    // TODO:: API Response
-    public boolean addSongsFromAlbumToCart(AlbumDTO album, @HeaderParam("CartUUID") String UUID) throws NoPermissionException {
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Add to cart successful",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Request parameter not ok",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "No permission",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    )
+            })
+    public Response addSongsFromAlbumToCart(AlbumDTO album, @HeaderParam("CartUUID") String UUID) {
 
-        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
-        shoppingCartService.addSongsToCart(new LinkedList<>(album.getSongs()));
-        return true;
-
-    }
-
-
-    @POST
-    @Path("/shoppingCart/buyProducts")
-    @Consumes("application/json")
-    @Produces("text/plain")
-    @ApiResponse(responseCode = "200", description = "Buy product successful", useReturnTypeSchema = true)
-    @ApiResponse(responseCode = "404", description = "Method name not found", useReturnTypeSchema = true)
-    // TODO:: API Response
-    public boolean buyProduct(List<InvoiceLineItemDTO> invoiceLineItemDTOs, @HeaderParam("Authorization") String jwt_Token) throws AlbumNotFoundException, NoPermissionException, NotEnoughStockException {
-
-        if (JwtManager.isValidToken(jwt_Token) && isCustomerOrLicensee(jwt_Token)) {
-            InvoiceDTO invoiceDTO = new InvoiceDTO(
-                    new InvoiceId(),
-                    invoiceLineItemDTOs,
-                    PaymentMethod.CASH,
-                    LocalDate.now(),
-                    null
-            );
-
-            invoiceService.createInvoice(invoiceDTO);
-            return true;
+        if (album == null || UUID == null) {
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("Request parameter not ok")
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
         }
 
-        return false;
-    }
+        return ResponseWrapper
+                .builder()
+                .response(() -> {
 
+                    ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+
+                    try {
+                        shoppingCartService.addSongsToCart(new LinkedList<>(album.getSongs()));
+                    } catch (NoPermissionException e) {
+                        return Response
+                                .status(Response.Status.FORBIDDEN)
+                                .entity("No permission")
+                                .type(MediaType.TEXT_PLAIN)
+                                .build();
+                    }
+
+                    return Response
+                            .status(Response.Status.OK)
+                            .entity("Add to cart successful")
+                            .type(MediaType.TEXT_PLAIN)
+                            .build();
+                })
+                .build();
+    }
 
     @GET
     @Path("/shoppingCart/display")
@@ -562,6 +622,154 @@ public class RestController {
 
     }
 
+    @POST
+    @Path("/shoppingCart/buyProducts")
+    @Consumes("application/json")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Buy product successful",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Request parameter not ok",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "No authorization provided",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Invalid JWT token provided",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "No permission",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Album not found",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "409",
+                            description = "Not enough stock available",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "Internal server error, please contact our support",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    )
+            })
+    public Response buyProduct(List<InvoiceLineItemDTO> invoiceLineItemDTOs, @HeaderParam("Authorization") String jwt_Token) throws AlbumNotFoundException, NoPermissionException, NotEnoughStockException {
+
+        if (invoiceLineItemDTOs == null || jwt_Token == null) {
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("Request parameter not ok")
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
+
+        if (jwt_Token.equals("")) {
+            return Response
+                    .status(Response.Status.UNAUTHORIZED)
+                    .entity("No authorization provided")
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
+
+        return ResponseWrapper
+                .builder()
+                .considerJWT(JwtManager.isValidToken(jwt_Token))
+                .considerRoles(this.isCustomerOrLicensee(jwt_Token))
+                .response(() -> {
+
+                    InvoiceDTO invoiceDTO = new InvoiceDTO(
+                            new InvoiceId(),
+                            invoiceLineItemDTOs,
+                            PaymentMethod.CASH,
+                            LocalDate.now(),
+                            null
+                    );
+
+                    try {
+                        invoiceService.createInvoice(invoiceDTO);
+                    } catch (NoPermissionException e) {
+                        return Response
+                                .status(Response.Status.FORBIDDEN)
+                                .entity("No permission")
+                                .type(MediaType.TEXT_PLAIN)
+                                .build();
+                    } catch (NotEnoughStockException e) {
+                        return Response
+                                .status(Response.Status.CONFLICT)
+                                .entity("Not enough stock available")
+                                .type(MediaType.TEXT_PLAIN)
+                                .build();
+                    } catch (AlbumNotFoundException e) {
+                        return Response
+                                .status(Response.Status.NOT_FOUND)
+                                .entity("Album not found")
+                                .type(MediaType.TEXT_PLAIN)
+                                .build();
+                    }
+
+                    return Response
+                            .status(Response.Status.OK)
+                            .entity("Buy product successful")
+                            .type(MediaType.TEXT_PLAIN)
+                            .build();
+                })
+                .build();
+    }
 
     private boolean isCustomerOrLicensee(String jwt_Token) {
         List<Role> userRoles = JwtManager.getRoles(jwt_Token);

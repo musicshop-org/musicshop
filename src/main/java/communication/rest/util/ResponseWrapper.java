@@ -1,6 +1,5 @@
 package communication.rest.util;
 
-import communication.rest.JwtManager;
 import org.apache.commons.lang3.NotImplementedException;
 
 import javax.ws.rs.core.MediaType;
@@ -17,30 +16,30 @@ public class ResponseWrapper {
     }
 
     public static class ResponseWrapperBuilder {
-        private Boolean checkCredentials;
+        private Boolean considerLogin;
         private Boolean loginOk;
         private Boolean considerJWT;
         private Boolean considerPermission;
-        private String JWT;
+        private Boolean validJWT;
         private Boolean permission;
         private IResponse iResponse;
 
         ResponseWrapperBuilder() {
         }
 
-        public ResponseWrapperBuilder checkCredentials(Boolean loginOk) {
-            this.checkCredentials = true;
+        public ResponseWrapperBuilder considerLogin(Boolean loginOk) {
+            this.considerLogin = true;
             this.loginOk = loginOk;
             return this;
         }
 
-        public ResponseWrapperBuilder checkJWT(String JWT) {
+        public ResponseWrapperBuilder considerJWT(Boolean validJWT) {
             this.considerJWT = true;
-            this.JWT = JWT;
+            this.validJWT = validJWT;
             return this;
         }
 
-        public ResponseWrapperBuilder checkRoles(Boolean permission) {
+        public ResponseWrapperBuilder considerRoles(Boolean permission) {
             this.considerPermission = true;
             this.permission = permission;
             return this;
@@ -63,7 +62,7 @@ public class ResponseWrapper {
             Object entity = "Internal server error, please contact our support";
             String type = MediaType.TEXT_PLAIN;
 
-            if (this.checkCredentials) {
+            if (this.considerLogin) {
 
                 if (!this.loginOk) {
 
@@ -85,13 +84,7 @@ public class ResponseWrapper {
 
                 if (this.considerJWT) {
 
-                    if (this.JWT == null || this.JWT.equals("")) {
-
-                        status = Response.Status.UNAUTHORIZED;
-                        entity = "No authorization provided";
-                        validationError = true;
-
-                    } else if (!JwtManager.isValidToken(this.JWT)) {
+                    if (this.validJWT) {
 
                         status = Response.Status.UNAUTHORIZED;
                         entity = "Invalid JWT token provided";
