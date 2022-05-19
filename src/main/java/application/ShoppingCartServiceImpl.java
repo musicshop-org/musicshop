@@ -13,9 +13,6 @@ import sharedrmi.application.dto.ShoppingCartDTO;
 import sharedrmi.application.dto.SongDTO;
 import sharedrmi.domain.enums.ProductType;
 
-import javax.naming.NoPermissionException;
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;

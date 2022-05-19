@@ -50,6 +50,7 @@ public class ProductServiceImpl implements ProductService {
 
                 for (Song song : album.getSongs()) {
                     songDTOs.add(new SongDTO(
+                            song.getId(),
                             song.getTitle(),
                             song.getPrice(),
                             song.getStock(),
@@ -111,6 +112,7 @@ public class ProductServiceImpl implements ProductService {
 
                 for (Song song : album.getSongs()) {
                     songDTOs.add(new SongDTO(
+                            song.getId(),
                             song.getTitle(),
                             song.getPrice(),
                             song.getStock(),
@@ -271,6 +273,7 @@ public class ProductServiceImpl implements ProductService {
 
         for (Song song : songs) {
             songDTOs.add(new SongDTO(
+                    song.getId(),
                     song.getTitle(),
                     song.getPrice(),
                     song.getStock(),
