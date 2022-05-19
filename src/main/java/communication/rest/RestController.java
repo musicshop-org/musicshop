@@ -68,42 +68,168 @@ public class RestController {
     @POST
     @Path("/login")
     @Consumes("application/json")
-    @Produces("text/plain")
-    @ApiResponse(responseCode = "200", description = "Login ok", useReturnTypeSchema = true)
-    @ApiResponse(responseCode = "404", description = "Method name not found", useReturnTypeSchema = true)
-    // TODO:: API Response
-    public String login(UserDataDTO userData) {
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Login successful",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Request parameter not ok",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Username or password wrong",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "No permission",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "Internal server error, please contact our support",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    )
+            })
+    public Response login(UserDataDTO userData) {
+
+        if (userData == null) {
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("Request parameter not ok")
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
+
         RestLoginService restLoginService = new RestLoginServiceImpl();
 
         String emailAddress = userData.getEmailAddress();
         String password = userData.getPassword();
 
-        if (restLoginService.checkCredentials(emailAddress, password) && restLoginService.getRole(emailAddress).contains(Role.LICENSEE)) {
-            return JwtManager.createJWT(emailAddress, 900000);
-        }
-
-        return "";
+        return ResponseWrapper
+                .builder()
+                .checkCredentials(restLoginService.checkCredentials(emailAddress, password))
+                .checkRoles(restLoginService.getRole(emailAddress).contains(Role.LICENSEE))
+                .response(() -> Response
+                        .status(Response.Status.OK)
+                        .entity(JwtManager.createJWT(emailAddress, 900000))
+                        .type(MediaType.TEXT_PLAIN)
+                        .build())
+                .build();
     }
 
 
     @POST
     @Path("/loginWeb")
     @Consumes("application/json")
-    @Produces("text/plain")
-    @ApiResponse(responseCode = "200", description = "Login successful", useReturnTypeSchema = true)
-    @ApiResponse(responseCode = "404", description = "Method name not found", useReturnTypeSchema = true)
-    // TODO:: API Response
-    public String loginWeb(UserDataDTO userData) {
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Login successful",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Request parameter not ok",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Username or password wrong",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "No permission",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "Internal server error, please contact our support",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    )
+            })
+    public Response loginWeb(UserDataDTO userData) {
+
+        if (userData == null) {
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("Request parameter not ok")
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
+
         RestLoginService restLoginService = new RestLoginServiceImpl();
 
         String emailAddress = userData.getEmailAddress();
         String password = userData.getPassword();
 
-        if (restLoginService.checkCredentials(emailAddress, password) && restLoginService.getRole(emailAddress).contains(Role.CUSTOMER)) {
-            return JwtManager.createJWT(emailAddress, 900000);
-        }
-
-        return "";
+        return ResponseWrapper
+                .builder()
+                .checkCredentials(restLoginService.checkCredentials(emailAddress, password))
+                .checkRoles(restLoginService.getRole(emailAddress).contains(Role.CUSTOMER))
+                .response(() -> Response
+                        .status(Response.Status.OK)
+                        .entity(JwtManager.createJWT(emailAddress, 900000))
+                        .type(MediaType.TEXT_PLAIN)
+                        .build())
+                .build();
     }
 
 
@@ -122,6 +248,16 @@ public class RestController {
                             }
                     ),
                     @ApiResponse(
+                            responseCode = "400",
+                            description = "Request parameter not ok",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
                             responseCode = "404",
                             description = "No album found",
                             content = {
@@ -132,12 +268,18 @@ public class RestController {
                             }
                     )
             })
-    public Response findAlbumsBySongTitle(@PathParam("songTitle") String songTitle, @HeaderParam("Authorization") String jwt_Token) {
+    public Response findAlbumsBySongTitle(@PathParam("songTitle") String songTitle) {
+
+        if (songTitle == null) {
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("Request parameter not ok")
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
 
         return ResponseWrapper
                 .builder()
-                .considerJWT(jwt_Token)
-                .considerRoles(this.isCustomerOrLicensee(jwt_Token))
                 .response(() -> {
 
                     List<AlbumDTO> albumDTOList = productService.findAlbumsBySongTitleDigital(songTitle);
@@ -161,20 +303,68 @@ public class RestController {
 
     @GET
     @Path("/album/{albumId}")
-    @Produces("application/json")
-    @ApiResponse(responseCode = "200", description = "Album found", useReturnTypeSchema = true)
-    @ApiResponse(responseCode = "404", description = "Method name not found", useReturnTypeSchema = true)
-    // TODO:: API Response
-    public AlbumDTO findAlbumByAlbumId(@PathParam("albumId") String albumId, @HeaderParam("Authorization") String jwt_Token) {
-        ProductService productService = new ProductServiceImpl();
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Album found",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON,
+                                            schema = @Schema(implementation = AlbumDTO.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Request parameter not ok",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No album found",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    )
+            })
+    public Response findAlbumByAlbumId(@PathParam("albumId") String albumId) {
 
-        try {
-            return productService.findAlbumByAlbumId(albumId);
-        } catch (AlbumNotFoundException e) {
-            e.printStackTrace();
+        if (albumId == null) {
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("Request parameter not ok")
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
         }
 
-        return null;
+        return ResponseWrapper
+                .builder()
+                .response(() -> {
+
+                    try {
+                        return Response
+                                .status(Response.Status.OK)
+                                .entity(productService.findAlbumByAlbumId(albumId))
+                                .type(MediaType.APPLICATION_JSON)
+                                .build();
+                    } catch (AlbumNotFoundException e) {
+                        return Response
+                                .status(Response.Status.NOT_FOUND)
+                                .entity("No album found")
+                                .type(MediaType.TEXT_PLAIN)
+                                .build();
+                    }
+                })
+                .build();
     }
 
 
@@ -186,6 +376,16 @@ public class RestController {
                     @ApiResponse(
                             responseCode = "200",
                             description = "Add to cart successful",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Request parameter not ok",
                             content = {
                                     @Content(
                                             mediaType = MediaType.TEXT_PLAIN,
@@ -215,54 +415,58 @@ public class RestController {
                     ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "Not found",
+                            description = "Shopping cart not found",
                             content = {
                                     @Content(
                                             mediaType = MediaType.TEXT_PLAIN,
-                                            array = @ArraySchema(schema = @Schema(implementation = String.class))
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "Internal server error, please contact our support",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
                                     )
                             }
                     )
             })
-    public boolean addAlbumsToCart(AlbumDTO album, @HeaderParam("CartUUID") String UUID) throws NoPermissionException {
+    public Response addAlbumsToCart(AlbumDTO album, @HeaderParam("CartUUID") String UUID) {
 
-        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
-        shoppingCartService.addAlbumsToCart(album, album.getQuantityToAddToCart());
-        return true;
+        if (album == null || UUID == null) {
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("Request parameter not ok")
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
 
-//        Response.Status status;
-//        String responseText;
-//
-//        if (jwt_Token == null || jwt_Token.equals("")) {
-//
-//            status = Response.Status.UNAUTHORIZED;
-//            responseText = "No authorization provided";
-//
-//        } else if (!JwtManager.isValidToken(jwt_Token)) {
-//
-//            status = Response.Status.UNAUTHORIZED;
-//            responseText = "Invalid JWT token provided";
-//
-//        } else if (isCustomerOrLicensee(jwt_Token)) {
-//
-//            ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(JwtManager.getEmailAddress(jwt_Token));
-//            shoppingCartService.addProductToCart(album, album.getQuantityToAddToCart());
-//
-//            status = Response.Status.OK;
-//            responseText = "Add to cart successful";
-//
-//        } else {
-//
-//            status = Response.Status.FORBIDDEN;
-//            responseText = "No permission";
-//
-//        }
-//
-//        return Response
-//                .status(status)
-//                .entity(responseText)
-//                .type(MediaType.TEXT_PLAIN)
-//                .build();
+        return ResponseWrapper
+                .builder()
+                .response(() -> {
+
+                    ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+
+                    try {
+                        shoppingCartService.addAlbumsToCart(album, album.getQuantityToAddToCart());
+                    } catch (NoPermissionException e) {
+                        return Response
+                                .status(Response.Status.INTERNAL_SERVER_ERROR)
+                                .entity("Internal server error, please contact our support")
+                                .type(MediaType.TEXT_PLAIN)
+                                .build();
+                    }
+
+                    return Response
+                            .status(Response.Status.OK)
+                            .entity("Add to cart successful")
+                            .type(MediaType.TEXT_PLAIN)
+                            .build();
+                })
+                .build();
     }
 
 

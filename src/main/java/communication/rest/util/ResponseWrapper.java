@@ -17,6 +17,8 @@ public class ResponseWrapper {
     }
 
     public static class ResponseWrapperBuilder {
+        private Boolean checkCredentials;
+        private Boolean loginOk;
         private Boolean considerJWT;
         private Boolean considerPermission;
         private String JWT;
@@ -26,13 +28,19 @@ public class ResponseWrapper {
         ResponseWrapperBuilder() {
         }
 
-        public ResponseWrapperBuilder considerJWT(String JWT) {
+        public ResponseWrapperBuilder checkCredentials(Boolean loginOk) {
+            this.checkCredentials = true;
+            this.loginOk = loginOk;
+            return this;
+        }
+
+        public ResponseWrapperBuilder checkJWT(String JWT) {
             this.considerJWT = true;
             this.JWT = JWT;
             return this;
         }
 
-        public ResponseWrapperBuilder considerRoles(Boolean permission) {
+        public ResponseWrapperBuilder checkRoles(Boolean permission) {
             this.considerPermission = true;
             this.permission = permission;
             return this;
@@ -52,31 +60,52 @@ public class ResponseWrapper {
             boolean validationError = false;
 
             Response.Status status = Response.Status.INTERNAL_SERVER_ERROR;
-            Object entity = "Server error, please contact our support.";
+            Object entity = "Internal server error, please contact our support";
             String type = MediaType.TEXT_PLAIN;
 
-            if (this.considerJWT) {
+            if (this.checkCredentials) {
 
-                if (this.JWT.equals("")) {
-
-                    status = Response.Status.UNAUTHORIZED;
-                    entity = "No authorization provided";
-                    validationError = true;
-
-                } else if (!JwtManager.isValidToken(this.JWT)) {
+                if (!this.loginOk) {
 
                     status = Response.Status.UNAUTHORIZED;
-                    entity = "Invalid JWT token provided";
+                    entity = "Username or password wrong";
                     validationError = true;
 
                 } else if (this.considerPermission) {
 
                     if (!this.permission) {
+
                         status = Response.Status.FORBIDDEN;
                         entity = "No permission";
                         validationError = true;
-                    }
 
+                    }
+                }
+            } else {
+
+                if (this.considerJWT) {
+
+                    if (this.JWT == null || this.JWT.equals("")) {
+
+                        status = Response.Status.UNAUTHORIZED;
+                        entity = "No authorization provided";
+                        validationError = true;
+
+                    } else if (!JwtManager.isValidToken(this.JWT)) {
+
+                        status = Response.Status.UNAUTHORIZED;
+                        entity = "Invalid JWT token provided";
+                        validationError = true;
+
+                    } else if (this.considerPermission) {
+
+                        if (!this.permission) {
+                            status = Response.Status.FORBIDDEN;
+                            entity = "No permission";
+                            validationError = true;
+                        }
+
+                    }
                 }
             }
 
