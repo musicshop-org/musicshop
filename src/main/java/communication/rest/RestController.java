@@ -5,6 +5,7 @@ import application.ProductServiceImpl;
 import application.ShoppingCartServiceImpl;
 import communication.rest.api.RestLoginService;
 
+import communication.rest.util.ResponseWrapper;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -132,29 +133,29 @@ public class RestController {
                     )
             })
     public Response findAlbumsBySongTitle(@PathParam("songTitle") String songTitle, @HeaderParam("Authorization") String jwt_Token) {
-        ProductService productService = new ProductServiceImpl();
 
-        List<AlbumDTO> albumDTOList = productService.findAlbumsBySongTitleDigital(songTitle);
-
-        Response response = ResponseWrapper.
-                builder()
+        return ResponseWrapper
+                .builder()
                 .considerJWT(jwt_Token)
                 .considerRoles(this.isCustomerOrLicensee(jwt_Token))
-                .responseConfiguration(ResponseConfiguration::new)
-                .build();
+                .response(() -> {
 
-        if (albumDTOList.size() <= 0) {
-            return Response
-                    .status(Response.Status.NOT_FOUND)
-                    .entity("No album found")
-                    .type(MediaType.TEXT_PLAIN)
-                    .build();
-        }
+                    List<AlbumDTO> albumDTOList = productService.findAlbumsBySongTitleDigital(songTitle);
 
-        return Response
-                .status(Response.Status.OK)
-                .entity(albumDTOList)
-                .type(MediaType.APPLICATION_JSON)
+                    if (albumDTOList.size() <= 0) {
+                        return Response
+                                .status(Response.Status.NOT_FOUND)
+                                .entity("No album found")
+                                .type(MediaType.TEXT_PLAIN)
+                                .build();
+                    }
+
+                    return Response
+                            .status(Response.Status.OK)
+                            .entity(albumDTOList)
+                            .type(MediaType.APPLICATION_JSON)
+                            .build();
+                })
                 .build();
     }
 
