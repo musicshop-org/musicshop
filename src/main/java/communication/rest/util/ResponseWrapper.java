@@ -19,8 +19,8 @@ public class ResponseWrapper {
         private Boolean considerLogin;
         private Boolean loginOk;
         private Boolean considerJWT;
-        private Boolean considerPermission;
         private Boolean validJWT;
+        private Boolean considerPermission;
         private Boolean permission;
         private IResponse iResponse;
 
