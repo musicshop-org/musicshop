@@ -13,9 +13,14 @@ import sharedrmi.application.dto.ShoppingCartDTO;
 import sharedrmi.application.dto.SongDTO;
 import sharedrmi.domain.enums.ProductType;
 
+import javax.naming.NoPermissionException;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ShoppingCartServiceImpl implements ShoppingCartService {
 
@@ -63,7 +68,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                     cartLineItem.getPrice(),
                     cartLineItem.getStock(),
                     cartLineItem.getImageUrl(),
-                    cartLineItem.getProductType()
+                    cartLineItem.getProductType(),
+                    cartLineItem.getArtists()
             ));
         }
 
@@ -79,7 +85,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 album.getPrice(),
                 album.getStock(),
                 album.getImageUrl(),
-                ProductType.ALBUM
+                ProductType.ALBUM,
+                album.getSongs().stream().map(song -> song.getArtists().stream().map(artist -> artist.getName()).findFirst().get()).collect(Collectors.toList())
         );
 
         this.shoppingCart.addLineItem(cartLineItem);
@@ -104,7 +111,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                     song.getPrice(),
                     song.getStock(),
                     imageUrl,
-                    ProductType.SONG
+                    ProductType.SONG,
+                    song.getArtists().stream().map(artist -> artist.getName()).collect(Collectors.toList())
             );
 
             this.shoppingCart.addLineItem(cartLineItem);
