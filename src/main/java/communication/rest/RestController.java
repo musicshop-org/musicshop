@@ -237,7 +237,7 @@ public class RestController {
 
 
     @GET
-    @Path("/albums/{songTitle}")
+    @Path("/albums/digital/{songTitle}")
     @ApiResponses(
             value = {
                     @ApiResponse(
@@ -320,7 +320,7 @@ public class RestController {
     }
 
     @GET
-    @Path("/albums/{songTitle}")
+    @Path("/albums/physical/{songTitle}")
     @ApiResponses(
             value = {
                     @ApiResponse(
