@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.servers.Server;
 
+import domain.Album;
 import sharedrmi.application.api.InvoiceService;
 import sharedrmi.application.api.ProductService;
 import sharedrmi.application.api.ShoppingCartService;
@@ -316,6 +317,15 @@ public class RestController {
 //                            .build();
 //                })
 //                .build();
+    }
+
+    @GET
+    @Path("/albums/{songTitle}")
+    @Produces("application/json")
+    public List<AlbumDTO> findAlbumsBySongTitlePhysical(@PathParam("songTitle") String songTitle, @HeaderParam("Authorization") String jwt_Token) {
+
+        ProductService productService = new ProductServiceImpl();
+        return productService.findAlbumsBySongTitle(songTitle);
     }
 
     @GET
