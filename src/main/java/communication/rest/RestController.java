@@ -5,7 +5,6 @@ import application.ProductServiceImpl;
 import application.ShoppingCartServiceImpl;
 
 import communication.rest.api.RestLoginService;
-import communication.rest.util.ResponseWrapper;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
@@ -35,6 +34,7 @@ import javax.ws.rs.core.Response;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @OpenAPIDefinition(
         info = @Info(
@@ -136,16 +136,27 @@ public class RestController {
         String emailAddress = userData.getEmailAddress();
         String password = userData.getPassword();
 
-        return ResponseWrapper
-                .builder()
-                .considerLogin(restLoginService.checkCredentials(emailAddress, password))
-                .considerRoles(restLoginService.getRole(emailAddress).contains(Role.LICENSEE))
-                .response(() -> Response
+        if (restLoginService.checkCredentials(emailAddress, password)) {
+            if (restLoginService.getRole(emailAddress).contains(Role.LICENSEE)) {
+                return Response
                         .status(Response.Status.OK)
                         .entity(JwtManager.createJWT(emailAddress, 900000))
                         .type(MediaType.TEXT_PLAIN)
-                        .build())
-                .build();
+                        .build();
+            } else {
+                return Response
+                        .status(Response.Status.FORBIDDEN)
+                        .entity("No permission")
+                        .type(MediaType.TEXT_PLAIN)
+                        .build();
+            }
+        } else {
+            return Response
+                    .status(Response.Status.UNAUTHORIZED)
+                    .entity("Username or password wrong")
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
     }
 
 
@@ -220,16 +231,27 @@ public class RestController {
         String emailAddress = userData.getEmailAddress();
         String password = userData.getPassword();
 
-        return ResponseWrapper
-                .builder()
-                .considerLogin(restLoginService.checkCredentials(emailAddress, password))
-                .considerRoles(restLoginService.getRole(emailAddress).contains(Role.CUSTOMER))
-                .response(() -> Response
+        if (restLoginService.checkCredentials(emailAddress, password)) {
+            if (restLoginService.getRole(emailAddress).contains(Role.CUSTOMER)) {
+                return Response
                         .status(Response.Status.OK)
                         .entity(JwtManager.createJWT(emailAddress, 900000))
                         .type(MediaType.TEXT_PLAIN)
-                        .build())
-                .build();
+                        .build();
+            } else {
+                return Response
+                        .status(Response.Status.FORBIDDEN)
+                        .entity("No permission")
+                        .type(MediaType.TEXT_PLAIN)
+                        .build();
+            }
+        } else {
+            return Response
+                    .status(Response.Status.UNAUTHORIZED)
+                    .entity("Username or password wrong")
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
     }
 
 
@@ -278,26 +300,20 @@ public class RestController {
                     .build();
         }
 
-        return ResponseWrapper
-                .builder()
-                .response(() -> {
+        List<AlbumDTO> albumDTOList = productService.findAlbumsBySongTitleDigital(songTitle);
 
-                    List<AlbumDTO> albumDTOList = productService.findAlbumsBySongTitleDigital(songTitle);
+        if (albumDTOList.size() <= 0) {
+            return Response
+                    .status(Response.Status.NOT_FOUND)
+                    .entity("No album found")
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
 
-                    if (albumDTOList.size() <= 0) {
-                        return Response
-                                .status(Response.Status.NOT_FOUND)
-                                .entity("No album found")
-                                .type(MediaType.TEXT_PLAIN)
-                                .build();
-                    }
-
-                    return Response
-                            .status(Response.Status.OK)
-                            .entity(albumDTOList)
-                            .type(MediaType.APPLICATION_JSON)
-                            .build();
-                })
+        return Response
+                .status(Response.Status.OK)
+                .entity(albumDTOList)
+                .type(MediaType.APPLICATION_JSON)
                 .build();
     }
 
@@ -346,25 +362,19 @@ public class RestController {
                     .build();
         }
 
-        return ResponseWrapper
-                .builder()
-                .response(() -> {
-
-                    try {
-                        return Response
-                                .status(Response.Status.OK)
-                                .entity(productService.findAlbumByAlbumId(albumId))
-                                .type(MediaType.APPLICATION_JSON)
-                                .build();
-                    } catch (AlbumNotFoundException e) {
-                        return Response
-                                .status(Response.Status.NOT_FOUND)
-                                .entity("No album found")
-                                .type(MediaType.TEXT_PLAIN)
-                                .build();
-                    }
-                })
-                .build();
+        try {
+            return Response
+                    .status(Response.Status.OK)
+                    .entity(productService.findAlbumByAlbumId(albumId))
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        } catch (AlbumNotFoundException e) {
+            return Response
+                    .status(Response.Status.NOT_FOUND)
+                    .entity("No album found")
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
     }
 
 
@@ -414,28 +424,22 @@ public class RestController {
                     .build();
         }
 
-        return ResponseWrapper
-                .builder()
-                .response(() -> {
+        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
 
-                    ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+        try {
+            shoppingCartService.addAlbumsToCart(album, album.getQuantityToAddToCart());
+        } catch (NoPermissionException e) {
+            return Response
+                    .status(Response.Status.FORBIDDEN)
+                    .entity("No permission")
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
 
-                    try {
-                        shoppingCartService.addAlbumsToCart(album, album.getQuantityToAddToCart());
-                    } catch (NoPermissionException e) {
-                        return Response
-                                .status(Response.Status.FORBIDDEN)
-                                .entity("No permission")
-                                .type(MediaType.TEXT_PLAIN)
-                                .build();
-                    }
-
-                    return Response
-                            .status(Response.Status.OK)
-                            .entity("Add to cart successful")
-                            .type(MediaType.TEXT_PLAIN)
-                            .build();
-                })
+        return Response
+                .status(Response.Status.OK)
+                .entity("Add to cart successful")
+                .type(MediaType.TEXT_PLAIN)
                 .build();
     }
 
@@ -486,30 +490,23 @@ public class RestController {
                     .build();
         }
 
-        return ResponseWrapper
-                .builder()
-                .response(() -> {
+        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
 
-                    ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+        try {
+            shoppingCartService.addSongsToCart(songs);
+        } catch (NoPermissionException e) {
+            return Response
+                    .status(Response.Status.FORBIDDEN)
+                    .entity("No permission")
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
 
-                    try {
-                        shoppingCartService.addSongsToCart(songs);
-                    } catch (NoPermissionException e) {
-                        return Response
-                                .status(Response.Status.FORBIDDEN)
-                                .entity("No permission")
-                                .type(MediaType.TEXT_PLAIN)
-                                .build();
-                    }
-
-                    return Response
-                            .status(Response.Status.OK)
-                            .entity("Add to cart successful")
-                            .type(MediaType.TEXT_PLAIN)
-                            .build();
-                })
+        return Response
+                .status(Response.Status.OK)
+                .entity("Add to cart successful")
+                .type(MediaType.TEXT_PLAIN)
                 .build();
-
     }
 
 
@@ -559,28 +556,22 @@ public class RestController {
                     .build();
         }
 
-        return ResponseWrapper
-                .builder()
-                .response(() -> {
+        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
 
-                    ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+        try {
+            shoppingCartService.addSongsToCart(new LinkedList<>(album.getSongs()));
+        } catch (NoPermissionException e) {
+            return Response
+                    .status(Response.Status.FORBIDDEN)
+                    .entity("No permission")
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
 
-                    try {
-                        shoppingCartService.addSongsToCart(new LinkedList<>(album.getSongs()));
-                    } catch (NoPermissionException e) {
-                        return Response
-                                .status(Response.Status.FORBIDDEN)
-                                .entity("No permission")
-                                .type(MediaType.TEXT_PLAIN)
-                                .build();
-                    }
-
-                    return Response
-                            .status(Response.Status.OK)
-                            .entity("Add to cart successful")
-                            .type(MediaType.TEXT_PLAIN)
-                            .build();
-                })
+        return Response
+                .status(Response.Status.OK)
+                .entity("Add to cart successful")
+                .type(MediaType.TEXT_PLAIN)
                 .build();
     }
 
@@ -629,27 +620,21 @@ public class RestController {
                     .build();
         }
 
-        return ResponseWrapper
-                .builder()
-                .response(() -> {
+        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
 
-                    ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
-
-                    try {
-                        return Response
-                                .status(Response.Status.OK)
-                                .entity(shoppingCartService.getCart())
-                                .type(MediaType.APPLICATION_JSON)
-                                .build();
-                    } catch (NoPermissionException e) {
-                        return Response
-                                .status(Response.Status.FORBIDDEN)
-                                .entity("No permission")
-                                .type(MediaType.TEXT_PLAIN)
-                                .build();
-                    }
-                })
-                .build();
+        try {
+            return Response
+                    .status(Response.Status.OK)
+                    .entity(shoppingCartService.getCart())
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        } catch (NoPermissionException e) {
+            return Response
+                    .status(Response.Status.FORBIDDEN)
+                    .entity("No permission")
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
     }
 
 
@@ -699,28 +684,22 @@ public class RestController {
                     .build();
         }
 
-        return ResponseWrapper
-                .builder()
-                .response(() -> {
+        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
 
-                    ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+        try {
+            shoppingCartService.removeLineItemFromCart(cartLineItemDTO);
+        } catch (NoPermissionException e) {
+            return Response
+                    .status(Response.Status.FORBIDDEN)
+                    .entity("No permission")
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
 
-                    try {
-                        shoppingCartService.removeLineItemFromCart(cartLineItemDTO);
-                    } catch (NoPermissionException e) {
-                        return Response
-                                .status(Response.Status.FORBIDDEN)
-                                .entity("No permission")
-                                .type(MediaType.TEXT_PLAIN)
-                                .build();
-                    }
-
-                    return Response
-                            .status(Response.Status.OK)
-                            .entity("Remove item successful")
-                            .type(MediaType.TEXT_PLAIN)
-                            .build();
-                })
+        return Response
+                .status(Response.Status.OK)
+                .entity("Remove item successful")
+                .type(MediaType.TEXT_PLAIN)
                 .build();
     }
 
@@ -770,28 +749,22 @@ public class RestController {
                     .build();
         }
 
-        return ResponseWrapper
-                .builder()
-                .response(() -> {
+        ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
 
-                    ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+        try {
+            shoppingCartService.clearCart();
+        } catch (NoPermissionException e) {
+            return Response
+                    .status(Response.Status.FORBIDDEN)
+                    .entity("No permission")
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
 
-                    try {
-                        shoppingCartService.clearCart();
-                    } catch (NoPermissionException e) {
-                        return Response
-                                .status(Response.Status.FORBIDDEN)
-                                .entity("No permission")
-                                .type(MediaType.TEXT_PLAIN)
-                                .build();
-                    }
-
-                    return Response
-                            .status(Response.Status.OK)
-                            .entity("CLear cart successful")
-                            .type(MediaType.TEXT_PLAIN)
-                            .build();
-                })
+        return Response
+                .status(Response.Status.OK)
+                .entity("CLear cart successful")
+                .type(MediaType.TEXT_PLAIN)
                 .build();
     }
 
@@ -872,7 +845,7 @@ public class RestController {
                     ),
                     @ApiResponse(
                             responseCode = "500",
-                            description = "Internal server error, please contact our support",
+                            description = "Internal server error",
                             content = {
                                     @Content(
                                             mediaType = MediaType.TEXT_PLAIN,
@@ -883,64 +856,51 @@ public class RestController {
             })
     public Response buyProduct(List<InvoiceLineItemDTO> invoiceLineItemDTOs, @HeaderParam("Authorization") String jwt_Token) {
 
+        Response.Status status;
+        Object entity;
+
         if (invoiceLineItemDTOs == null || jwt_Token == null) {
-            return Response
-                    .status(Response.Status.BAD_REQUEST)
-                    .entity("Request parameter not ok")
-                    .type(MediaType.TEXT_PLAIN)
-                    .build();
+            status = Response.Status.BAD_REQUEST;
+            entity = "Request parameter not ok";
+        } else if (jwt_Token.equals("")) {
+            status = Response.Status.UNAUTHORIZED;
+            entity = "No authorization provided";
+        } else if (!JwtManager.isValidToken(jwt_Token)) {
+            status = Response.Status.UNAUTHORIZED;
+            entity = "Invalid JWT token provided";
+        } else if (!this.isCustomerOrLicensee(jwt_Token)) {
+            status = Response.Status.FORBIDDEN;
+            entity = "No permission";
+        } else {
+            InvoiceDTO invoiceDTO = new InvoiceDTO(
+                    new InvoiceId(),
+                    invoiceLineItemDTOs,
+                    PaymentMethod.CASH,
+                    LocalDate.now(),
+                    null
+            );
+
+            try {
+                invoiceService.createInvoice(invoiceDTO);
+
+                status = Response.Status.OK;
+                entity = "Buy product successful";
+            } catch (NoPermissionException e) {
+                status = Response.Status.FORBIDDEN;
+                entity = "No permission";
+            } catch (NotEnoughStockException e) {
+                status = Response.Status.CONFLICT;
+                entity = "Not enough stock available";
+            } catch (AlbumNotFoundException e) {
+                status = Response.Status.NOT_FOUND;
+                entity = "Album not found";
+            }
         }
 
-        if (jwt_Token.equals("")) {
-            return Response
-                    .status(Response.Status.UNAUTHORIZED)
-                    .entity("No authorization provided")
-                    .type(MediaType.TEXT_PLAIN)
-                    .build();
-        }
-
-        return ResponseWrapper
-                .builder()
-                .considerJWT(JwtManager.isValidToken(jwt_Token))
-                .considerRoles(this.isCustomerOrLicensee(jwt_Token))
-                .response(() -> {
-
-                    InvoiceDTO invoiceDTO = new InvoiceDTO(
-                            new InvoiceId(),
-                            invoiceLineItemDTOs,
-                            PaymentMethod.CASH,
-                            LocalDate.now(),
-                            null
-                    );
-
-                    try {
-                        invoiceService.createInvoice(invoiceDTO);
-                    } catch (NoPermissionException e) {
-                        return Response
-                                .status(Response.Status.FORBIDDEN)
-                                .entity("No permission")
-                                .type(MediaType.TEXT_PLAIN)
-                                .build();
-                    } catch (NotEnoughStockException e) {
-                        return Response
-                                .status(Response.Status.CONFLICT)
-                                .entity("Not enough stock available")
-                                .type(MediaType.TEXT_PLAIN)
-                                .build();
-                    } catch (AlbumNotFoundException e) {
-                        return Response
-                                .status(Response.Status.NOT_FOUND)
-                                .entity("Album not found")
-                                .type(MediaType.TEXT_PLAIN)
-                                .build();
-                    }
-
-                    return Response
-                            .status(Response.Status.OK)
-                            .entity("Buy product successful")
-                            .type(MediaType.TEXT_PLAIN)
-                            .build();
-                })
+        return Response
+                .status(status)
+                .entity(entity)
+                .type(MediaType.TEXT_PLAIN)
                 .build();
     }
 
