@@ -109,16 +109,6 @@ public class RestController {
                                             schema = @Schema(implementation = String.class)
                                     )
                             }
-                    ),
-                    @ApiResponse(
-                            responseCode = "500",
-                            description = "Internal server error, please contact our support",
-                            content = {
-                                    @Content(
-                                            mediaType = MediaType.TEXT_PLAIN,
-                                            schema = @Schema(implementation = String.class)
-                                    )
-                            }
                     )
             })
     public Response login(UserDataDTO userData) {
@@ -198,16 +188,6 @@ public class RestController {
                     @ApiResponse(
                             responseCode = "403",
                             description = "No permission",
-                            content = {
-                                    @Content(
-                                            mediaType = MediaType.TEXT_PLAIN,
-                                            schema = @Schema(implementation = String.class)
-                                    )
-                            }
-                    ),
-                    @ApiResponse(
-                            responseCode = "500",
-                            description = "Internal server error, please contact our support",
                             content = {
                                     @Content(
                                             mediaType = MediaType.TEXT_PLAIN,
@@ -836,16 +816,6 @@ public class RestController {
                     @ApiResponse(
                             responseCode = "409",
                             description = "Not enough stock available",
-                            content = {
-                                    @Content(
-                                            mediaType = MediaType.TEXT_PLAIN,
-                                            schema = @Schema(implementation = String.class)
-                                    )
-                            }
-                    ),
-                    @ApiResponse(
-                            responseCode = "500",
-                            description = "Internal server error",
                             content = {
                                     @Content(
                                             mediaType = MediaType.TEXT_PLAIN,
