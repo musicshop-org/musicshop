@@ -321,11 +321,64 @@ public class RestController {
 
     @GET
     @Path("/albums/{songTitle}")
-    @Produces("application/json")
-    public List<AlbumDTO> findAlbumsBySongTitlePhysical(@PathParam("songTitle") String songTitle, @HeaderParam("Authorization") String jwt_Token) {
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Album(s) found",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON,
+                                            array = @ArraySchema(schema = @Schema(implementation = AlbumDTO.class))
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Request parameter not ok",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No album found",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    )
+            })
+    public Response findAlbumsBySongTitlePhysical(@PathParam("songTitle") String songTitle) {
 
-        ProductService productService = new ProductServiceImpl();
-        return productService.findAlbumsBySongTitle(songTitle);
+        if (songTitle == null) {
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("Request parameter not ok")
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
+
+        List<AlbumDTO> albumDTOList = productService.findAlbumsBySongTitle(songTitle);
+
+        if (albumDTOList.size() <= 0) {
+            return Response
+                    .status(Response.Status.NOT_FOUND)
+                    .entity("No album found")
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
+
+        return Response
+                .status(Response.Status.OK)
+                .entity(albumDTOList)
+                .type(MediaType.APPLICATION_JSON)
+                .build();
     }
 
     @GET
