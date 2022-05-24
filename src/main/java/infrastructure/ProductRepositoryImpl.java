@@ -44,7 +44,7 @@ public class ProductRepositoryImpl implements ProductRepository {
         Session session = sessionFactory.openSession();
         Album album = session.get(Album.class, id);
         //Album album = session.createQuery("from Album where id = :id", Album.class).setParameter("id", id).getSingleResult();
-//        Query query = session.createQuery("from Album where productid = :id", Album.class);
+//        Query query = session.createQuery("from Album where product_id = :id", Album.class);
 //        query.setParameter("id", id);
        // Album album = (Album) query.getResultList().stream().findFirst().orElse(null);
 

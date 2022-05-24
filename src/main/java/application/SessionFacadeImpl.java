@@ -14,6 +14,7 @@ import sharedrmi.domain.valueobjects.Role;
 
 import javax.jms.JMSException;
 import javax.naming.NoPermissionException;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -180,8 +181,8 @@ public class SessionFacadeImpl implements SessionFacade {
     }
 
     @Override
-    public void buyShoppingCart() {
-        shoppingCartService.buyShoppingCart();
+    public void buyShoppingCart(String s) throws IOException {
+        this.shoppingCartService.buyShoppingCart(s);
     }
 
     @Override

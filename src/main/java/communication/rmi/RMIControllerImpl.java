@@ -17,6 +17,7 @@ import javax.ejb.Remote;
 import javax.ejb.Stateful;
 import javax.naming.NoPermissionException;
 import javax.security.auth.login.FailedLoginException;
+import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.rmi.RemoteException;
 import java.time.LocalDateTime;
@@ -109,8 +110,8 @@ public class RMIControllerImpl implements RMIController {
     }
 
     @Override
-    public void buyShoppingCart() {
-        sessionFacade.buyShoppingCart();
+    public void buyShoppingCart(String s) throws IOException {
+        sessionFacade.buyShoppingCart(s);
     }
 
     @Override

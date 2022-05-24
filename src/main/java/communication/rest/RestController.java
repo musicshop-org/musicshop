@@ -33,6 +33,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.io.IOException;
+import java.rmi.ServerException;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
@@ -1033,6 +1035,16 @@ public class RestController {
                                             schema = @Schema(implementation = String.class)
                                     )
                             }
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "Internal server error",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
                     )
             })
     public Response buyProductsWeb(List<CartLineItemDTO> cartLineItemDTO, @HeaderParam("Authorization") String jwt_Token, @HeaderParam("CartUUID") String UUID) {
@@ -1055,7 +1067,19 @@ public class RestController {
         } else {
 
             ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
-            shoppingCartService.buyShoppingCart();
+            try {
+                shoppingCartService.buyShoppingCart(JwtManager.getEmailAddress(jwt_Token));
+            } catch (IOException e) {
+
+                status = Response.Status.INTERNAL_SERVER_ERROR;
+                entity = "Internal server error";
+                return Response
+                        .status(status)
+                        .entity(entity)
+                        .type(MediaType.TEXT_PLAIN)
+                        .build();
+
+            }
             status = Response.Status.OK;
             entity = "Products bought successfully";
         }
