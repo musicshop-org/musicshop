@@ -42,15 +42,14 @@ public class ProductServiceImpl implements ProductService {
         List<AlbumDTO> albumDTOs = new LinkedList<>();
 
         Set<Album> albums = productRepository.findAlbumsBySongTitle(title);
-        List<MediumType> acceptedMediums = List.of(MediumType.CD,MediumType.VINYL);
+        List<MediumType> acceptedMediums = List.of(MediumType.CD, MediumType.VINYL);
 
         for (Album album : albums) {
-            if (acceptedMediums.contains(album.getMediumType())){
+            if (acceptedMediums.contains(album.getMediumType())) {
                 Set<SongDTO> songDTOs = new HashSet<>();
 
                 for (Song song : album.getSongs()) {
                     songDTOs.add(new SongDTO(
-                            song.getId(),
                             song.getTitle(),
                             song.getPrice(),
                             song.getStock(),
@@ -74,8 +73,9 @@ public class ProductServiceImpl implements ProductService {
                                             albumDTO.getAlbumId(),
                                             albumDTO.getLabel(),
                                             Collections.emptySet(),
-                                            0))
-                                    .collect(Collectors.toSet())
+                                            0, albumDTO.getId()))
+                                    .collect(Collectors.toSet()),
+                            song.getId()
                     ));
                 }
 
@@ -89,7 +89,8 @@ public class ProductServiceImpl implements ProductService {
                         album.getAlbumId(),
                         album.getLabel(),
                         songDTOs,
-                        0
+                        0,
+                        album.getId()
                 ));
             }
         }
@@ -107,12 +108,12 @@ public class ProductServiceImpl implements ProductService {
         List<MediumType> acceptedMediums = List.of(MediumType.DIGITAL);
 
         for (Album album : albums) {
-            if (acceptedMediums.contains(album.getMediumType())){
+            if (acceptedMediums.contains(album.getMediumType())) {
                 Set<SongDTO> songDTOs = new HashSet<>();
 
                 for (Song song : album.getSongs()) {
                     songDTOs.add(new SongDTO(
-                            song.getId(),
+
                             song.getTitle(),
                             song.getPrice(),
                             song.getStock(),
@@ -136,8 +137,10 @@ public class ProductServiceImpl implements ProductService {
                                             albumDTO.getAlbumId(),
                                             albumDTO.getLabel(),
                                             Collections.emptySet(),
-                                            0))
-                                    .collect(Collectors.toSet())
+                                            0,
+                                            albumDTO.getId()))
+                                    .collect(Collectors.toSet()),
+                            song.getId()
                     ));
                 }
 
@@ -151,7 +154,8 @@ public class ProductServiceImpl implements ProductService {
                         album.getAlbumId(),
                         album.getLabel(),
                         songDTOs,
-                        0
+                        0,
+                        album.getId()
                 ));
             }
         }
@@ -201,7 +205,8 @@ public class ProductServiceImpl implements ProductService {
                                         album.getAlbumId(),
                                         album.getLabel(),
                                         Collections.emptySet(),
-                                        0
+                                        0,
+                                        album.getId()
                                 )))
                                 .build()
                         )
@@ -215,7 +220,7 @@ public class ProductServiceImpl implements ProductService {
     public AlbumDTO findAlbumByAlbumId(String albumId) throws AlbumNotFoundException {
 
         Optional<Album> albumOpt = productRepository.findAlbumByAlbumId(albumId);
-        if(albumOpt.isPresent()) {
+        if (albumOpt.isPresent()) {
             Album album = albumOpt.get();
 
             return AlbumDTO.builder()
@@ -251,8 +256,10 @@ public class ProductServiceImpl implements ProductService {
                                             album.getAlbumId(),
                                             album.getLabel(),
                                             Collections.emptySet(),
-                                            0
+                                            0,
+                                            album.getId()
                                     )))
+                                    .longId(song.getId())
                                     .build()
                             )
                             .collect(Collectors.toSet())
@@ -273,7 +280,6 @@ public class ProductServiceImpl implements ProductService {
 
         for (Song song : songs) {
             songDTOs.add(new SongDTO(
-                    song.getId(),
                     song.getTitle(),
                     song.getPrice(),
                     song.getStock(),
@@ -281,7 +287,8 @@ public class ProductServiceImpl implements ProductService {
                     song.getReleaseDate().toString(),
                     song.getGenre(),
                     song.getArtists().stream().map(artist -> new ArtistDTO(artist.getName())).collect(Collectors.toList()),
-                    Collections.emptySet()
+                    Collections.emptySet(),
+                    song.getId()
             ));
         }
 
@@ -308,7 +315,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) throws NotEnoughStockException {
         Album album = productRepository.findAlbumByAlbumTitleAndMedium(title, mediumType);
-        if (decreaseAmount > album.getStock()){
+        if (decreaseAmount > album.getStock()) {
             throw new NotEnoughStockException("not enough " + album.getTitle() + " available ... in stock: " + album.getStock() + ", in cart: " + decreaseAmount);
         }
         album.decreaseStock(decreaseAmount);

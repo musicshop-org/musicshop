@@ -180,6 +180,11 @@ public class SessionFacadeImpl implements SessionFacade {
     }
 
     @Override
+    public void buyShoppingCart() {
+        shoppingCartService.buyShoppingCart();
+    }
+
+    @Override
     public List<CustomerDTO> findCustomersByName(String name) throws NoPermissionException, RemoteException {
 
         for (Role role : this.roles)

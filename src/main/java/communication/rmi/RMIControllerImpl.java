@@ -109,6 +109,11 @@ public class RMIControllerImpl implements RMIController {
     }
 
     @Override
+    public void buyShoppingCart() {
+        sessionFacade.buyShoppingCart();
+    }
+
+    @Override
     public List<Role> getRoles() {
         return sessionFacade.getRoles();
     }
