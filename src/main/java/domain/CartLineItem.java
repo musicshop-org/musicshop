@@ -13,6 +13,7 @@ import java.util.List;
 public class CartLineItem implements Serializable {
 
     private long id;
+    private long productId;
     private MediumType mediumType;
     private String name;
     private int quantity;
@@ -25,7 +26,7 @@ public class CartLineItem implements Serializable {
     protected CartLineItem() {
     }
 
-    public CartLineItem(MediumType mediumType, String name, int quantity, BigDecimal price, int stock, String imageUrl, ProductType productType) {
+    public CartLineItem(MediumType mediumType, String name, int quantity, BigDecimal price, int stock, String imageUrl, ProductType productType, long productId) {
         this.mediumType = mediumType;
         this.name = name;
         this.quantity = quantity;
@@ -34,9 +35,21 @@ public class CartLineItem implements Serializable {
         this.imageUrl = imageUrl;
         this.productType = productType;
         this.artists = new ArrayList<String>();
+        this.productId = productId;
     }
+//
+//    public CartLineItem(MediumType mediumType, String name, int quantity, BigDecimal price, int stock, String imageUrl, ProductType productType, List<String> artists) {
+//        this.mediumType = mediumType;
+//        this.name = name;
+//        this.quantity = quantity;
+//        this.price = price;
+//        this.stock = stock;
+//        this.imageUrl = imageUrl;
+//        this.productType = productType;
+//        this.artists = artists;
+//    }
 
-    public CartLineItem(MediumType mediumType, String name, int quantity, BigDecimal price, int stock, String imageUrl, ProductType productType, List<String> artists) {
+    public CartLineItem(MediumType mediumType, String name, int quantity, BigDecimal price, int stock, String imageUrl, ProductType productType, List<String> artists, long productId) {
         this.mediumType = mediumType;
         this.name = name;
         this.quantity = quantity;
@@ -45,6 +58,7 @@ public class CartLineItem implements Serializable {
         this.imageUrl = imageUrl;
         this.productType = productType;
         this.artists = artists;
+        this.productId = productId;
     }
 
     public void changeQuantity(int newQuantity) {

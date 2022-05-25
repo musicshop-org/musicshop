@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.valueobjects.AlbumId;
 
@@ -36,6 +37,30 @@ public class ProductRepositoryImpl implements ProductRepository {
 
         return albums;
     }
+
+    @Override
+    public Album findAlbumByLongId(long id) {
+
+        Session session = sessionFactory.openSession();
+        Album album = session.get(Album.class, id);
+        //Album album = session.createQuery("from Album where id = :id", Album.class).setParameter("id", id).getSingleResult();
+//        Query query = session.createQuery("from Album where product_id = :id", Album.class);
+//        query.setParameter("id", id);
+       // Album album = (Album) query.getResultList().stream().findFirst().orElse(null);
+
+        return album;
+    }
+
+    @Override
+    public Song findSongByLongId(long id) {
+
+        Session session = sessionFactory.openSession();
+        Song song = session.get(Song.class, id);
+        //return session.createQuery("from Song where id LIKE (:id)", Song.class).setParameter("id", Long.toString(id)).getSingleResult();
+        return song;
+    }
+
+
 
     @Override
     public List<Song> findSongsByTitle(String title) {
