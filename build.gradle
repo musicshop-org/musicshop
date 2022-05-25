@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'jacoco'
     id 'war'
+    id "org.sonarqube" version "3.3"
 }
 
 group 'fhv.musicshop'
