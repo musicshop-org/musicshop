@@ -1,6 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="WildFly Remote Deployment" type="JBossConfiguration" factoryName="Remote" APPLICATION_SERVER_NAME="JBoss/WildFly 26.1.0.Final" ALTERNATIVE_JRE_ENABLED="false">
     <option name="LOCAL" value="false" />
+    <option name="OPEN_IN_BROWSER" value="false" />
     <option name="OPEN_IN_BROWSER_URL" value="http://localhost:8080/musicshop-1.0/api" />
     <option name="UPDATING_POLICY" value="hot-swap-classes" />
     <deployment>

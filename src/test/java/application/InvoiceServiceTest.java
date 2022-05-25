@@ -53,6 +53,7 @@ public class InvoiceServiceTest {
     @BeforeEach
     void initMockAndService() throws RemoteException {
         givenAlbum = new Album("Test Album",
+                "",
                 new BigDecimal("5.00"),
                 99,
                 MediumType.CD,

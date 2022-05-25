@@ -16,10 +16,7 @@ import infrastructure.ProductRepositoryImpl;
 import sharedrmi.application.exceptions.AlbumNotFoundException;
 import sharedrmi.application.exceptions.NotEnoughStockException;
 import sharedrmi.domain.enums.MediumType;
-import sharedrmi.domain.valueobjects.AlbumId;
 
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,37 +42,122 @@ public class ProductServiceImpl implements ProductService {
         List<AlbumDTO> albumDTOs = new LinkedList<>();
 
         Set<Album> albums = productRepository.findAlbumsBySongTitle(title);
+        List<MediumType> acceptedMediums = List.of(MediumType.CD, MediumType.VINYL);
 
         for (Album album : albums) {
-            Set<SongDTO> songDTOs = new HashSet<>();
+            if (acceptedMediums.contains(album.getMediumType())) {
+                Set<SongDTO> songDTOs = new HashSet<>();
 
-            for (Song song : album.getSongs()) {
-                songDTOs.add(new SongDTO(
-                        song.getTitle(),
-                        song.getPrice(),
-                        song.getStock(),
-                        song.getMediumType(),
-                        song.getReleaseDate().toString(),
-                        song.getGenre(),
-                        song.getArtists()
-                                .stream()
-                                .map(artist -> new ArtistDTO(artist.getName()))
-                                .collect(Collectors.toList()),
-                        Collections.emptySet()
+                for (Song song : album.getSongs()) {
+                    songDTOs.add(new SongDTO(
+                            song.getTitle(),
+                            song.getPrice(),
+                            song.getStock(),
+                            song.getMediumType(),
+                            song.getReleaseDate().toString(),
+                            song.getGenre(),
+                            song.getArtists()
+                                    .stream()
+                                    .map(artistDTO -> new ArtistDTO(
+                                            artistDTO.getName()))
+                                    .collect(Collectors.toList()),
+                            song.getInAlbum()
+                                    .stream()
+                                    .map(albumDTO -> new AlbumDTO(
+                                            albumDTO.getTitle(),
+                                            albumDTO.getImageUrl() != null ? albumDTO.getImageUrl() : " ",
+                                            albumDTO.getPrice(),
+                                            albumDTO.getStock(),
+                                            albumDTO.getMediumType(),
+                                            albumDTO.getReleaseDate().toString(),
+                                            albumDTO.getAlbumId(),
+                                            albumDTO.getLabel(),
+                                            Collections.emptySet(),
+                                            0, albumDTO.getId()))
+                                    .collect(Collectors.toSet()),
+                            song.getId()
+                    ));
+                }
+
+                albumDTOs.add(new AlbumDTO(
+                        album.getTitle(),
+                        album.getImageUrl() != null ? album.getImageUrl() : " ",
+                        album.getPrice(),
+                        album.getStock(),
+                        album.getMediumType(),
+                        album.getReleaseDate().toString(),
+                        album.getAlbumId(),
+                        album.getLabel(),
+                        songDTOs,
+                        0,
+                        album.getId()
                 ));
             }
+        }
 
-            albumDTOs.add(new AlbumDTO(
-                    album.getTitle(),
-                    album.getPrice(),
-                    album.getStock(),
-                    album.getMediumType(),
-                    album.getReleaseDate().toString(),
-                    album.getAlbumId(),
-                    album.getLabel(),
-                    songDTOs,
-                    0
-            ));
+        return albumDTOs;
+    }
+
+    @Transactional
+    @Override
+    public List<AlbumDTO> findAlbumsBySongTitleDigital(String title) {
+
+        List<AlbumDTO> albumDTOs = new LinkedList<>();
+
+        Set<Album> albums = productRepository.findAlbumsBySongTitle(title);
+        List<MediumType> acceptedMediums = List.of(MediumType.DIGITAL);
+
+        for (Album album : albums) {
+            if (acceptedMediums.contains(album.getMediumType())) {
+                Set<SongDTO> songDTOs = new HashSet<>();
+
+                for (Song song : album.getSongs()) {
+                    songDTOs.add(new SongDTO(
+
+                            song.getTitle(),
+                            song.getPrice(),
+                            song.getStock(),
+                            song.getMediumType(),
+                            song.getReleaseDate().toString(),
+                            song.getGenre(),
+                            song.getArtists()
+                                    .stream()
+                                    .map(artistDTO -> new ArtistDTO(
+                                            artistDTO.getName()))
+                                    .collect(Collectors.toList()),
+                            song.getInAlbum()
+                                    .stream()
+                                    .map(albumDTO -> new AlbumDTO(
+                                            albumDTO.getTitle(),
+                                            albumDTO.getImageUrl() != null ? albumDTO.getImageUrl() : " ",
+                                            albumDTO.getPrice(),
+                                            albumDTO.getStock(),
+                                            albumDTO.getMediumType(),
+                                            albumDTO.getReleaseDate().toString(),
+                                            albumDTO.getAlbumId(),
+                                            albumDTO.getLabel(),
+                                            Collections.emptySet(),
+                                            0,
+                                            albumDTO.getId()))
+                                    .collect(Collectors.toSet()),
+                            song.getId()
+                    ));
+                }
+
+                albumDTOs.add(new AlbumDTO(
+                        album.getTitle(),
+                        album.getImageUrl() != null ? album.getImageUrl() : " ",
+                        album.getPrice(),
+                        album.getStock(),
+                        album.getMediumType(),
+                        album.getReleaseDate().toString(),
+                        album.getAlbumId(),
+                        album.getLabel(),
+                        songDTOs,
+                        0,
+                        album.getId()
+                ));
+            }
         }
 
         return albumDTOs;
@@ -92,6 +174,7 @@ public class ProductServiceImpl implements ProductService {
 
         return AlbumDTO.builder()
                 .title(album.getTitle())
+                .imageUrl(album.getImageUrl() != null ? album.getImageUrl() : " ")
                 .price(album.getPrice())
                 .stock(album.getStock())
                 .mediumType(album.getMediumType())
@@ -112,7 +195,19 @@ public class ProductServiceImpl implements ProductService {
                                 .releaseDate(song.getReleaseDate().toString())
                                 .genre(song.getGenre())
                                 .stock(song.getStock())
-                                .inAlbum(Collections.emptySet())
+                                .inAlbum(Set.of(new AlbumDTO(
+                                        album.getTitle(),
+                                        album.getImageUrl() != null ? album.getImageUrl() : " ",
+                                        album.getPrice(),
+                                        album.getStock(),
+                                        album.getMediumType(),
+                                        album.getReleaseDate().toString(),
+                                        album.getAlbumId(),
+                                        album.getLabel(),
+                                        Collections.emptySet(),
+                                        0,
+                                        album.getId()
+                                )))
                                 .build()
                         )
                         .collect(Collectors.toSet())
@@ -125,10 +220,12 @@ public class ProductServiceImpl implements ProductService {
     public AlbumDTO findAlbumByAlbumId(String albumId) throws AlbumNotFoundException {
 
         Optional<Album> albumOpt = productRepository.findAlbumByAlbumId(albumId);
-        if(albumOpt.isPresent()) {
+        if (albumOpt.isPresent()) {
             Album album = albumOpt.get();
+
             return AlbumDTO.builder()
                     .title(album.getTitle())
+                    .imageUrl(album.getImageUrl() != null ? album.getImageUrl() : " ")
                     .price(album.getPrice())
                     .stock(album.getStock())
                     .mediumType(album.getMediumType())
@@ -149,7 +246,20 @@ public class ProductServiceImpl implements ProductService {
                                     .releaseDate(song.getReleaseDate().toString())
                                     .genre(song.getGenre())
                                     .stock(song.getStock())
-                                    .inAlbum(Collections.emptySet())
+                                    .inAlbum(Set.of(new AlbumDTO(
+                                            album.getTitle(),
+                                            album.getImageUrl() != null ? album.getImageUrl() : " ",
+                                            album.getPrice(),
+                                            album.getStock(),
+                                            album.getMediumType(),
+                                            album.getReleaseDate().toString(),
+                                            album.getAlbumId(),
+                                            album.getLabel(),
+                                            Collections.emptySet(),
+                                            0,
+                                            album.getId()
+                                    )))
+                                    .longId(song.getId())
                                     .build()
                             )
                             .collect(Collectors.toSet())
@@ -177,7 +287,8 @@ public class ProductServiceImpl implements ProductService {
                     song.getReleaseDate().toString(),
                     song.getGenre(),
                     song.getArtists().stream().map(artist -> new ArtistDTO(artist.getName())).collect(Collectors.toList()),
-                    Collections.emptySet()
+                    Collections.emptySet(),
+                    song.getId()
             ));
         }
 
@@ -204,7 +315,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void decreaseStockOfAlbum(String title, MediumType mediumType, int decreaseAmount) throws NotEnoughStockException {
         Album album = productRepository.findAlbumByAlbumTitleAndMedium(title, mediumType);
-        if (decreaseAmount > album.getStock()){
+        if (decreaseAmount > album.getStock()) {
             throw new NotEnoughStockException("not enough " + album.getTitle() + " available ... in stock: " + album.getStock() + ", in cart: " + decreaseAmount);
         }
         album.decreaseStock(decreaseAmount);

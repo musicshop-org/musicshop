@@ -10,9 +10,7 @@ import java.rmi.RemoteException;
 
 public class RMIControllerFactoryImpl implements RMIControllerFactory {
 
-
     private RMIControllerFactoryImpl() {
-
     }
 
     @Override

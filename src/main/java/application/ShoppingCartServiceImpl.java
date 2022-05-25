@@ -1,27 +1,43 @@
 package application;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import domain.Album;
 import domain.CartLineItem;
 import domain.ShoppingCart;
+import domain.Song;
+import domain.repositories.ProductRepository;
 import domain.repositories.ShoppingCartRepository;
+import infrastructure.ProductRepositoryImpl;
 import infrastructure.ShoppingCartRepositoryImpl;
 
 import jakarta.transaction.Transactional;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClients;
 import sharedrmi.application.api.ShoppingCartService;
-import sharedrmi.application.dto.AlbumDTO;
-import sharedrmi.application.dto.CartLineItemDTO;
-import sharedrmi.application.dto.ShoppingCartDTO;
+import sharedrmi.application.dto.*;
+import sharedrmi.domain.enums.ProductType;
 
 import javax.naming.NoPermissionException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.rmi.RemoteException;
+import java.rmi.ServerException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     private final ShoppingCartRepository shoppingCartRepository;
     private final ShoppingCart shoppingCart;
+    private ProductRepository productRepository = new ProductRepositoryImpl();
 
     public ShoppingCartServiceImpl() {
         super();
@@ -62,7 +78,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                     cartLineItem.getName(),
                     cartLineItem.getQuantity(),
                     cartLineItem.getPrice(),
-                    cartLineItem.getStock()
+                    cartLineItem.getStock(),
+                    cartLineItem.getImageUrl(),
+                    cartLineItem.getProductType(),
+                    cartLineItem.getArtists(),
+                    cartLineItem.getProductId()
             ));
         }
 
@@ -71,15 +91,47 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Transactional
     @Override
-    public void addProductToCart(AlbumDTO album, int amount) {
+    public void addAlbumsToCart(AlbumDTO album, int amount) {
         CartLineItem cartLineItem = new CartLineItem(
                 album.getMediumType(),
                 album.getTitle(), amount,
                 album.getPrice(),
-                album.getStock()
+                album.getStock(),
+                album.getImageUrl(),
+                ProductType.ALBUM,
+                album.getSongs().stream().map(song -> song.getArtists().stream().map(artist -> artist.getName()).findFirst().get()).collect(Collectors.toList()),
+                album.getLongId()
         );
 
         this.shoppingCart.addLineItem(cartLineItem);
+    }
+
+    @Transactional
+    @Override
+    public void addSongsToCart(List<SongDTO> songs) {
+
+        for (SongDTO song : songs) {
+
+            String imageUrl;
+            if (!song.getInAlbum().isEmpty()) {
+                imageUrl = song.getInAlbum().iterator().next().getImageUrl();
+            } else {
+                imageUrl = "";
+            }
+
+            CartLineItem cartLineItem = new CartLineItem(
+                    song.getMediumType(),
+                    song.getTitle(), 1,
+                    song.getPrice(),
+                    song.getStock(),
+                    imageUrl,
+                    ProductType.SONG,
+                    song.getArtists().stream().map(artist -> artist.getName()).collect(Collectors.toList()),
+                    song.getLongId()
+            );
+
+            this.shoppingCart.addLineItem(cartLineItem);
+        }
     }
 
     @Transactional
@@ -90,7 +142,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 cartLineItemDTO.getName(),
                 cartLineItemDTO.getQuantity(),
                 cartLineItemDTO.getPrice(),
-                cartLineItemDTO.getStock()
+                cartLineItemDTO.getStock(),
+                cartLineItemDTO.getImageUrl(),
+                cartLineItemDTO.getProductType(),
+                cartLineItemDTO.getProductId()
         );
 
         this.shoppingCart.changeQuantity(cartLineItem, quantity);
@@ -98,16 +153,128 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Transactional
     @Override
-    public void removeProductFromCart(CartLineItemDTO cartLineItemDTO) {
+    public void removeLineItemFromCart(CartLineItemDTO cartLineItemDTO) {
         CartLineItem cartLineItem = new CartLineItem(
                 cartLineItemDTO.getMediumType(),
                 cartLineItemDTO.getName(),
                 cartLineItemDTO.getQuantity(),
                 cartLineItemDTO.getPrice(),
-                cartLineItemDTO.getStock()
+                cartLineItemDTO.getStock(),
+                cartLineItemDTO.getImageUrl(),
+                cartLineItemDTO.getProductType(),
+                cartLineItemDTO.getProductId()
         );
 
         this.shoppingCart.removeLineItem(cartLineItem);
+    }
+
+    @Override
+    public void buyShoppingCart(String ownerId) throws IOException {
+        List<CartLineItem> cartLineItems = shoppingCart.getCartLineItems();
+        Set<SongDTO> songDTOs = new HashSet<>();
+        //TODO: getSongs from CartLineItem
+        for (CartLineItem cartLineItem : cartLineItems) {
+            if (cartLineItem.getProductType().equals(ProductType.ALBUM)) {
+                Album album = productRepository.findAlbumByLongId(cartLineItem.getProductId());
+                for (Song song : album.getSongs()) {
+                    songDTOs.add(SongDTO.builder()
+                            .title(song.getTitle())
+                            .price(song.getPrice())
+                            .stock(song.getStock())
+                            .mediumType(song.getMediumType())
+                            .releaseDate(song.getReleaseDate().toString())
+                            .genre(song.getGenre())
+                            .artists(song.getArtists()
+                                    .stream()
+                                    .map(artist -> new ArtistDTO(artist.getName()))
+                                    .collect(Collectors.toList())
+                            ).inAlbum(Set.of(new AlbumDTO(
+                                    album.getTitle(),
+                                    album.getImageUrl() != null ? album.getImageUrl() : " ",
+                                    album.getPrice(),
+                                    album.getStock(),
+                                    album.getMediumType(),
+                                    album.getReleaseDate().toString(),
+                                    album.getAlbumId(),
+                                    album.getLabel(),
+                                    Collections.emptySet(),
+                                    0,
+                                    album.getId()
+                            )))
+                            .longId(song.getId())
+                            .build());
+                }
+            }
+            else if (cartLineItem.getProductType().equals(ProductType.SONG)){
+                Song song = productRepository.findSongByLongId(cartLineItem.getProductId());
+                songDTOs.add(new SongDTO(
+                        song.getTitle(),
+                        song.getPrice(),
+                        song.getStock(),
+                        song.getMediumType(),
+                        song.getReleaseDate().toString(),
+                        song.getGenre(),
+                        song.getArtists()
+                                .stream()
+                                .map(artist -> new ArtistDTO(artist.getName()))
+                                .collect(Collectors.toList()),
+                        song.getInAlbum()
+                                .stream()
+                                .map(album -> new AlbumDTO(
+                                        album.getTitle(),
+                                        album.getImageUrl() != null ? album.getImageUrl() : " ",
+                                        album.getPrice(),
+                                        album.getStock(),
+                                        album.getMediumType(),
+                                        album.getReleaseDate().toString(),
+                                        album.getAlbumId(),
+                                        album.getLabel(),
+                                        Collections.emptySet(),
+                                        0,
+                                        album.getId()
+                                ))
+                                .collect(Collectors.toSet()),
+                        song.getId()
+                ));
+            }
+        }
+
+
+        //TODO: tell microservice which songs have been bought
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        //Set pretty printing of json
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+        //Define map which will be converted to JSON
+
+
+        //1. Convert List of Person objects to JSON
+        String arrayToJson = null;
+        try {
+            arrayToJson = objectMapper.writeValueAsString(songDTOs);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        System.out.println("1. Convert List of person objects to JSON :");
+        System.out.println(arrayToJson);
+
+        HttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost("http://localhost:9001/playlist/addSongs");
+        httpPost.setEntity(new StringEntity(arrayToJson, ContentType.APPLICATION_JSON));
+        httpPost.setHeader("ownerId", ownerId);
+        httpPost.setHeader("accept", "text/plain");
+        httpPost.setHeader("Content-Type", "application/json");
+
+        HttpResponse response = httpClient.execute(httpPost);
+
+        if(response.getStatusLine().getStatusCode() == 200){
+            shoppingCart.clear();
+        }
+        else{
+            throw new ServerException("Error while buying cart");
+        }
+
     }
 
     @Transactional

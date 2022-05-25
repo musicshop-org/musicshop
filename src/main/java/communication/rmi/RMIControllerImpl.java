@@ -17,6 +17,7 @@ import javax.ejb.Remote;
 import javax.ejb.Stateful;
 import javax.naming.NoPermissionException;
 import javax.security.auth.login.FailedLoginException;
+import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.rmi.RemoteException;
 import java.time.LocalDateTime;
@@ -41,6 +42,11 @@ public class RMIControllerImpl implements RMIController {
     @Override
     public List<AlbumDTO> findAlbumsBySongTitle(String s) {
         return sessionFacade.findAlbumsBySongTitle(s);
+    }
+
+    @Override
+    public List<AlbumDTO> findAlbumsBySongTitleDigital(String s) {
+        return null;
     }
 
     @Override
@@ -79,8 +85,13 @@ public class RMIControllerImpl implements RMIController {
     }
 
     @Override
-    public void addProductToCart(AlbumDTO albumDTO, int i) throws NoPermissionException {
-        sessionFacade.addProductToCart(albumDTO, i);
+    public void addAlbumsToCart(AlbumDTO albumDTO, int i) throws NoPermissionException {
+        sessionFacade.addAlbumsToCart(albumDTO, i);
+    }
+
+    @Override
+    public void addSongsToCart(List<SongDTO> songs) throws NoPermissionException {
+        sessionFacade.addSongsToCart(songs);
     }
 
     @Override
@@ -89,13 +100,18 @@ public class RMIControllerImpl implements RMIController {
     }
 
     @Override
-    public void removeProductFromCart(CartLineItemDTO cartLineItemDTO) throws NoPermissionException {
-        sessionFacade.removeProductFromCart(cartLineItemDTO);
+    public void removeLineItemFromCart(CartLineItemDTO cartLineItemDTO) throws NoPermissionException {
+        sessionFacade.removeLineItemFromCart(cartLineItemDTO);
     }
 
     @Override
     public void clearCart() throws NoPermissionException {
         sessionFacade.clearCart();
+    }
+
+    @Override
+    public void buyShoppingCart(String s) throws IOException {
+        sessionFacade.buyShoppingCart(s);
     }
 
     @Override
