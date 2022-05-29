@@ -16,7 +16,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.servers.Server;
 
-import domain.Album;
 import sharedrmi.application.api.InvoiceService;
 import sharedrmi.application.api.ProductService;
 import sharedrmi.application.api.ShoppingCartService;
@@ -34,14 +33,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import java.io.IOException;
-import java.rmi.ServerException;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
 @OpenAPIDefinition(
         info = @Info(
-                title = "OpenAPIDefinition",
+                title = "Swagger Music Shop",
                 description = "Music shop REST API",
                 version = "1.0.0"
         ),
