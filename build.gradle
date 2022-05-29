@@ -36,7 +36,7 @@ dependencies {
 
     implementation 'io.swagger.core.v3:swagger-jaxrs2:2.2.0'
     implementation 'io.swagger.core.v3:swagger-jaxrs2-servlet-initializer:2.2.0'
-    implementation 'org.webjars:swagger-ui:4.10.3'
+    implementation 'org.microprofile-ext.openapi-ext:openapi-ui:1.1.5'
 
     implementation 'org.postgresql:postgresql:42.3.3'
 
