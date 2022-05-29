@@ -39,7 +39,7 @@ import java.util.List;
 
 @OpenAPIDefinition(
         info = @Info(
-                title = "OpenAPIDefinition",
+                title = "Swagger Music Shop",
                 description = "Music shop REST API",
                 version = "1.0.0"
         ),
