@@ -14,6 +14,7 @@ import sharedrmi.domain.valueobjects.Role;
 
 import javax.jms.JMSException;
 import javax.naming.NoPermissionException;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -177,6 +178,11 @@ public class SessionFacadeImpl implements SessionFacade {
         }
 
         throw new NoPermissionException("no permission to call this method!");
+    }
+
+    @Override
+    public void buyShoppingCart(String s) throws IOException {
+        this.shoppingCartService.buyShoppingCart(s);
     }
 
     @Override

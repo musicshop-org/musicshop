@@ -2,6 +2,7 @@ package domain.repositories;
 
 import domain.Album;
 import domain.Artist;
+import domain.Product;
 import domain.Song;
 import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.valueobjects.AlbumId;
@@ -14,6 +15,10 @@ import java.util.Set;
 public interface ProductRepository extends Serializable {
 
     Set<Album> findAlbumsBySongTitle(String title);
+
+    Album findAlbumByLongId(long id);
+
+    Song findSongByLongId(long id);
 
     List<Song> findSongsByTitle(String title);
 

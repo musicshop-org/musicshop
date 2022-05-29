@@ -33,6 +33,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.io.IOException;
+import java.rmi.ServerException;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
@@ -55,6 +57,7 @@ public class RestController {
 
     private final ProductService productService = new ProductServiceImpl();
     private final InvoiceService invoiceService = new InvoiceServiceImpl();
+    private final ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl();
 
     public RestController() {
     }
@@ -949,6 +952,136 @@ public class RestController {
                 status = Response.Status.NOT_FOUND;
                 entity = "Album not found";
             }
+        }
+
+        return Response
+                .status(status)
+                .entity(entity)
+                .type(MediaType.TEXT_PLAIN)
+                .build();
+    }
+
+    @POST
+    @Path("/shoppingCart/buyProductsWeb")
+    @Consumes("application/json")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Buy product successful",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Request parameter not ok",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "No authorization provided",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Invalid JWT token provided",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "No permission",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Album not found",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "409",
+                            description = "Not enough stock available",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "Internal server error",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.TEXT_PLAIN,
+                                            schema = @Schema(implementation = String.class)
+                                    )
+                            }
+                    )
+            })
+    public Response buyProductsWeb(List<CartLineItemDTO> cartLineItemDTO, @HeaderParam("Authorization") String jwt_Token, @HeaderParam("CartUUID") String UUID) {
+
+        Response.Status status;
+        Object entity;
+
+        if (cartLineItemDTO == null || jwt_Token == null) {
+            status = Response.Status.BAD_REQUEST;
+            entity = "Request parameter not ok";
+        } else if (jwt_Token.equals("")) {
+            status = Response.Status.UNAUTHORIZED;
+            entity = "No authorization provided";
+        } else if (!JwtManager.isValidToken(jwt_Token)) {
+            status = Response.Status.UNAUTHORIZED;
+            entity = "Invalid JWT token provided";
+        } else if (!this.isCustomerOrLicensee(jwt_Token)) {
+            status = Response.Status.FORBIDDEN;
+            entity = "No permission";
+        } else {
+
+            ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl(UUID);
+            try {
+                shoppingCartService.buyShoppingCart(JwtManager.getEmailAddress(jwt_Token));
+            } catch (IOException e) {
+
+                status = Response.Status.INTERNAL_SERVER_ERROR;
+                entity = "Internal server error";
+                return Response
+                        .status(status)
+                        .entity(entity)
+                        .type(MediaType.TEXT_PLAIN)
+                        .build();
+
+            }
+            status = Response.Status.OK;
+            entity = "Products bought successfully";
         }
 
         return Response
