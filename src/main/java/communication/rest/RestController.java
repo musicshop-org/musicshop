@@ -132,7 +132,7 @@ public class RestController {
             if (restLoginService.getRole(emailAddress).contains(Role.LICENSEE)) {
                 return Response
                         .status(Response.Status.OK)
-                        .entity(JwtManager.createJWT(emailAddress, 900000))
+                        .entity(JwtManager.createJWT(emailAddress, 9000000))
                         .type(MediaType.TEXT_PLAIN)
                         .build();
             } else {
@@ -217,7 +217,7 @@ public class RestController {
             if (restLoginService.getRole(emailAddress).contains(Role.CUSTOMER)) {
                 return Response
                         .status(Response.Status.OK)
-                        .entity(JwtManager.createJWT(emailAddress, 900000))
+                        .entity(JwtManager.createJWT(emailAddress, 9000000))
                         .type(MediaType.TEXT_PLAIN)
                         .build();
             } else {
