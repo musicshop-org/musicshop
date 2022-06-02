@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 public class CartLineItem implements Serializable {
@@ -60,8 +61,12 @@ public class CartLineItem implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CartLineItem cartLineItem = (CartLineItem) o;
-        return mediumType == cartLineItem.mediumType && name.equals(cartLineItem.name) && price.equals(cartLineItem.price) && productType.equals(cartLineItem.productType);
+        CartLineItem that = (CartLineItem) o;
+        return productId == that.productId && quantity == that.quantity && stock == that.stock && mediumType == that.mediumType && Objects.equals(name, that.name) && Objects.equals(price, that.price) && Objects.equals(imageUrl, that.imageUrl) && productType == that.productType && Objects.equals(artists, that.artists);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(productId, mediumType, name, quantity, price, stock, imageUrl, productType, artists);
+    }
 }
