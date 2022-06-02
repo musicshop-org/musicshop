@@ -6,7 +6,6 @@ import application.ShoppingCartServiceImpl;
 
 import communication.rest.api.RestLoginService;
 
-import communication.rest.util.ResponseWrapper;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -55,7 +54,6 @@ public class RestController {
 
     private final ProductService productService = new ProductServiceImpl();
     private final InvoiceService invoiceService = new InvoiceServiceImpl();
-    private final ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl();
 
     public RestController() {
     }
@@ -297,27 +295,6 @@ public class RestController {
                 .entity(albumDTOList)
                 .type(MediaType.APPLICATION_JSON)
                 .build();
-
-//        return ResponseWrapper
-//                .builder()
-//                .response(() -> {
-//                    List<AlbumDTO> albumDTOList = productService.findAlbumsBySongTitleDigital(songTitle);
-//
-//                    if (albumDTOList.size() <= 0) {
-//                        return Response
-//                                .status(Response.Status.NOT_FOUND)
-//                                .entity("No album found")
-//                                .type(MediaType.TEXT_PLAIN)
-//                                .build();
-//                    }
-//
-//                    return Response
-//                            .status(Response.Status.OK)
-//                            .entity(albumDTOList)
-//                            .type(MediaType.APPLICATION_JSON)
-//                            .build();
-//                })
-//                .build();
     }
 
     @GET

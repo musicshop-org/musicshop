@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import domain.Album;
-import domain.CartLineItem;
-import domain.ShoppingCart;
-import domain.Song;
+import domain.*;
 import domain.repositories.ProductRepository;
 import domain.repositories.ShoppingCartRepository;
 import infrastructure.ProductRepositoryImpl;
@@ -37,7 +34,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     private final ShoppingCartRepository shoppingCartRepository;
     private final ShoppingCart shoppingCart;
-    private ProductRepository productRepository = new ProductRepositoryImpl();
+    private final ProductRepository productRepository = new ProductRepositoryImpl();
 
     public ShoppingCartServiceImpl() {
         super();
@@ -99,7 +96,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 album.getStock(),
                 album.getImageUrl(),
                 ProductType.ALBUM,
-                album.getSongs().stream().map(song -> song.getArtists().stream().map(artist -> artist.getName()).findFirst().get()).collect(Collectors.toList()),
+                album.getSongs()
+                        .stream()
+                        .map(song -> song.getArtists()
+                                .stream()
+                                .map(ArtistDTO::getName)
+                                .findFirst()
+                                .orElse("")
+                        ).collect(Collectors.toList()),
                 album.getLongId()
         );
 
@@ -126,7 +130,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                     song.getStock(),
                     imageUrl,
                     ProductType.SONG,
-                    song.getArtists().stream().map(artist -> artist.getName()).collect(Collectors.toList()),
+                    song.getArtists()
+                            .stream()
+                            .map(ArtistDTO::getName)
+                            .collect(Collectors.toList()),
                     song.getLongId()
             );
 
@@ -204,8 +211,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                             .longId(song.getId())
                             .build());
                 }
-            }
-            else if (cartLineItem.getProductType().equals(ProductType.SONG)){
+            } else if (cartLineItem.getProductType().equals(ProductType.SONG)) {
                 Song song = productRepository.findSongByLongId(cartLineItem.getProductId());
                 songDTOs.add(new SongDTO(
                         song.getTitle(),
@@ -268,10 +274,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         HttpResponse response = httpClient.execute(httpPost);
 
-        if(response.getStatusLine().getStatusCode() == 200){
+        if (response.getStatusLine().getStatusCode() == 200) {
             shoppingCart.clear();
-        }
-        else{
+        } else {
             throw new ServerException("Error while buying cart");
         }
 
