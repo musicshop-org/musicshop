@@ -12,6 +12,7 @@ import java.util.List;
 @Getter
 public class CartLineItem implements Serializable {
 
+    @SuppressWarnings("unused")
     private long id;
     private long productId;
     private MediumType mediumType;
@@ -23,6 +24,7 @@ public class CartLineItem implements Serializable {
     private ProductType productType;
     private List<String> artists;
 
+    @SuppressWarnings("unused")
     protected CartLineItem() {
     }
 
@@ -34,20 +36,9 @@ public class CartLineItem implements Serializable {
         this.stock = stock;
         this.imageUrl = imageUrl;
         this.productType = productType;
-        this.artists = new ArrayList<String>();
+        this.artists = new ArrayList<>();
         this.productId = productId;
     }
-//
-//    public CartLineItem(MediumType mediumType, String name, int quantity, BigDecimal price, int stock, String imageUrl, ProductType productType, List<String> artists) {
-//        this.mediumType = mediumType;
-//        this.name = name;
-//        this.quantity = quantity;
-//        this.price = price;
-//        this.stock = stock;
-//        this.imageUrl = imageUrl;
-//        this.productType = productType;
-//        this.artists = artists;
-//    }
 
     public CartLineItem(MediumType mediumType, String name, int quantity, BigDecimal price, int stock, String imageUrl, ProductType productType, List<String> artists, long productId) {
         this.mediumType = mediumType;

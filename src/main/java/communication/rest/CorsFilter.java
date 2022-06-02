@@ -9,18 +9,24 @@ import java.io.IOException;
 @Provider
 public class CorsFilter implements ContainerResponseFilter {
 
+    @SuppressWarnings("RedundantThrows")
     @Override
-    public void filter(ContainerRequestContext requestContext,
-                       ContainerResponseContext responseContext) throws IOException {
+    public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
         responseContext.getHeaders().add(
-                "Access-Control-Allow-Origin", "*");
+                "Access-Control-Allow-Origin",
+                "*"
+        );
         responseContext.getHeaders().add(
-                "Access-Control-Allow-Credentials", "true");
+                "Access-Control-Allow-Credentials",
+                "true"
+        );
         responseContext.getHeaders().add(
                 "Access-Control-Allow-Headers",
-                "*");
+                "*"
+        );
         responseContext.getHeaders().add(
                 "Access-Control-Allow-Methods",
-                "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+                "GET, POST, PUT, DELETE, OPTIONS, HEAD"
+        );
     }
 }

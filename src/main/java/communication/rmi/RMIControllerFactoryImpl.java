@@ -8,11 +8,13 @@ import java.nio.file.AccessDeniedException;
 import java.rmi.RemoteException;
 
 
+@SuppressWarnings("unused")
 public class RMIControllerFactoryImpl implements RMIControllerFactory {
 
     private RMIControllerFactoryImpl() {
     }
 
+    @SuppressWarnings("RedundantThrows")
     @Override
     public RMIController createRMIController(String username, String password) throws FailedLoginException, RemoteException, AccessDeniedException {
         //RMIController rmiController = new RMIControllerImpl(username, password);

@@ -2,10 +2,8 @@ package domain.repositories;
 
 import domain.Album;
 import domain.Artist;
-import domain.Product;
 import domain.Song;
 import sharedrmi.domain.enums.MediumType;
-import sharedrmi.domain.valueobjects.AlbumId;
 
 import java.io.Serializable;
 import java.util.List;
