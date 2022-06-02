@@ -42,28 +42,18 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         super();
 
         this.shoppingCartRepository = new ShoppingCartRepositoryImpl();
-
-        Optional<ShoppingCart> existingCart = shoppingCartRepository.findShoppingCartByOwnerId(ownerId);
-
-        if (existingCart.isEmpty()) {
-            this.shoppingCart = shoppingCartRepository.createShoppingCart(ownerId);
-        } else {
-            this.shoppingCart = existingCart.orElse(new ShoppingCart(ownerId));;
-        }
+        this.shoppingCart = shoppingCartRepository
+                .findShoppingCartByOwnerId(ownerId)
+                .orElse(shoppingCartRepository.createShoppingCart(ownerId));
     }
 
     public ShoppingCartServiceImpl(String ownerId, ShoppingCartRepository repo) {
         super();
 
         this.shoppingCartRepository = repo;
-
-        Optional<ShoppingCart> existingCart = shoppingCartRepository.findShoppingCartByOwnerId(ownerId);
-
-        if (existingCart.isEmpty()) {
-            this.shoppingCart = shoppingCartRepository.createShoppingCart(ownerId);
-        } else {
-            this.shoppingCart = existingCart.orElse(new ShoppingCart(ownerId));;
-        }
+        this.shoppingCart = shoppingCartRepository
+                .findShoppingCartByOwnerId(ownerId)
+                .orElse(shoppingCartRepository.createShoppingCart(ownerId));
     }
 
     @Transactional
