@@ -1,7 +1,6 @@
 package application;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import domain.*;
@@ -12,21 +11,17 @@ import infrastructure.ShoppingCartRepositoryImpl;
 
 import jakarta.transaction.Transactional;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.CloseableHttpClient;
 import sharedrmi.application.api.ShoppingCartService;
 import sharedrmi.application.dto.*;
 import sharedrmi.domain.enums.ProductType;
 
-import javax.naming.NoPermissionException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.rmi.RemoteException;
 import java.rmi.ServerException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -61,7 +56,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         super();
 
         this.shoppingCartRepository = repo;
-        this.shoppingCart = shoppingCartRepository.findShoppingCartByOwnerId(ownerId).get();
+
+        this.shoppingCart = shoppingCartRepository
+                .findShoppingCartByOwnerId(ownerId)
+                .orElse(new ShoppingCart(ownerId));
     }
 
     @Transactional
@@ -176,10 +174,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public void buyShoppingCart(String ownerId) throws IOException {
+    public void buyShoppingCart(String ownerId) {
         List<CartLineItem> cartLineItems = shoppingCart.getCartLineItems();
         Set<SongDTO> songDTOs = new HashSet<>();
-        //TODO: getSongs from CartLineItem
+
         for (CartLineItem cartLineItem : cartLineItems) {
             if (cartLineItem.getProductType().equals(ProductType.ALBUM)) {
                 Album album = productRepository.findAlbumByLongId(cartLineItem.getProductId());
@@ -246,40 +244,44 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         }
 
 
-        //TODO: tell microservice which songs have been bought
+        // tell microservice which songs have been bought
 
         ObjectMapper objectMapper = new ObjectMapper();
-        //Set pretty printing of json
+
+        // set pretty printing of json
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 
-        //Define map which will be converted to JSON
-
-
-        //1. Convert List of Person objects to JSON
-        String arrayToJson = null;
         try {
-            arrayToJson = objectMapper.writeValueAsString(songDTOs);
+            // convert songDTOs to stringifyJSON
+            String stringifyJSON = objectMapper.writeValueAsString(songDTOs);
+
+            System.out.println("Convert List of person objects to JSON:");
+            System.out.println(stringifyJSON);
+
+            try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+
+                HttpPost httpPost = new HttpPost("http://localhost:9001/playlist/addSongs");
+
+                httpPost.setEntity(new StringEntity(stringifyJSON, ContentType.APPLICATION_JSON));
+                httpPost.setHeader("ownerId", ownerId);
+                httpPost.setHeader("accept", "text/plain");
+                httpPost.setHeader("Content-Type", "application/json");
+
+                HttpResponse response = httpClient.execute(httpPost);
+
+                if (response.getStatusLine().getStatusCode() == 200) {
+                    shoppingCart.clear();
+                } else {
+                    throw new ServerException("Error while buying cart");
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        System.out.println("1. Convert List of person objects to JSON :");
-        System.out.println(arrayToJson);
-
-        HttpClient httpClient = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost("http://localhost:9001/playlist/addSongs");
-        httpPost.setEntity(new StringEntity(arrayToJson, ContentType.APPLICATION_JSON));
-        httpPost.setHeader("ownerId", ownerId);
-        httpPost.setHeader("accept", "text/plain");
-        httpPost.setHeader("Content-Type", "application/json");
-
-        HttpResponse response = httpClient.execute(httpPost);
-
-        if (response.getStatusLine().getStatusCode() == 200) {
-            shoppingCart.clear();
-        } else {
-            throw new ServerException("Error while buying cart");
-        }
-
     }
 
     @Transactional
