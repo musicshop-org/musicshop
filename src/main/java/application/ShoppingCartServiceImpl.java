@@ -48,7 +48,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         if (existingCart.isEmpty()) {
             this.shoppingCart = shoppingCartRepository.createShoppingCart(ownerId);
         } else {
-            this.shoppingCart = existingCart.get();
+            this.shoppingCart = existingCart.orElse(new ShoppingCart(ownerId));;
         }
     }
 
@@ -57,9 +57,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         this.shoppingCartRepository = repo;
 
-        this.shoppingCart = shoppingCartRepository
-                .findShoppingCartByOwnerId(ownerId)
-                .orElse(new ShoppingCart(ownerId));
+        Optional<ShoppingCart> existingCart = shoppingCartRepository.findShoppingCartByOwnerId(ownerId);
+
+        if (existingCart.isEmpty()) {
+            this.shoppingCart = shoppingCartRepository.createShoppingCart(ownerId);
+        } else {
+            this.shoppingCart = existingCart.orElse(new ShoppingCart(ownerId));;
+        }
     }
 
     @Transactional
