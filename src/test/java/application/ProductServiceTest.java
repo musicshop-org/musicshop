@@ -389,8 +389,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    void given_album_when_decreasestockofalbum_then_decreasedstock() throws RemoteException, NoPermissionException, NotEnoughStockException {
-
+    void given_album_when_decreaseStockOfAlbum_then_decreasedStock() throws RemoteException, NoPermissionException, NotEnoughStockException {
         // given
         final String title = "title1";
         final MediumType mediumType = MediumType.CD;
@@ -412,6 +411,35 @@ public class ProductServiceTest {
 
         // when
         productService.decreaseStockOfAlbum(title, mediumType, decreaseQuantity);
+
+        // then
+        assertEquals(expectedQuantity, album.getStock());
+    }
+
+    @Test
+    void given_album_when_increaseStockOfAlbum_then_decreasedStock() throws RemoteException, NoPermissionException, NotEnoughStockException {
+        // given
+        final String title = "title1";
+        final MediumType mediumType = MediumType.CD;
+        final int givenStock = 8;
+        final int increaseQuantity = 5;
+        final int expectedQuantity = 13;
+
+        Album album = new Album(title,
+                "",
+                BigDecimal.TEN,
+                givenStock,
+                mediumType,
+                LocalDate.now(),
+                new AlbumId(),
+                "label1",
+                new HashSet<>()
+        );
+
+        Mockito.when(productRepository.findAlbumByAlbumTitleAndMedium(title, mediumType)).thenReturn(album);
+
+        // when
+        productService.increaseStockOfAlbum(title, mediumType, increaseQuantity);
 
         // then
         assertEquals(expectedQuantity, album.getStock());
