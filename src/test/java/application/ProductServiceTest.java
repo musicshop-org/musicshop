@@ -309,12 +309,11 @@ public class ProductServiceTest {
 
     @Test
     void given_album_when_findAlbumByTitleAndMedium_then_expectAlbum () throws RemoteException, AlbumNotFoundException {
-
         // given
         final String title = "title1";
         final MediumType mediumType = MediumType.CD;
-
-        Album album = new Album(title,
+        Album album = new Album(
+                title,
                 "",
                 BigDecimal.TEN,
                 8,
@@ -322,7 +321,16 @@ public class ProductServiceTest {
                 LocalDate.now(),
                 new AlbumId(),
                 "label1",
-                new HashSet<>());
+                Set.of(new Song(
+                        "songTitle1",
+                        BigDecimal.ONE,
+                        1,
+                        MediumType.DIGITAL,
+                        LocalDate.now(),
+                        "genre1",
+                        List.of(new Artist("artist1"))
+                ))
+        );
 
         Mockito.when(productRepository.findAlbumByAlbumTitleAndMedium(title, mediumType)).thenReturn(album);
 
@@ -337,20 +345,9 @@ public class ProductServiceTest {
 
     @Test
     void given_notExistingAlbum_when_findAlbumByTitleAndMedium_then_albumNotFoundException() {
-
         // given
         final String title = "title1";
         final MediumType mediumType = MediumType.CD;
-
-        Album album = new Album(title,
-                "",
-                BigDecimal.TEN,
-                8,
-                mediumType,
-                LocalDate.now(),
-                new AlbumId(),
-                "label1",
-                new HashSet<>());
 
         Mockito.when(productRepository.findAlbumByAlbumTitleAndMedium(title, mediumType)).thenReturn(null);
 
@@ -362,7 +359,8 @@ public class ProductServiceTest {
     void given_albumId_when_findAlbumByAlbumId_then_expectAlbum() throws AlbumNotFoundException {
         // given
         AlbumId albumId = new AlbumId();
-        Album album = new Album("title1",
+        Album album = new Album(
+                "title1",
                 "",
                 BigDecimal.TEN,
                 8,
