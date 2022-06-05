@@ -127,6 +127,40 @@ public class ProductServiceTest {
     }
 
     @Test
+    void given_songTitle_when_findAlbumsBySongTitleDigital_then_returnDigitalAlbumsWithThisSongIn() throws RemoteException {
+        // given
+        String songTitle = "Thriller";
+
+        Set<Song> songs = new HashSet<>();
+        songs.add(new Song("Thriller", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(1982, 11, 30), "pop, disco, pop-soul", Collections.emptyList()));
+
+        Set<SongDTO> songDTOs = new HashSet<>();
+        songDTOs.add(new SongDTO("Thriller", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(1982, 11, 30).toString(), "pop, disco, pop-soul", Collections.emptyList(), Collections.emptySet(), 2));
+
+
+        Set<Album> albums = new HashSet<>();
+        albums.add(new Album("Thriller", "", new BigDecimal(12), 4, MediumType.DIGITAL, LocalDate.of(1983, 6, 6), new AlbumId(), "Epic", songs));
+
+        givenAlbumDTOs.add(new AlbumDTO("Thriller", "", new BigDecimal(12), 4, MediumType.DIGITAL, LocalDate.of(1983, 6, 6).toString(), new AlbumId(), "Epic", songDTOs, 0, 1));
+
+        Mockito.when(productRepository.findAlbumsBySongTitle(songTitle)).thenReturn(albums);
+
+        // when
+        List<AlbumDTO> albumDTOs = productService.findAlbumsBySongTitleDigital(songTitle);
+
+        // then
+        assertAll(
+                () -> assertEquals(givenAlbumDTOs.get(0).getTitle(), albumDTOs.get(0).getTitle()),
+                () -> assertEquals(givenAlbumDTOs.get(0).getPrice(), albumDTOs.get(0).getPrice()),
+                () -> assertEquals(givenAlbumDTOs.get(0).getStock(), albumDTOs.get(0).getStock()),
+                () -> assertEquals(givenAlbumDTOs.get(0).getMediumType(), albumDTOs.get(0).getMediumType()),
+                () -> assertEquals(givenAlbumDTOs.get(0).getReleaseDate(), albumDTOs.get(0).getReleaseDate()),
+                () -> assertEquals(givenAlbumDTOs.get(0).getLabel(), albumDTOs.get(0).getLabel()),
+                () -> assertEquals(givenAlbumDTOs.get(0).getSongs().size(), albumDTOs.get(0).getSongs().size())
+        );
+    }
+
+    @Test
     void given_existingSong_when_findSongsByTitle_then_expectEmptyList() throws RemoteException {
         // given
         String songTitle = "Beautiful";
