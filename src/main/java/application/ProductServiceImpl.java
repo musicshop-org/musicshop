@@ -329,5 +329,4 @@ public class ProductServiceImpl implements ProductService {
         album.increaseStock(increaseAmount);
         productRepository.updateAlbum(album);
     }
-
 }

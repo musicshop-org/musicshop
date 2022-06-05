@@ -21,12 +21,8 @@ import sharedrmi.application.api.ShoppingCartService;
 import sharedrmi.application.dto.*;
 import sharedrmi.domain.enums.ProductType;
 
-import javax.naming.NoPermissionException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.rmi.RemoteException;
 import java.rmi.ServerException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.util.stream.Collectors;
 
