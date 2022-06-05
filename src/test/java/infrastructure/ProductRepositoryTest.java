@@ -11,10 +11,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ProductRepositoryTest {
 
@@ -90,6 +90,33 @@ public class ProductRepositoryTest {
 
         // then
         assertNull(album);
+    }
+
+    @Test
+    void given_songId_when_findSongByLongId_then_expectSong() {
+        // given
+        ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
+        long songId = 1;
+        String expectedSongTitle = "Beautiful";
+
+        // when
+        Song song = productRepository.findSongByLongId(songId);
+
+        // then
+        assertEquals(expectedSongTitle, song.getTitle());
+    }
+
+    @Test
+    void given_notExistingSongId_when_findSongByLongId_then_expectNull() {
+        // given
+        ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
+        long songId = -1;
+
+        // when
+        Song song = productRepository.findSongByLongId(songId);
+
+        // then
+        assertNull(song);
     }
 
     @Test
@@ -259,5 +286,29 @@ public class ProductRepositoryTest {
         // then
         assertEquals(expectedAlbum.getTitle(), actualAlbum.getTitle());
         assertEquals(expectedAlbum.getMediumType(), actualAlbum.getMediumType());
+    }
+
+    @Test
+    void given_albumId_when_findAlbumByAlbumId_then_expectAlbum() {
+        // given
+        ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
+        String albumId = "add33dcb-7e63-4242-b758-d828b45fa300";
+        String expectedAlbumTitle = "Thriller";
+
+        // when
+        Optional<Album> album = productRepository.findAlbumByAlbumId(albumId);
+
+        // then
+        assertEquals(expectedAlbumTitle, album.get().getTitle());
+    }
+
+    @Test
+    void given_noValidUUIDString_when_findAlbumByAlbumId_then_expectNull() {
+        // given
+        ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
+        String albumId = "noValidUUIDString";
+
+        // when ... then
+        assertThrows(IllegalArgumentException.class, () -> productRepository.findAlbumByAlbumId(albumId));
     }
 }
