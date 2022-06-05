@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedConstruction;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sharedrmi.application.api.ProductService;
@@ -26,6 +27,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mockConstruction;
 
 @ExtendWith(MockitoExtension.class)
 public class ProductServiceTest {
@@ -40,12 +42,12 @@ public class ProductServiceTest {
     private static ProductRepository productRepository;
 
     @BeforeEach
-    void initMockAndService() throws RemoteException {
+    void initMockAndService() {
         productService = new ProductServiceImpl(productRepository);
     }
 
     @Test
-    void given_songTitle_when_findAlbumsBySongTitle_then_returnAlbumsWithThisSongIn() throws RemoteException {
+    void given_songTitle_when_findAlbumsBySongTitle_then_returnAlbumsWithThisSongIn() {
         // given
         String songTitle = "Thriller";
 
@@ -59,7 +61,7 @@ public class ProductServiceTest {
                 new AlbumId(),
                 "Epic",
                 Set.of(new Song(
-                        "Thriller",
+                        songTitle,
                         new BigDecimal(2),
                         -1,
                         MediumType.DIGITAL,
@@ -90,7 +92,7 @@ public class ProductServiceTest {
                 new AlbumId(),
                 "Epic",
                 Set.of(new SongDTO(
-                        "Thriller",
+                        songTitle,
                         new BigDecimal(2),
                         -1,
                         MediumType.DIGITAL,
@@ -134,7 +136,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    void given_notExistingSongTitle_when_findAlbumsBySongTitle_then_returnEmptySet() throws RemoteException {
+    void given_notExistingSongTitle_when_findAlbumsBySongTitle_then_returnEmptySet() {
         // given
         String songTitle = "notExistingSongTitle";
 
@@ -148,21 +150,76 @@ public class ProductServiceTest {
     }
 
     @Test
-    void given_existingSongWithRandomCase_when_findAlbumsBySongTitle_then_expectSong() throws RemoteException {
+    void given_existingSongWithRandomCase_when_findAlbumsBySongTitle_then_expectSong() {
         // given
         String songTitle = "tHrIlLeR";
 
-        Set<Song> songs = new HashSet<>();
-        songs.add(new Song("Thriller", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(1982, 11, 30), "pop, disco, pop-soul", Collections.emptyList()));
+        Set<Album> albums = Set.of(new Album(
+                "Thriller",
+                "",
+                new BigDecimal(12),
+                4,
+                MediumType.CD,
+                LocalDate.of(1983, 6, 6),
+                new AlbumId(),
+                "Epic",
+                Set.of(new Song(
+                        songTitle,
+                        new BigDecimal(2),
+                        -1,
+                        MediumType.DIGITAL,
+                        LocalDate.of(1982, 11, 30),
+                        "pop, disco, pop-soul",
+                        List.of(new Artist("Michael Jackson")),
+                        Set.of(new Album(
+                                "Thriller",
+                                "",
+                                new BigDecimal(12),
+                                4,
+                                MediumType.CD,
+                                LocalDate.of(1983, 6, 6),
+                                new AlbumId(),
+                                "Epic",
+                                Collections.emptySet()
+                        ))
+                ))
+        ));
 
-        Set<SongDTO> songDTOs = new HashSet<>();
-        songDTOs.add(new SongDTO("Thriller", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(1982, 11, 30).toString(), "pop, disco, pop-soul", Collections.emptyList(), Collections.emptySet(), 5));
-
-
-        Set<Album> albums = new HashSet<>();
-        albums.add(new Album("Thriller", "", new BigDecimal(12), 4, MediumType.CD, LocalDate.of(1983, 6, 6), new AlbumId(), "Epic", songs));
-
-        givenAlbumDTOs.add(new AlbumDTO("Thriller", "", new BigDecimal(12), 4, MediumType.CD, LocalDate.of(1983, 6, 6).toString(), new AlbumId(), "Epic", songDTOs, 0, 1));
+        givenAlbumDTOs.add(new AlbumDTO(
+                "Thriller",
+                "",
+                new BigDecimal(12),
+                4,
+                MediumType.CD,
+                LocalDate.of(1983, 6, 6).toString(),
+                new AlbumId(),
+                "Epic",
+                Set.of(new SongDTO(
+                        songTitle,
+                        new BigDecimal(2),
+                        -1,
+                        MediumType.DIGITAL,
+                        LocalDate.of(1982, 11, 30).toString(),
+                        "pop, disco, pop-soul",
+                        List.of(new ArtistDTO("Michael Jackson")),
+                        Set.of(new AlbumDTO(
+                                "Thriller",
+                                "",
+                                new BigDecimal(12),
+                                4,
+                                MediumType.CD,
+                                LocalDate.of(1983, 6, 6).toString(),
+                                new AlbumId(),
+                                "Epic",
+                                Collections.emptySet(),
+                                0,
+                                1
+                        )),
+                        2
+                )),
+                0,
+                1
+        ));
 
         Mockito.when(productRepository.findAlbumsBySongTitle(songTitle)).thenReturn(albums);
 
@@ -182,7 +239,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    void given_songTitle_when_findAlbumsBySongTitleDigital_then_returnDigitalAlbumsWithThisSongIn() throws RemoteException {
+    void given_songTitle_when_findAlbumsBySongTitleDigital_then_returnDigitalAlbumsWithThisSongIn() {
         // given
         String songTitle = "Thriller";
 
@@ -271,14 +328,31 @@ public class ProductServiceTest {
     }
 
     @Test
-    void given_existingSong_when_findSongsByTitle_then_expectEmptyList() throws RemoteException {
+    void given_existingSong_when_findSongsByTitle_then_expectEmptyList() {
         // given
         String songTitle = "Beautiful";
 
-        List<Song> songs = new LinkedList<>();
-        songs.add(new Song(songTitle, new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(2012, 9, 28), "dancehall, reggae", Collections.emptyList()));
+        List<Song> songs = List.of(new Song(
+                songTitle,
+                new BigDecimal(2),
+                -1,
+                MediumType.DIGITAL,
+                LocalDate.of(2012, 9, 28),
+                "dancehall, reggae",
+                Collections.emptyList()
+        ));
 
-        givenSongDTOs.add(new SongDTO(songTitle, new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(2012, 9, 28).toString(), "dancehall, reggae", Collections.emptyList(), Collections.emptySet(), 0));
+        givenSongDTOs.add(new SongDTO(
+                songTitle,
+                new BigDecimal(2),
+                -1,
+                MediumType.DIGITAL,
+                LocalDate.of(2012, 9, 28).toString(),
+                "dancehall, reggae",
+                Collections.emptyList(),
+                Collections.emptySet(),
+                0
+        ));
 
         Mockito.when(productRepository.findSongsByTitle(songTitle)).thenReturn(songs);
 
@@ -297,7 +371,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    void given_notExistingSong_when_findSongsByTitle_then_expectEmptyList() throws RemoteException {
+    void given_notExistingSong_when_findSongsByTitle_then_expectEmptyList() {
         // given
         String songTitle = "notExistingSongTitle";
 
@@ -311,14 +385,31 @@ public class ProductServiceTest {
     }
 
     @Test
-    void given_existingSongWithRandomCase_when_findSongsByTitle_then_expectSong() throws RemoteException {
+    void given_existingSongWithRandomCase_when_findSongsByTitle_then_expectSong() {
         // given
         String songTitle = "beaUtiFul";
 
-        List<Song> songs = new LinkedList<>();
-        songs.add(new Song("Beautiful", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(2012, 9, 28), "dancehall, reggae", Collections.emptyList()));
+        List<Song> songs = List.of(new Song(
+                songTitle,
+                new BigDecimal(2),
+                -1,
+                MediumType.DIGITAL,
+                LocalDate.of(2012, 9, 28),
+                "dancehall, reggae",
+                Collections.emptyList()
+        ));
 
-        givenSongDTOs.add(new SongDTO("Beautiful", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(2012, 9, 28).toString(), "dancehall, reggae", Collections.emptyList(), Collections.emptySet(), 0));
+        givenSongDTOs.add(new SongDTO(
+                songTitle,
+                new BigDecimal(2),
+                -1,
+                MediumType.DIGITAL,
+                LocalDate.of(2012, 9, 28).toString(),
+                "dancehall, reggae",
+                Collections.emptyList(),
+                Collections.emptySet(),
+                0
+        ));
 
         Mockito.when(productRepository.findSongsByTitle(songTitle)).thenReturn(songs);
 
@@ -337,12 +428,11 @@ public class ProductServiceTest {
     }
 
     @Test
-    void given_artist_when_findArtistsByName_then_expectArtist() throws RemoteException {
+    void given_artist_when_findArtistsByName_then_expectArtist() {
         // given
         String artistName = "Seeed";
 
-        List<Artist> artists = new LinkedList<>();
-        artists.add(new Artist(artistName));
+        List<Artist> artists = List.of(new Artist(artistName));
 
         givenArtistDTOs.add(new ArtistDTO(artistName));
 
@@ -356,7 +446,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    void given_notExistingArtist_when_findArtistsByName_then_expectEmptyList() throws RemoteException {
+    void given_notExistingArtist_when_findArtistsByName_then_expectEmptyList() {
         // given
         String artistName = "notExistingArtistName";
 
@@ -370,12 +460,11 @@ public class ProductServiceTest {
     }
 
     @Test
-    void given_existingArtistWithRandomCase_when_findArtistsByName_then_expectArtist() throws RemoteException {
+    void given_existingArtistWithRandomCase_when_findArtistsByName_then_expectArtist() {
         // given
         String artistName = "seEed";
 
-        List<Artist> artists = new LinkedList<>();
-        artists.add(new Artist(artistName));
+        List<Artist> artists = List.of(new Artist(artistName));
 
         givenArtistDTOs.add(new ArtistDTO(artistName));
 
@@ -389,7 +478,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    void given_album_when_decreaseStockOfAlbum_then_decreasedStock() throws RemoteException, NoPermissionException, NotEnoughStockException {
+    void given_album_when_decreaseStockOfAlbum_then_decreasedStock() throws NoPermissionException, NotEnoughStockException {
         // given
         final String title = "title1";
         final MediumType mediumType = MediumType.CD;
@@ -417,7 +506,31 @@ public class ProductServiceTest {
     }
 
     @Test
-    void given_album_when_increaseStockOfAlbum_then_decreasedStock() throws RemoteException, NoPermissionException, NotEnoughStockException {
+    void given_albumWithLimitedStock_when_decreaseStockOfAlbum_then_decreasedStock() {
+        // given
+        final String title = "title1";
+        final MediumType mediumType = MediumType.CD;
+        final int givenStock = 8;
+        final int decreaseQuantity = 9;
+
+        Album album = new Album(title,
+                "",
+                BigDecimal.TEN,
+                givenStock,
+                mediumType,
+                LocalDate.now(),
+                new AlbumId(),
+                "label1",
+                new HashSet<>());
+
+        Mockito.when(productRepository.findAlbumByAlbumTitleAndMedium(title, mediumType)).thenReturn(album);
+
+        // when ... then
+        assertThrows(NotEnoughStockException.class, () -> productService.decreaseStockOfAlbum(title, mediumType, decreaseQuantity));
+    }
+
+    @Test
+    void given_album_when_increaseStockOfAlbum_then_decreasedStock() throws NoPermissionException {
         // given
         final String title = "title1";
         final MediumType mediumType = MediumType.CD;
@@ -446,7 +559,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    void given_album_when_findAlbumByTitleAndMedium_then_expectAlbum () throws RemoteException, AlbumNotFoundException {
+    void given_album_when_findAlbumByTitleAndMedium_then_expectAlbum () throws AlbumNotFoundException {
         // given
         final String title = "title1";
         final MediumType mediumType = MediumType.CD;
