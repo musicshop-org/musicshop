@@ -29,6 +29,7 @@ public class Song extends Product {
         this.releaseDate = releaseDate;
     }
 
+    // needed for testing (ProductServiceTest)
     public Song(String title, BigDecimal price, int stock, MediumType mediumType, LocalDate releaseDate, String genre, List<Artist> artists, Set<Album> inAlbum) {
         this.genre = genre;
         this.artists = artists;
