@@ -308,7 +308,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    void given_album_when_findAlbumByTitleAndMedium_then_expectalbum () throws RemoteException, AlbumNotFoundException {
+    void given_album_when_findAlbumByTitleAndMedium_then_expectAlbum () throws RemoteException, AlbumNotFoundException {
 
         // given
         final String title = "title1";
@@ -336,7 +336,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    void given_notexistingalbum_when_findAlbumByTitleAndMedium_then_albumnotfoundexception () {
+    void given_notExistingAlbum_when_findAlbumByTitleAndMedium_then_albumNotFoundException() {
 
         // given
         final String title = "title1";
@@ -356,5 +356,58 @@ public class ProductServiceTest {
 
         // when ... then
         assertThrows(AlbumNotFoundException.class, () -> productService.findAlbumByAlbumTitleAndMedium(title, mediumType));
+    }
+
+    @Test
+    void given_albumId_when_findAlbumByAlbumId_then_expectAlbum() throws AlbumNotFoundException {
+        // given
+        AlbumId albumId = new AlbumId();
+        Album album = new Album("title1",
+                "",
+                BigDecimal.TEN,
+                8,
+                MediumType.CD,
+                LocalDate.now(),
+                albumId,
+                "label1",
+                Set.of(new Song(
+                        "songTitle1",
+                        BigDecimal.ONE,
+                        1,
+                        MediumType.DIGITAL,
+                        LocalDate.now(),
+                        "genre1",
+                        List.of(new Artist("artist1"))
+                ))
+        );
+
+        Mockito.when(productRepository.findAlbumByAlbumId(albumId.toString())).thenReturn(Optional.of(album));
+
+        // when
+        AlbumDTO albumDTO = productService.findAlbumByAlbumId(albumId.toString());
+
+        // then
+        assertAll(
+                () -> assertEquals(albumDTO.getTitle(), album.getTitle()),
+                () -> assertEquals(albumDTO.getImageUrl(), album.getImageUrl()),
+                () -> assertEquals(albumDTO.getPrice(), album.getPrice()),
+                () -> assertEquals(albumDTO.getStock(), album.getStock()),
+                () -> assertEquals(albumDTO.getMediumType(), album.getMediumType()),
+                () -> assertEquals(albumDTO.getReleaseDate(), album.getReleaseDate().toString()),
+                () -> assertEquals(albumDTO.getAlbumId(), album.getAlbumId()),
+                () -> assertEquals(albumDTO.getLabel(), album.getLabel()),
+                () -> assertEquals(albumDTO.getSongs().size(), album.getSongs().size())
+        );
+    }
+
+    @Test
+    void given_notExistingAlbumId_when_findAlbumByAlbumId_then_expectAlbum() {
+        // given
+        AlbumId notExistingAlbumId = new AlbumId();
+
+        Mockito.when(productRepository.findAlbumByAlbumId(notExistingAlbumId.toString())).thenReturn(Optional.empty());
+
+        // when ... then
+        assertThrows(AlbumNotFoundException.class, () -> productService.findAlbumByAlbumId(notExistingAlbumId.toString()));
     }
 }
