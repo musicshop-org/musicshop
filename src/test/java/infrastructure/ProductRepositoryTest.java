@@ -311,4 +311,21 @@ public class ProductRepositoryTest {
         // when ... then
         assertThrows(IllegalArgumentException.class, () -> productRepository.findAlbumByAlbumId(albumId));
     }
+
+    @Test
+    void given_album_when_updateAlbum_then_changeAlbum() {
+        // given
+        ProductRepositoryImpl productRepository = new ProductRepositoryImpl();
+        Album album = productRepository.findAlbumByLongId(-99999);
+        int currentStock = album.getStock();
+        int increasedStock = 1;
+
+        album.increaseStock(increasedStock);
+
+        // when
+        productRepository.updateAlbum(album);
+
+        // then
+        assertEquals(currentStock + increasedStock, productRepository.findAlbumByLongId(-99999).getStock());
+    }
 }
