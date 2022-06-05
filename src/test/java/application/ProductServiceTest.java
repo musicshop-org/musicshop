@@ -49,17 +49,72 @@ public class ProductServiceTest {
         // given
         String songTitle = "Thriller";
 
-        Set<Song> songs = new HashSet<>();
-        songs.add(new Song("Thriller", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(1982, 11, 30), "pop, disco, pop-soul", Collections.emptyList()));
+        Set<Album> albums = Set.of(new Album(
+                "Thriller",
+                "",
+                new BigDecimal(12),
+                4,
+                MediumType.CD,
+                LocalDate.of(1983, 6, 6),
+                new AlbumId(),
+                "Epic",
+                Set.of(new Song(
+                        "Thriller",
+                        new BigDecimal(2),
+                        -1,
+                        MediumType.DIGITAL,
+                        LocalDate.of(1982, 11, 30),
+                        "pop, disco, pop-soul",
+                        List.of(new Artist("Michael Jackson")),
+                        Set.of(new Album(
+                                "Thriller",
+                                "",
+                                new BigDecimal(12),
+                                4,
+                                MediumType.CD,
+                                LocalDate.of(1983, 6, 6),
+                                new AlbumId(),
+                                "Epic",
+                                Collections.emptySet()
+                        ))
+                ))
+        ));
 
-        Set<SongDTO> songDTOs = new HashSet<>();
-        songDTOs.add(new SongDTO("Thriller", new BigDecimal(2), -1, MediumType.DIGITAL, LocalDate.of(1982, 11, 30).toString(), "pop, disco, pop-soul", Collections.emptyList(), Collections.emptySet(), 2));
-
-
-        Set<Album> albums = new HashSet<>();
-        albums.add(new Album("Thriller", "", new BigDecimal(12), 4, MediumType.CD, LocalDate.of(1983, 6, 6), new AlbumId(), "Epic", songs));
-
-        givenAlbumDTOs.add(new AlbumDTO("Thriller", "", new BigDecimal(12), 4, MediumType.CD, LocalDate.of(1983, 6, 6).toString(), new AlbumId(), "Epic", songDTOs, 0, 1));
+        givenAlbumDTOs.add(new AlbumDTO(
+                "Thriller",
+                "",
+                new BigDecimal(12),
+                4,
+                MediumType.CD,
+                LocalDate.of(1983, 6, 6).toString(),
+                new AlbumId(),
+                "Epic",
+                Set.of(new SongDTO(
+                        "Thriller",
+                        new BigDecimal(2),
+                        -1,
+                        MediumType.DIGITAL,
+                        LocalDate.of(1982, 11, 30).toString(),
+                        "pop, disco, pop-soul",
+                        List.of(new ArtistDTO("Michael Jackson")),
+                        Set.of(new AlbumDTO(
+                                "Thriller",
+                                "",
+                                new BigDecimal(12),
+                                4,
+                                MediumType.CD,
+                                LocalDate.of(1983, 6, 6).toString(),
+                                new AlbumId(),
+                                "Epic",
+                                Collections.emptySet(),
+                                0,
+                                1
+                        )),
+                        2
+                )),
+                0,
+                1
+        ));
 
         Mockito.when(productRepository.findAlbumsBySongTitle(songTitle)).thenReturn(albums);
 
@@ -141,7 +196,7 @@ public class ProductServiceTest {
                 new AlbumId(),
                 "Epic",
                 Set.of(new Song(
-                        "Thriller",
+                        songTitle,
                         new BigDecimal(2),
                         -1,
                         MediumType.DIGITAL,
@@ -172,7 +227,7 @@ public class ProductServiceTest {
                 new AlbumId(),
                 "Epic",
                 Set.of(new SongDTO(
-                        "Thriller",
+                        songTitle,
                         new BigDecimal(2),
                         -1,
                         MediumType.DIGITAL,
