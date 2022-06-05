@@ -2,11 +2,14 @@ package application;
 
 
 import application.api.LoginService;
+import application.api.SessionFacade;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import sharedrmi.domain.valueobjects.Role;
 
 import javax.security.auth.login.FailedLoginException;
 import java.nio.file.AccessDeniedException;
+import java.rmi.RemoteException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,29 +20,37 @@ public class LoginServiceTest {
     private final LoginService loginService = new LoginServiceImpl();
 
     @Test
-    void given_PssWrd_when_login_then_returnSessionFacade() {
-        // TODO: implement
-
+    void given_PssWrd_when_login_then_returnSessionFacade() throws AccessDeniedException, FailedLoginException, RemoteException {
         // given
-
+        String username = "";
+        String password = "PssWrd";
+        SessionFacade expectedSessionFacade = new SessionFacadeImpl(List.of(Role.SALESPERSON, Role.OPERATOR), username);
 
         // when
-
+        SessionFacade actualSessionFacade = loginService.login(username, password);
 
         // then
+        assertAll(
+                () -> assertEquals(expectedSessionFacade.getRoles(), actualSessionFacade.getRoles()),
+                () -> assertEquals(expectedSessionFacade.getUsername(), actualSessionFacade.getUsername())
+        );
     }
 
     @Test
-    void given_validCredentials_when_login_then_returnSessionFacade() {
-        // TODO: implement
-
+    void given_validCredentials_when_login_then_returnSessionFacade() throws AccessDeniedException, FailedLoginException, RemoteException {
         // given
-
+        String username = "meierm";
+        String password = "password06";
+        SessionFacade expectedSessionFacade = new SessionFacadeImpl(List.of(Role.SALESPERSON), username);
 
         // when
-
+        SessionFacade actualSessionFacade = loginService.login(username, password);
 
         // then
+        assertAll(
+                () -> assertEquals(expectedSessionFacade.getRoles(), actualSessionFacade.getRoles()),
+                () -> assertEquals(expectedSessionFacade.getUsername(), actualSessionFacade.getUsername())
+        );
     }
 
     @Test
