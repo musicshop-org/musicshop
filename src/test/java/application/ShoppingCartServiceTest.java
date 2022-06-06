@@ -10,10 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sharedrmi.application.api.ShoppingCartService;
-import sharedrmi.application.dto.AlbumDTO;
-import sharedrmi.application.dto.CartLineItemDTO;
-import sharedrmi.application.dto.ShoppingCartDTO;
-import sharedrmi.application.dto.SongDTO;
+import sharedrmi.application.dto.*;
 import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.enums.ProductType;
 import sharedrmi.domain.valueobjects.AlbumId;
@@ -71,10 +68,43 @@ public class ShoppingCartServiceTest {
     }
 
     @Test
-    void given_album_when_addProduct_return_new_entry() throws NoPermissionException {
+    void given_albumAndQuantity_when_addAlbumsToCart_return_new_entry() throws NoPermissionException {
         // given
         int quantity = 2;
-        AlbumDTO album = new AlbumDTO("TestAlbum", "", BigDecimal.TEN, 10, MediumType.CD, LocalDate.now().toString(), new AlbumId(), "TestLabel", Collections.emptySet(), 0, 1);
+        AlbumDTO album = new AlbumDTO(
+                "TestAlbum",
+                "",
+                BigDecimal.TEN,
+                10,
+                MediumType.CD,
+                LocalDate.now().toString(),
+                new AlbumId(),
+                "TestLabel",
+                Set.of(new SongDTO(
+                        "TestSong",
+                        BigDecimal.TEN,
+                        10,
+                        MediumType.DIGITAL,
+                        LocalDate.now().toString(),
+                        "TestGenre",
+                        List.of(new ArtistDTO("TestArtist")),
+                        Set.of(new AlbumDTO(
+                                "TestAlbum",
+                                "",
+                                BigDecimal.TEN,
+                                10,
+                                MediumType.CD,
+                                LocalDate.now().toString(),
+                                new AlbumId(),
+                                "TestLabel",
+                                Collections.emptySet(),
+                                0,
+                                1
+                        )),
+                        1
+                )),
+                0,
+                1);
 
         // when
         shoppingCartService.addAlbumsToCart(album, quantity);
@@ -91,7 +121,41 @@ public class ShoppingCartServiceTest {
     }
 
     @Test
-    void given_songs_when_addSongs_return_new_entry() throws NoPermissionException {
+    void given_songsWithInAlbum_when_addSongsToCart_return_new_entry() throws NoPermissionException {
+        // given
+        List<SongDTO> songs = new LinkedList<>();
+        songs.add(SongDTO.builder()
+                .title("TestSong1")
+                .price(BigDecimal.TEN)
+                .stock(-1)
+                .mediumType(MediumType.DIGITAL)
+                .releaseDate(LocalDate.now().toString())
+                .genre("TestGenre")
+                .inAlbum(Set.of(AlbumDTO.builder()
+                        .title("TestAlbum")
+                        .imageUrl("TestUrl")
+                        .build()))
+                .artists(List.of(ArtistDTO.builder()
+                        .name("TestArtist")
+                        .build()))
+                .build());
+
+        // when
+        shoppingCartService.addSongsToCart(songs);
+
+        // then
+        ShoppingCartDTO cartDTO = shoppingCartService.getCart();
+        assertEquals(givenCart.getOwnerId(), cartDTO.getOwnerId());
+        assertAll("LineItem 3",
+                () -> assertEquals(songs.get(0).getTitle(), cartDTO.getCartLineItems().get(2).getName()),
+                () -> assertEquals(1, cartDTO.getCartLineItems().get(2).getQuantity()),
+                () -> assertEquals(songs.get(0).getPrice(), cartDTO.getCartLineItems().get(2).getPrice()),
+                () -> assertEquals(songs.get(0).getMediumType(), cartDTO.getCartLineItems().get(2).getMediumType())
+        );
+    }
+
+    @Test
+    void given_songsWithoutInAlbum_when_addSongsToCart_return_new_entry() throws NoPermissionException {
         // given
         List<SongDTO> songs = new LinkedList<>();
         songs.add(SongDTO.builder()
@@ -102,7 +166,9 @@ public class ShoppingCartServiceTest {
                 .releaseDate(LocalDate.now().toString())
                 .genre("TestGenre")
                 .inAlbum(Collections.emptySet())
-                .artists(new LinkedList<>())
+                .artists(List.of(ArtistDTO.builder()
+                        .name("TestArtist")
+                        .build()))
                 .build());
 
         // when
