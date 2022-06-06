@@ -37,17 +37,6 @@ public class CartLineItem implements Serializable {
         this.artists = new ArrayList<String>();
         this.productId = productId;
     }
-//
-//    public CartLineItem(MediumType mediumType, String name, int quantity, BigDecimal price, int stock, String imageUrl, ProductType productType, List<String> artists) {
-//        this.mediumType = mediumType;
-//        this.name = name;
-//        this.quantity = quantity;
-//        this.price = price;
-//        this.stock = stock;
-//        this.imageUrl = imageUrl;
-//        this.productType = productType;
-//        this.artists = artists;
-//    }
 
     public CartLineItem(MediumType mediumType, String name, int quantity, BigDecimal price, int stock, String imageUrl, ProductType productType, List<String> artists, long productId) {
         this.mediumType = mediumType;
@@ -72,5 +61,4 @@ public class CartLineItem implements Serializable {
         CartLineItem cartLineItem = (CartLineItem) o;
         return mediumType == cartLineItem.mediumType && name.equals(cartLineItem.name) && price.equals(cartLineItem.price) && productType.equals(cartLineItem.productType);
     }
-
 }
