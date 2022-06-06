@@ -13,8 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class AlbumTest {
 
     @Test
-    void given_album_when_increasestock_then_stockincreased () {
-
+    void given_album_when_increaseStock_then_stockIncreased () {
         // given
         final int givenStock = 8;
         final int increaseQuantity = 5;
@@ -38,8 +37,7 @@ public class AlbumTest {
     }
 
     @Test
-    void given_album_when_decreasestock_then_stockdecreased () {
-
+    void given_album_when_decreaseStock_then_stockDecreased () {
         // given
         final int givenStock = 8;
         final int decreaseQuantity = 5;
