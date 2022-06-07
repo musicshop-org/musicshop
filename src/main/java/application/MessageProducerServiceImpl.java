@@ -41,7 +41,6 @@ public class MessageProducerServiceImpl implements MessageProducerService {
                 TextMessage textMessage = session.createTextMessage(messageDTO.getMessageText());
                 textMessage.setJMSCorrelationID(messageDTO.getMessageTitle());
 
-               // textMessage.setJMSExpiration(TimeUnit.DAYS.toMillis(messageDTO.getExpirationDays()));
                 messageProducer.send(textMessage);
             }
 

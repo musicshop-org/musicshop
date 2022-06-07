@@ -128,8 +128,5 @@ public class InvoiceServiceImpl implements InvoiceService {
             album.increaseStock(returnQuantity);
             productRepository.updateAlbum(album);
         }
-
-
     }
-
 }

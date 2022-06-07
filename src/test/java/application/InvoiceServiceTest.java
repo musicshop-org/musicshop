@@ -26,7 +26,6 @@ import sharedrmi.domain.valueobjects.InvoiceId;
 
 import javax.naming.NoPermissionException;
 import java.math.BigDecimal;
-import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -51,7 +50,7 @@ public class InvoiceServiceTest {
     private static ProductRepository productRepository;
 
     @BeforeEach
-    void initMockAndService() throws RemoteException {
+    void initMockAndService() {
         givenAlbum = new Album("Test Album",
                 "",
                 new BigDecimal("5.00"),
@@ -79,11 +78,10 @@ public class InvoiceServiceTest {
     }
 
     @Test
-    void given_invoiceId_when_findInvoiceById_then_returnInvoice() throws RemoteException, NoPermissionException, InvoiceNotFoundException {
+    void given_invoiceId_when_findInvoiceById_then_returnInvoice() throws NoPermissionException, InvoiceNotFoundException {
         // given
         InvoiceId invoiceId = new InvoiceId(111);
         Mockito.when(invoiceRepository.findInvoiceById(invoiceId)).thenReturn(Optional.of(givenInvoice));
-
 
         // when
         InvoiceDTO invoiceDTO = invoiceService.findInvoiceById(invoiceId);
@@ -98,36 +96,43 @@ public class InvoiceServiceTest {
     }
 
     @Test
-    void given_notExistingInvoiceId_when_findInvoiceById_then_returnEmptyOptional() throws RemoteException, NoPermissionException, InvoiceNotFoundException {
+    void given_notExistingInvoiceId_when_findInvoiceById_then_returnEmptyOptional() {
         // given
         InvoiceId invoiceId = new InvoiceId(-111);
 
         Mockito.when(invoiceRepository.findInvoiceById(invoiceId)).thenReturn(Optional.empty());
 
-        //when...then
+        // when ... then
         assertThrows(InvoiceNotFoundException.class, () -> invoiceService.findInvoiceById(invoiceId));
     }
 
     @Test
-    void given_InvoiceLineItemDTOandAmount_when_returnInvoiceLineItem_then_addReturnQuantity() throws RemoteException, NoPermissionException, InvoiceNotFoundException {
-        //given
+    void given_invoiceLineItemDTOandAmount_when_returnInvoiceLineItem_then_addReturnQuantity() throws NoPermissionException, InvoiceNotFoundException {
+        // given
         InvoiceId invoiceId = new InvoiceId(111);
         Mockito.when(invoiceRepository.findInvoiceById(invoiceId)).thenReturn(Optional.of(givenInvoice));
-
-
 
         InvoiceLineItemDTO invoiceLineItemDTO = new InvoiceLineItemDTO(MediumType.CD, "Test Album", 4, new BigDecimal("5.00"),0);
         int returnQuantity = 2;
 
-        //when
-        invoiceService.returnInvoiceLineItem(invoiceId,invoiceLineItemDTO,returnQuantity);
+        // when
+        invoiceService.returnInvoiceLineItem(invoiceId, invoiceLineItemDTO, returnQuantity);
 
-        //then
-        assertEquals(returnQuantity,givenInvoice.getInvoiceLineItems().get(0).getReturnedQuantity());
+        // then
+        assertEquals(returnQuantity, givenInvoice.getInvoiceLineItems().get(0).getReturnedQuantity());
     }
 
     @Test
-    void given_invoiceDTO_when_createInvoice_then_validInvoice() throws RemoteException, AlbumNotFoundException, NoPermissionException, NotEnoughStockException {
+    void given_notExistingInvoiceId_when_returnInvoiceLineItem_then_throwInvoiceNotFoundException()  {
+        // given
+        InvoiceId invoiceId = new InvoiceId(-111);
+
+        // when ... then
+        assertThrows(InvoiceNotFoundException.class, () -> invoiceService.returnInvoiceLineItem(invoiceId, new InvoiceLineItemDTO(), 0));
+    }
+
+    @Test
+    void given_invoiceDTO_when_createInvoice_then_validInvoice() throws AlbumNotFoundException, NoPermissionException, NotEnoughStockException {
         // given
         InvoiceDTO invoiceDTO = new InvoiceDTO(
                 givenInvoice.getInvoiceId(),
@@ -152,6 +157,7 @@ public class InvoiceServiceTest {
         invoiceService.createInvoice(invoiceDTO);
         Mockito.verify(invoiceRepository).createInvoice(invoiceCaptor.capture());
         Invoice invoice = invoiceCaptor.getValue();
+
         // then
         assertAll(
                 () -> assertEquals(givenInvoice.getInvoiceId().getInvoiceId(), invoice.getInvoiceId().getInvoiceId()),
@@ -162,8 +168,8 @@ public class InvoiceServiceTest {
     }
 
     @Test
-    void given_invalidStockInvoiceDTO_when_createInvoice_then_throws() throws RemoteException, AlbumNotFoundException, NoPermissionException {
-        Boolean failed = false;
+    void given_invalidStockInvoiceDTO_when_createInvoice_then_throws() throws AlbumNotFoundException, NoPermissionException {
+        boolean failed = false;
         // given
         InvoiceDTO invoiceDTO = new InvoiceDTO(
                 givenInvoice.getInvoiceId(),
@@ -184,21 +190,21 @@ public class InvoiceServiceTest {
                         givenInvoice.getInvoiceLineItems().get(0).getMediumType()))
                 .thenReturn(givenAlbum);
 
-        //when
-        try{
+        // when
+        try {
             invoiceService.createInvoice(invoiceDTO);
             Mockito.verify(invoiceRepository).createInvoice(invoiceCaptor.capture());
         } catch (NotEnoughStockException e) {
             failed = true;
         }
 
-        //then
+        // then
         assertTrue(failed);
     }
 
     @Test
-    void given_invalidNameInvoiceDTO_when_createInvoice_then_throws() throws RemoteException, NoPermissionException, NotEnoughStockException {
-        Boolean failed = false;
+    void given_invalidNameInvoiceDTO_when_createInvoice_then_throws() throws NoPermissionException, NotEnoughStockException {
+        boolean failed = false;
         // given
         InvoiceDTO invoiceDTO = new InvoiceDTO(
                 givenInvoice.getInvoiceId(),
@@ -219,18 +225,15 @@ public class InvoiceServiceTest {
                         givenInvoice.getInvoiceLineItems().get(0).getMediumType()))
                 .thenReturn(null);
 
-        //when
-        try{
+        // when
+        try {
             invoiceService.createInvoice(invoiceDTO);
             Mockito.verify(invoiceRepository).createInvoice(invoiceCaptor.capture());
         } catch (AlbumNotFoundException e) {
             failed = true;
         }
 
-        //then
+        // then
         assertTrue(failed);
     }
-
-
-
 }
