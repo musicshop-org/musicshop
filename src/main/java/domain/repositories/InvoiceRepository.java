@@ -11,5 +11,6 @@ public interface InvoiceRepository extends Serializable {
     Optional<Invoice> findInvoiceById(InvoiceId invoiceId);
 
     void createInvoice(Invoice invoice);
+
     void update(Invoice invoice);
 }

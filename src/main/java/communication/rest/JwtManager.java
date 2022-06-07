@@ -49,14 +49,17 @@ public class JwtManager {
         return builder.compact();
     }
 
+    @SuppressWarnings("unused")
     public static String getId(String jwt) {
         return getClaims(jwt).getId();
     }
 
+    @SuppressWarnings("unused")
     public static String getIssuer(String jwt) {
         return getClaims(jwt).getIssuer();
     }
 
+    @SuppressWarnings("unused")
     public static Date getIssuedAt(String jwt) {
         return getClaims(jwt).getIssuedAt();
     }
@@ -65,6 +68,7 @@ public class JwtManager {
         return getClaims(jwt).get("email", String.class);
     }
 
+    @SuppressWarnings("unused")
     public static Date getExpiration(String jwt) {
         return getClaims(jwt).getExpiration();
     }
@@ -72,7 +76,8 @@ public class JwtManager {
     private static Claims getClaims(String jwt) {
         return Jwts.parser()
                 .setSigningKey(SECRET_KEY)
-                .parseClaimsJws(jwt).getBody();
+                .parseClaimsJws(jwt)
+                .getBody();
     }
 
     public static List<Role> getRoles(String jwt) {
@@ -87,11 +92,11 @@ public class JwtManager {
         return roles;
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isValidToken(String jwt) {
         try {
             getClaims(jwt);
-        }
-        catch (JwtException e) {
+        } catch (JwtException e) {
             return false;
         }
 

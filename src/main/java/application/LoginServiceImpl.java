@@ -13,7 +13,6 @@ import javax.naming.directory.SearchResult;
 import javax.security.auth.login.FailedLoginException;
 import java.math.BigInteger;
 import java.nio.file.AccessDeniedException;
-import java.rmi.RemoteException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -135,15 +134,15 @@ public class LoginServiceImpl implements LoginService {
             BigInteger no = new BigInteger(1, messageDigest);
 
             // Convert message digest into hex value
-            String hashtext = no.toString(16);
+            StringBuilder hashText = new StringBuilder(no.toString(16));
 
             // Add preceding 0s to make it 32 bit
-            while (hashtext.length() < 32) {
-                hashtext = "0" + hashtext;
+            while (hashText.length() < 32) {
+                hashText.insert(0, "0");
             }
 
             // return the HashText
-            return hashtext;
+            return hashText.toString();
         }
 
         // For specifying wrong message digest algorithms

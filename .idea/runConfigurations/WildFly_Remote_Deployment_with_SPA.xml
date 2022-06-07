@@ -1,0 +1,51 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="WildFly Remote Deployment with SPA" type="JBossConfiguration" factoryName="Remote" APPLICATION_SERVER_NAME="JBoss/WildFly 26.1.0.Final" ALTERNATIVE_JRE_ENABLED="false">
+    <option name="LOCAL" value="false" />
+    <option name="OPEN_IN_BROWSER" value="false" />
+    <option name="OPEN_IN_BROWSER_URL" value="http://localhost:8080/musicshop-1.0/api" />
+    <option name="UPDATING_POLICY" value="hot-swap-classes" />
+    <deployment>
+      <artifact name="Gradle : fhv.musicshop : musicshop-1.0.war">
+        <settings DEPLOYMENT_METHOD="Staging" />
+      </artifact>
+      <file path="$PROJECT_DIR$/spa_war/musicshop-spa.war">
+        <settings DEPLOYMENT_METHOD="Staging" />
+      </file>
+    </deployment>
+    <server-settings>
+      <data>
+        <option name="credentialAlias" value="eedead68-0e61-451c-b0c6-4870356dc0b7" />
+        <option name="managementPort" value="9990" />
+        <option name="stagingRemotePath" value="" />
+        <option name="transportStagingTarget">
+          <TransportTarget>
+            <option name="id" value="bbcd93d1-78f9-4dda-be9e-6876ae6d8d94" />
+            <id>bbcd93d1-78f9-4dda-be9e-6876ae6d8d94</id>
+          </TransportTarget>
+        </option>
+        <option name="username" value="admin" />
+        <username>admin</username>
+        <credential-alias>eedead68-0e61-451c-b0c6-4870356dc0b7</credential-alias>
+        <management-port>9990</management-port>
+        <transport-target>
+          <TransportTarget>
+            <option name="id" value="bbcd93d1-78f9-4dda-be9e-6876ae6d8d94" />
+            <id>bbcd93d1-78f9-4dda-be9e-6876ae6d8d94</id>
+          </TransportTarget>
+        </transport-target>
+        <staging-path />
+      </data>
+    </server-settings>
+    <predefined_log_file enabled="true" id="JBoss" />
+    <RunnerSettings RunnerId="Debug">
+      <option name="DEBUG_PORT" value="56891" />
+      <option name="LOCAL" value="false" />
+    </RunnerSettings>
+    <method v="2">
+      <option name="Make" enabled="true" />
+      <option name="BuildArtifacts" enabled="true">
+        <artifact name="Gradle : fhv.musicshop : musicshop-1.0.war" />
+      </option>
+    </method>
+  </configuration>
+</component>

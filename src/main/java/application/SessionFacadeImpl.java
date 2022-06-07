@@ -12,16 +12,13 @@ import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.valueobjects.InvoiceId;
 import sharedrmi.domain.valueobjects.Role;
 
-import javax.jms.JMSException;
 import javax.naming.NoPermissionException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDateTime;
-import java.util.LinkedList;
 import java.util.List;
 
 public class SessionFacadeImpl implements SessionFacade {
