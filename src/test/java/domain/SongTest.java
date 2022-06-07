@@ -2,12 +2,10 @@ package domain;
 
 import org.junit.jupiter.api.Test;
 import sharedrmi.domain.enums.MediumType;
-import sharedrmi.domain.valueobjects.AlbumId;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;
-import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -27,7 +25,7 @@ public class SongTest {
                 Collections.emptySet()
         );
 
-        String expectedString = "Song{id=0, title='SongTitle', price=10, stock=5, mediumType=CD, releaseDate=" + LocalDate.now() +", genre='TestGenre', artists=[], inAlbum=[]}";
+        String expectedString = "Song{id=0, title='SongTitle', price=10, stock=5, mediumType=CD, releaseDate=" + LocalDate.now() + ", genre='TestGenre', artists=[], inAlbum=[]}";
 
         // when ... then
         assertEquals(expectedString, song.toString());

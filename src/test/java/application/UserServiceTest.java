@@ -14,7 +14,6 @@ import org.mockito.quality.Strictness;
 import sharedrmi.application.api.UserService;
 import sharedrmi.application.exceptions.UserNotFoundException;
 
-import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

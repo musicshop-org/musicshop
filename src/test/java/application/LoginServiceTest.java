@@ -4,7 +4,6 @@ package application;
 import application.api.LoginService;
 import application.api.SessionFacade;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import sharedrmi.domain.valueobjects.Role;
 
 import javax.security.auth.login.FailedLoginException;
