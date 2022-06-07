@@ -12,6 +12,7 @@ import java.util.List;
 @Getter
 public class Invoice implements Serializable {
 
+    @SuppressWarnings("unused")
     private long id;
     private InvoiceId invoiceId;
     private List<InvoiceLineItem> invoiceLineItems;
@@ -19,6 +20,7 @@ public class Invoice implements Serializable {
     private LocalDate date;
     private CustomerData customerData;
 
+    @SuppressWarnings("unused")
     protected Invoice() {
     }
 

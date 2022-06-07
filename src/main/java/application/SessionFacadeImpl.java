@@ -12,7 +12,6 @@ import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.valueobjects.InvoiceId;
 import sharedrmi.domain.valueobjects.Role;
 
-import javax.jms.JMSException;
 import javax.naming.NoPermissionException;
 import java.io.IOException;
 import java.net.MalformedURLException;

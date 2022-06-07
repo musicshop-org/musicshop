@@ -23,12 +23,12 @@ import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@SuppressWarnings("unused")
 @Remote(RMIController.class)
 @Stateful
 public class RMIControllerImpl implements RMIController {
 
     private SessionFacade sessionFacade;
-
 
     public RMIControllerImpl() {
     }
@@ -141,7 +141,7 @@ public class RMIControllerImpl implements RMIController {
 
     @Override
     public void returnInvoiceLineItem(InvoiceId invoiceId, InvoiceLineItemDTO invoiceLineItemDTO, int returnQuantity) throws NoPermissionException, InvoiceNotFoundException {
-        sessionFacade.returnInvoiceLineItem(invoiceId,invoiceLineItemDTO,returnQuantity);
+        sessionFacade.returnInvoiceLineItem(invoiceId, invoiceLineItemDTO, returnQuantity);
     }
 
     @Override

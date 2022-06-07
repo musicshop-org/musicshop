@@ -7,14 +7,17 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-public class User  implements Serializable {
+public class User implements Serializable {
 
+    @SuppressWarnings("unused")
     private long id;
     private String username;
     private List<Topic> topics;
     private LocalDateTime lastViewed;
 
-    protected User () {}
+    @SuppressWarnings("unused")
+    protected User() {
+    }
 
     public User(String username, List<Topic> topics) {
         this.username = username;
@@ -22,7 +25,7 @@ public class User  implements Serializable {
         this.lastViewed = LocalDateTime.MIN;
     }
 
-    public void setLastViewed(LocalDateTime lastViewed){
+    public void setLastViewed(LocalDateTime lastViewed) {
         this.lastViewed = lastViewed;
     }
 }

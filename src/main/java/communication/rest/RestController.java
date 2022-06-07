@@ -45,7 +45,11 @@ import java.util.List;
         servers = {
                 @Server(
                         url = "http://localhost:8080/musicshop-1.0",
-                        description = "Music shop REST"
+                        description = "Music shop REST-Local"
+                ),
+                @Server(
+                        url = "http://10.0.40.162:8080/musicshop-1.0",
+                        description = "Music shop REST FHV1"
                 )
         }
 )
@@ -1066,6 +1070,7 @@ public class RestController {
                 .build();
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private boolean isCustomerOrLicensee(String jwt_Token) {
         List<Role> userRoles = JwtManager.getRoles(jwt_Token);
 

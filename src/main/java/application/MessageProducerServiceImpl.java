@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MessageProducerServiceImpl implements MessageProducerService {
 
+    @SuppressWarnings("FieldCanBeLocal")
     private final String DEFAULT_BROKER_BIND_URL = "tcp://10.0.40.162:61616";
 
     public MessageProducerServiceImpl() {

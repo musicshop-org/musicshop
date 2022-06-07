@@ -10,5 +10,4 @@ public interface ShoppingCartRepository extends Serializable {
     Optional<ShoppingCart> findShoppingCartByOwnerId(String ownerId);
 
     ShoppingCart createShoppingCart(String ownerId);
-
 }
