@@ -1066,6 +1066,7 @@ public class RestController {
                 .build();
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private boolean isCustomerOrLicensee(String jwt_Token) {
         List<Role> userRoles = JwtManager.getRoles(jwt_Token);
 
