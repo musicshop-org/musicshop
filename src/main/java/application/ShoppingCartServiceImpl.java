@@ -254,7 +254,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
             try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
 
-                HttpPost httpPost = new HttpPost("http://localhost:9001/playlist/addSongs");
+//                HttpPost httpPost = new HttpPost("http://localhost:9001/playlist/addSongs");
+                HttpPost httpPost = new HttpPost("http://34.234.78.108/playlist/addSongs");
 
                 httpPost.setEntity(new StringEntity(stringifyJSON, ContentType.APPLICATION_JSON));
                 httpPost.setHeader("ownerId", ownerId);
