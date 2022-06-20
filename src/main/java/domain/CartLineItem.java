@@ -61,8 +61,8 @@ public class CartLineItem implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CartLineItem that = (CartLineItem) o;
-        return productId == that.productId && quantity == that.quantity && stock == that.stock && mediumType == that.mediumType && Objects.equals(name, that.name) && Objects.equals(price, that.price) && Objects.equals(imageUrl, that.imageUrl) && productType == that.productType && Objects.equals(artists, that.artists);
+        CartLineItem cartLineItem = (CartLineItem) o;
+        return mediumType == cartLineItem.mediumType && name.equals(cartLineItem.name) && price.equals(cartLineItem.price) && productType.equals(cartLineItem.productType);
     }
 
     @Override
