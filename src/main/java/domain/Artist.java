@@ -7,9 +7,11 @@ import java.io.Serializable;
 @Getter
 public class Artist implements Serializable {
 
+    @SuppressWarnings("unused")
     private long id;
     private String name;
 
+    @SuppressWarnings("unused")
     protected Artist() {
     }
 

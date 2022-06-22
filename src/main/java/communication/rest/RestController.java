@@ -6,7 +6,6 @@ import application.ShoppingCartServiceImpl;
 
 import communication.rest.api.RestLoginService;
 
-import communication.rest.util.ResponseWrapper;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -16,7 +15,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.servers.Server;
 
-import domain.Album;
 import sharedrmi.application.api.InvoiceService;
 import sharedrmi.application.api.ProductService;
 import sharedrmi.application.api.ShoppingCartService;
@@ -34,21 +32,24 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import java.io.IOException;
-import java.rmi.ServerException;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
 @OpenAPIDefinition(
         info = @Info(
-                title = "OpenAPIDefinition",
+                title = "Swagger Music Shop",
                 description = "Music shop REST API",
                 version = "1.0.0"
         ),
         servers = {
                 @Server(
                         url = "http://localhost:8080/musicshop-1.0",
-                        description = "Music shop REST"
+                        description = "Music shop REST-Local"
+                ),
+                @Server(
+                        url = "http://10.0.40.162:8080/musicshop-1.0",
+                        description = "Music shop REST FHV1"
                 )
         }
 )
@@ -57,7 +58,6 @@ public class RestController {
 
     private final ProductService productService = new ProductServiceImpl();
     private final InvoiceService invoiceService = new InvoiceServiceImpl();
-    private final ShoppingCartService shoppingCartService = new ShoppingCartServiceImpl();
 
     public RestController() {
     }
@@ -134,7 +134,7 @@ public class RestController {
             if (restLoginService.getRole(emailAddress).contains(Role.LICENSEE)) {
                 return Response
                         .status(Response.Status.OK)
-                        .entity(JwtManager.createJWT(emailAddress, 900000))
+                        .entity(JwtManager.createJWT(emailAddress, 9000000))
                         .type(MediaType.TEXT_PLAIN)
                         .build();
             } else {
@@ -219,7 +219,7 @@ public class RestController {
             if (restLoginService.getRole(emailAddress).contains(Role.CUSTOMER)) {
                 return Response
                         .status(Response.Status.OK)
-                        .entity(JwtManager.createJWT(emailAddress, 900000))
+                        .entity(JwtManager.createJWT(emailAddress, 9000000))
                         .type(MediaType.TEXT_PLAIN)
                         .build();
             } else {
@@ -299,27 +299,6 @@ public class RestController {
                 .entity(albumDTOList)
                 .type(MediaType.APPLICATION_JSON)
                 .build();
-
-//        return ResponseWrapper
-//                .builder()
-//                .response(() -> {
-//                    List<AlbumDTO> albumDTOList = productService.findAlbumsBySongTitleDigital(songTitle);
-//
-//                    if (albumDTOList.size() <= 0) {
-//                        return Response
-//                                .status(Response.Status.NOT_FOUND)
-//                                .entity("No album found")
-//                                .type(MediaType.TEXT_PLAIN)
-//                                .build();
-//                    }
-//
-//                    return Response
-//                            .status(Response.Status.OK)
-//                            .entity(albumDTOList)
-//                            .type(MediaType.APPLICATION_JSON)
-//                            .build();
-//                })
-//                .build();
     }
 
     @GET
@@ -1091,6 +1070,7 @@ public class RestController {
                 .build();
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private boolean isCustomerOrLicensee(String jwt_Token) {
         List<Role> userRoles = JwtManager.getRoles(jwt_Token);
 

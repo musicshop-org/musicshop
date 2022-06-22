@@ -1,6 +1,5 @@
 package application;
 
-import infrastructure.ProductRepositoryImpl;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import sharedrmi.application.api.MessageProducerService;
 import sharedrmi.application.dto.MessageDTO;
@@ -11,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MessageProducerServiceImpl implements MessageProducerService {
 
+    @SuppressWarnings("FieldCanBeLocal")
     private final String DEFAULT_BROKER_BIND_URL = "tcp://10.0.40.162:61616";
 
     public MessageProducerServiceImpl() {
@@ -41,7 +41,6 @@ public class MessageProducerServiceImpl implements MessageProducerService {
                 TextMessage textMessage = session.createTextMessage(messageDTO.getMessageText());
                 textMessage.setJMSCorrelationID(messageDTO.getMessageTitle());
 
-               // textMessage.setJMSExpiration(TimeUnit.DAYS.toMillis(messageDTO.getExpirationDays()));
                 messageProducer.send(textMessage);
             }
 

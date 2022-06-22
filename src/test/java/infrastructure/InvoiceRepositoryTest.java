@@ -2,15 +2,12 @@ package infrastructure;
 
 import domain.Invoice;
 import domain.InvoiceLineItem;
-import domain.repositories.InvoiceRepository;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import sharedrmi.domain.enums.MediumType;
 import sharedrmi.domain.enums.PaymentMethod;
 import sharedrmi.domain.valueobjects.InvoiceId;
 
 import java.math.BigDecimal;
-import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -20,11 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class InvoiceRepositoryTest {
 
-    @Mock
-    InvoiceRepository invoiceRepository;
-
     @Test
-    void given_invoiceId_when_findInvoiceById_then_returnInvoice() throws RemoteException {
+    void given_invoiceId_when_findInvoiceById_then_returnInvoice() {
         // given
         InvoiceRepositoryImpl invoiceRepository = new InvoiceRepositoryImpl();
         InvoiceId invoiceId = new InvoiceId(111);
@@ -37,7 +31,7 @@ public class InvoiceRepositoryTest {
     }
 
     @Test
-    void given_notExistingInvoiceId_when_findInvoiceById_then_returnEmptyOptional() throws RemoteException {
+    void given_notExistingInvoiceId_when_findInvoiceById_then_returnEmptyOptional() {
         // given
         InvoiceRepositoryImpl invoiceRepository = new InvoiceRepositoryImpl();
         InvoiceId invoiceId = new InvoiceId(-111);
@@ -50,7 +44,7 @@ public class InvoiceRepositoryTest {
     }
 
     @Test
-    void given_invoice_when_createInvoice_then_addInvoiceToDatabase() throws RemoteException {
+    void given_invoice_when_createInvoice_then_addInvoiceToDatabase() {
         // given
         InvoiceRepositoryImpl invoiceRepository = new InvoiceRepositoryImpl();
         InvoiceId invoiceId = new InvoiceId();
@@ -75,4 +69,20 @@ public class InvoiceRepositoryTest {
         assertEquals(invoiceId.getInvoiceId(), invoiceRepository.findInvoiceById(invoiceId).get().getInvoiceId().getInvoiceId());
     }
 
+    @Test
+    void given_invoice_when_update_then_changeInvoice() {
+        // given
+        InvoiceRepositoryImpl invoiceRepository = new InvoiceRepositoryImpl();
+        Invoice invoice = invoiceRepository.findInvoiceById(new InvoiceId(111)).get();
+        int returnedQuantity = invoice.getInvoiceLineItems().get(0).getReturnedQuantity();
+        int returnQuantity = 1;
+
+        invoice.getInvoiceLineItems().get(0).returnInvoiceLineItem(returnQuantity);
+
+        // when
+        invoiceRepository.update(invoice);
+
+        // then
+        assertEquals(returnedQuantity + returnQuantity, invoiceRepository.findInvoiceById(new InvoiceId(111)).get().getInvoiceLineItems().get(0).getReturnedQuantity());
+    }
 }

@@ -14,7 +14,7 @@ public class Song extends Product {
 
     private String genre;
     private List<Artist> artists;
-    private final Set<Album> inAlbum = new HashSet<>();
+    private Set<Album> inAlbum = new HashSet<>();
 
     protected Song() {
     }
@@ -27,6 +27,18 @@ public class Song extends Product {
         this.stock = stock;
         this.mediumType = mediumType;
         this.releaseDate = releaseDate;
+    }
+
+    // needed for testing (ProductServiceTest)
+    public Song(String title, BigDecimal price, int stock, MediumType mediumType, LocalDate releaseDate, String genre, List<Artist> artists, Set<Album> inAlbum) {
+        this.genre = genre;
+        this.artists = artists;
+        this.title = title;
+        this.price = price;
+        this.stock = stock;
+        this.mediumType = mediumType;
+        this.releaseDate = releaseDate;
+        this.inAlbum = inAlbum;
     }
 
     @Override

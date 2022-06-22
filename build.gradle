@@ -30,34 +30,34 @@ jacocoTestReport {
 dependencies {
     implementation fileTree(dir: 'lib', include: ['*.jar'])
 
-    implementation 'org.projectlombok:lombok:1.18.22'
-    implementation 'org.hibernate.orm:hibernate-core:6.0.0.CR2'
+    implementation 'org.projectlombok:lombok:1.18.24'
+    implementation 'org.hibernate.orm:hibernate-core:6.0.1.Final'
     implementation 'org.apache.activemq:activemq-all:5.17.0'
-    implementation 'org.apache.logging.log4j:log4j-core:2.17.1'
+    implementation 'org.apache.logging.log4j:log4j-core:2.17.2'
 
     implementation 'io.swagger.core.v3:swagger-jaxrs2:2.2.0'
     implementation 'io.swagger.core.v3:swagger-jaxrs2-servlet-initializer:2.2.0'
-    implementation 'org.webjars:swagger-ui:4.10.3'
+    implementation 'org.microprofile-ext.openapi-ext:openapi-ui:1.1.5'
 
-    implementation 'org.postgresql:postgresql:42.3.3'
+    implementation 'org.postgresql:postgresql:42.3.4'
 
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-    testImplementation 'org.mockito:mockito-core:4.4.0'
-    testImplementation 'org.mockito:mockito-junit-jupiter:4.4.0'
-    testImplementation 'org.mockito:mockito-inline:4.3.1'
+    testImplementation 'org.mockito:mockito-core:4.5.1'
+    testImplementation 'org.mockito:mockito-junit-jupiter:4.5.1'
+    testImplementation 'org.mockito:mockito-inline:4.5.1'
     testImplementation 'org.mockito:junit-jupiter:2.20.0'
     compileOnly('javax.ws.rs:javax.ws.rs-api:2.1.1')
 
     implementation 'org.apache.httpcomponents:httpclient:4.5.13'
 
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
-    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+    implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
 
-    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
 
-    compileOnly 'org.projectlombok:lombok:1.18.22'
+    compileOnly 'org.projectlombok:lombok:1.18.24'
     compileOnly 'javax.enterprise:cdi-api:2.0.SP1'
     compileOnly 'javax.ejb:javax.ejb-api:3.2.2'
     compileOnly 'javax.ws.rs:javax.ws.rs-api:2.1.1'

@@ -8,10 +8,12 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 public class CartLineItem implements Serializable {
 
+    @SuppressWarnings("unused")
     private long id;
     private long productId;
     private MediumType mediumType;
@@ -23,6 +25,7 @@ public class CartLineItem implements Serializable {
     private ProductType productType;
     private List<String> artists;
 
+    @SuppressWarnings("unused")
     protected CartLineItem() {
     }
 
@@ -34,20 +37,9 @@ public class CartLineItem implements Serializable {
         this.stock = stock;
         this.imageUrl = imageUrl;
         this.productType = productType;
-        this.artists = new ArrayList<String>();
+        this.artists = new ArrayList<>();
         this.productId = productId;
     }
-//
-//    public CartLineItem(MediumType mediumType, String name, int quantity, BigDecimal price, int stock, String imageUrl, ProductType productType, List<String> artists) {
-//        this.mediumType = mediumType;
-//        this.name = name;
-//        this.quantity = quantity;
-//        this.price = price;
-//        this.stock = stock;
-//        this.imageUrl = imageUrl;
-//        this.productType = productType;
-//        this.artists = artists;
-//    }
 
     public CartLineItem(MediumType mediumType, String name, int quantity, BigDecimal price, int stock, String imageUrl, ProductType productType, List<String> artists, long productId) {
         this.mediumType = mediumType;
@@ -73,4 +65,8 @@ public class CartLineItem implements Serializable {
         return mediumType == cartLineItem.mediumType && name.equals(cartLineItem.name) && price.equals(cartLineItem.price) && productType.equals(cartLineItem.productType);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(productId, mediumType, name, quantity, price, stock, imageUrl, productType, artists);
+    }
 }

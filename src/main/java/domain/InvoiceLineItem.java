@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 @Getter
 public class InvoiceLineItem implements Serializable {
 
+    @SuppressWarnings("unused")
     private long id;
     private MediumType mediumType;
     private String name;
@@ -27,7 +28,7 @@ public class InvoiceLineItem implements Serializable {
         this.returnedQuantity = 0;
     }
 
-    public void returnInvoiceLineItem(int amount){
+    public void returnInvoiceLineItem(int amount) {
         this.returnedQuantity += amount;
     }
 }

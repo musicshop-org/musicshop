@@ -12,32 +12,48 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ShoppingCartTest {
 
     @Test
-    void when_lineItem_added_return_equal() {
-        //given
+    void given_cartAndNewLineItem_when_addLineItem_then_expectLineItemAdded() {
+        // given
         ShoppingCart cart = new ShoppingCart(UUID.randomUUID().toString());
         CartLineItem expectedItem = new CartLineItem(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18), 5, "", ProductType.ALBUM, 1);
 
-        //when
+        // when
         cart.addLineItem(expectedItem);
 
-        //then
+        // then
         assertEquals(expectedItem, cart.getCartLineItems().get(0));
     }
 
     @Test
-    void when_clearCart_return_empty() {
-        //given
+    void given_cartAndAlreadyAddedLineItem_when_addLineItem_then_expectLineItemAdded() {
+        // given
+        ShoppingCart cart = new ShoppingCart(UUID.randomUUID().toString());
+        CartLineItem cartLineItem = new CartLineItem(MediumType.CD, "24K Magic", 2, BigDecimal.valueOf(18), 5, "", ProductType.ALBUM, 1);
+
+        int expectedQuantity = 4;
+
+        // when
+        cart.addLineItem(cartLineItem);
+        cart.addLineItem(cartLineItem);
+
+        // then
+        assertEquals(expectedQuantity, cart.getCartLineItems().get(0).getQuantity());
+    }
+
+
+    @Test
+    void given_cart_when_clearCart_then_expectEmptyCart() {
+        // given
         ShoppingCart cart = new ShoppingCart(UUID.randomUUID().toString());
         CartLineItem expectedItem = new CartLineItem(MediumType.CD, "24K Magic", 12, BigDecimal.valueOf(18), 5, "", ProductType.ALBUM, 1);
         cart.addLineItem(expectedItem);
 
         int expected = 0;
 
-        //when
+        // when
         cart.clear();
 
-        //then
+        // then
         assertEquals(expected, cart.getCartLineItems().size());
     }
-
 }

@@ -32,9 +32,11 @@ public class Album extends Product {
         this.releaseDate = releaseDate;
     }
 
-    public void increaseStock(int increaseAmount){
+    public void increaseStock(int increaseAmount) {
         this.stock += increaseAmount;
     }
 
-    public void decreaseStock(int decreaseAmount) { this.stock -= decreaseAmount; }
+    public void decreaseStock(int decreaseAmount) {
+        this.stock -= decreaseAmount;
+    }
 }

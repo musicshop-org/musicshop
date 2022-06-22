@@ -41,7 +41,7 @@ public class ShoppingCart implements Serializable {
         for (CartLineItem cartLineItem : this.cartLineItems) {
             if (cartLineItem.equals(lineItem)) {
                 cartLineItem.changeQuantity(quantity);
-                return;
+                break;
             }
         }
     }
@@ -50,7 +50,7 @@ public class ShoppingCart implements Serializable {
         for (CartLineItem cartLineItem : cartLineItems) {
             if (cartLineItem.equals(cartLineItemToRemove)) {
                 this.cartLineItems.remove(cartLineItemToRemove);
-                return;
+                break;
             }
         }
     }

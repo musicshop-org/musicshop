@@ -26,13 +26,13 @@ public class ProductRepositoryImpl implements ProductRepository {
 
         Set<Album> albums = new HashSet<>();
         Session session = sessionFactory.openSession();
-        title = "%"+title+"%";
-        List<Song> songResults = session.createQuery("from Song where lower(title) LIKE lower(:title)", Song.class).setParameter("title", title).list();
+        title = "%" + title + "%";
+        List<Song> songResults = session.createQuery("from Song where lower(title) LIKE lower(:title)", Song.class)
+                .setParameter("title", title)
+                .list();
 
         for (Song songResult : songResults) {
-            for (Album album : songResult.getInAlbum()) {
-                albums.add(album);
-            }
+            albums.addAll(songResult.getInAlbum());
         }
 
         return albums;
@@ -42,22 +42,16 @@ public class ProductRepositoryImpl implements ProductRepository {
     public Album findAlbumByLongId(long id) {
 
         Session session = sessionFactory.openSession();
-        Album album = session.get(Album.class, id);
-        //Album album = session.createQuery("from Album where id = :id", Album.class).setParameter("id", id).getSingleResult();
-//        Query query = session.createQuery("from Album where product_id = :id", Album.class);
-//        query.setParameter("id", id);
-       // Album album = (Album) query.getResultList().stream().findFirst().orElse(null);
 
-        return album;
+        return session.get(Album.class, id);
     }
 
     @Override
     public Song findSongByLongId(long id) {
 
         Session session = sessionFactory.openSession();
-        Song song = session.get(Song.class, id);
-        //return session.createQuery("from Song where id LIKE (:id)", Song.class).setParameter("id", Long.toString(id)).getSingleResult();
-        return song;
+
+        return session.get(Song.class, id);
     }
 
 
@@ -66,50 +60,53 @@ public class ProductRepositoryImpl implements ProductRepository {
     public List<Song> findSongsByTitle(String title) {
 
         Session session = sessionFactory.openSession();
-        title = "%"+title+"%";
-        List<Song> songResults = session.createQuery("from Song where lower(title) LIKE lower(:title)", Song.class).setParameter("title", title).list();
+        title = "%" + title + "%";
 
-        return songResults;
+        return session.createQuery("from Song where lower(title) LIKE lower(:title)", Song.class)
+                .setParameter("title", title)
+                .list();
     }
 
     @Override
     public List<Artist> findArtistsByName(String name) {
 
         Session session = sessionFactory.openSession();
-        name = "%"+name+"%";
-        List<Artist> artistResults = session.createQuery("from Artist where lower(name) LIKE lower(:name)", Artist.class).setParameter("name", name).list();
+        name = "%" + name + "%";
 
-        return artistResults;
+        return session.createQuery("from Artist where lower(name) LIKE lower(:name)", Artist.class)
+                .setParameter("name", name)
+                .list();
     }
 
     @Override
     public List<Album> findAlbumsByAlbumTitle(String title) {
         Session session = sessionFactory.openSession();
-        title = "%"+title+"%";
-        List<Album> albumResults = session.createQuery("from Album where lower(title) LIKE lower(:title)", Album.class).setParameter("title", title).list();
+        title = "%" + title + "%";
 
-        return albumResults;
+        return session.createQuery("from Album where lower(title) LIKE lower(:title)", Album.class)
+                .setParameter("title", title)
+                .list();
     }
 
     @Override
     public Album findAlbumByAlbumTitleAndMedium(String title, MediumType mediumType) {
         Session session = sessionFactory.openSession();
-        Album album = session.createQuery("from Album where lower(title) LIKE lower(:title) AND mediumType = :mediumType", Album.class)
+
+        return session.createQuery("from Album where lower(title) LIKE lower(:title) AND mediumType = :mediumType", Album.class)
                 .setParameter("title", title)
                 .setParameter("mediumType", mediumType)
                 .getSingleResultOrNull();
-
-        return album;
     }
 
     @Override
     public Optional<Album> findAlbumByAlbumId(String albumId) {
         Session session = sessionFactory.openSession();
-        Album album = session.createQuery("from Album where albumId = (:albumId)", Album.class)
-                .setParameter("albumId", new AlbumId(albumId))
-                .getSingleResultOrNull();
 
-        return Optional.of(album);
+        return Optional.of(
+                session.createQuery("from Album where albumId = (:albumId)", Album.class)
+                        .setParameter("albumId", new AlbumId(albumId))
+                        .getSingleResultOrNull()
+        );
     }
 
     @Override
